@@ -1,0 +1,64 @@
+.reset-password-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #FFFFFF;
+  }
+  
+  .ikusasatech-header {
+    font-weight: bold; /* Make the text bold */
+    font-size: 24px; /* Adjust the font size as needed */
+    text-align: left;
+    margin: 20px; /* Add margin for spacing */
+    position: absolute; /* Position the element absolutely */
+    top: 20px; /* Distance from the top of the page */
+    left: 20px; /* Position the IKUSASATECH text at top left */
+  }
+  
+  .reset-password-heading {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: -80px;
+  }
+  
+  .form-container {
+    background-color: #f0f0f0;
+    padding: 30px;
+    width: 300px;
+    border-radius: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  .password-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px;
+    background-color: #fff; 
+  }
+  
+  .reset-password-button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .reset-password-button:hover {
+    background-color: #0056b3;
+  }
+  

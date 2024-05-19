@@ -1,0 +1,79 @@
+/* PersonalInfoPage.css */
+
+.cv-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.brand-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.title-container {
+    margin-bottom: 20px;
+}
+
+.title-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
+}
+
+.gray-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.button-column {
+    flex: 1;
+}
+
+.input-container {
+    margin-bottom: 15px;
+}
+
+input[type="text"],
+textarea,
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.yellow-button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: rgb(255, 174, 0);
+    margin-bottom: 5px; /* Reduce the bottom margin between buttons */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    cursor: pointer;
+}
+
+.yellow-button:hover {
+    background-color: #ffc400;
+    margin-left: 10px;
+}
