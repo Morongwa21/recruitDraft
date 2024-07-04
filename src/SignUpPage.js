@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import './components/SignUp.css';
+import './components/LoginA.css'; 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import logo from './company logo.jpg';
 
 const SignUpPage = () => {
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [serverError, setServerError] = useState('');
     const navigate = useNavigate();
+    const [showOTPModal, setShowOTPModal] = useState(false); 
+    const [showUserExistsMessage, setShowUserExistsMessage] = useState(false); // State for showing user exists message
 
     const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [accountType, setAccountType] = useState('jobseeker');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleTermsChange = () => {
         setAcceptedTerms(!acceptedTerms);
@@ -24,10 +29,16 @@ const SignUpPage = () => {
             return;
         }
 
+        if (password !== confirmPassword) {
+            alert('Passwords do not match. Please re-enter your passwords.');
+            return;
+        }
+
         const formData = {
             username,
             email,
             password,
+            accountType,
         };
 
         try {
@@ -37,90 +48,134 @@ const SignUpPage = () => {
                 }
             });
 
-                console.log('Form submitted successfully!');
-                navigate('/AuthPage');
-         
+            console.log('Form submitted successfully!');
+            setShowOTPModal(true);
+
         } catch (error) {
             if (error.response) {
-                // The request was made and the server responded with a status code
-                // Set the server error message in state
                 setServerError(error.response.data.message);
                 console.error('Server error:', error.response.data);
             } else if (error.request) {
-                // The request was made but no response was received
                 console.error('No response received:', error.request);
             } else {
-                // Something happened in setting up the request that triggered an Error
                 console.error('Request error:', error.message);
             }
         }
     };
+    const LoginClick = () => {
+        navigate('/LoginPageA');
+      };
+   const handleModalClose = () => {
+        setShowOTPModal(false);
+        navigate('/AuthPage'); 
+    };
 
     return (
-        <div className="container">
-            <div className="brand-text">IKUSASATECH</div>
-            <div className="heading">
+        <div className="login-page">
+            <div className="login-logo">
+                <img src={logo} alt="Company Logo" />
+            </div>
+            <div className="gradient-lines">
+                <div className="gradient-line"></div>
+                <div className="gradient-line"></div>
+            </div>
+            <div className="signup-heading">
                 <h2>Create Account</h2>
             </div>
-            <div className="registration-form">
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            placeholder="Enter Username"
-                            value={username}
-                            onChange={(e) => setUserName(e.target.value)}
-                            required
-                        />
+            <form className="login-container" onSubmit={handleSubmit}>
+                <label htmlFor="accountType">Account Type:</label>
+                <select
+                    id="accountType"
+                    name="accountType"
+                    className="Login-input-field"
+                    value={accountType}
+                    onChange={(e) => setAccountType(e.target.value)}
+                    required
+                >
+                    <option value="jobseeker">Jobseeker</option>
+                    <option value="recruiter">Recruiter</option>
+                </select>
+                <label htmlFor="username">Username:</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter Username"
+                    className="Login-input-field"
+                    value={username}
+                    onChange={(e) => setUserName(e.target.value)}
+                    required
+                />
+                <label htmlFor="email">Email:</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Email"
+                    className="Login-input-field"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <label htmlFor="password">Password:</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    className="Login-input-field"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <label htmlFor="confirmPassword">Confirm Password:</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    className="Login-input-field"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                />
+                <label htmlFor="terms">
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        name="terms"
+                        checked={acceptedTerms}
+                        onChange={handleTermsChange}
+                        required
+                    />
+                    &nbsp;I accept the <span className="terms-link">Terms and Conditions</span>
+                </label>
+                <button type="submit" className="login-button">
+          Register
+        </button>
+        <div className="separator">
+          <div className="line"></div>
+          <div className="or-text">OR</div>
+          <div className="line"></div>
+        </div>
+        <button type="button" className="signup-button" onClick={LoginClick}>Login</button>
+                {serverError && <div className="error-message">{serverError}</div>}
+                {showUserExistsMessage && (
+                    <div className="error-message">
+                        A user with this email or username already exists. Please log in or use a different email/username.
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="Enter Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                )}
+            </form>
+            {showOTPModal && (
+                <div className="otp-modal">
+                    <div className="otp-modal-content">
+                        <h3>OTP Token Sent</h3>
+                        <p>An OTP token has been sent to your email. Please check your inbox.</p>
+                        <button onClick={handleModalClose}>Close</button>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="Enter Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group terms-conditions">
-                        <label htmlFor="terms">
-                            <input
-                                type="checkbox"
-                                id="terms"
-                                name="terms"
-                                checked={acceptedTerms}
-                                onChange={handleTermsChange}
-                                required
-                            />
-                            &nbsp;I accept the <span className="terms-link">Terms and Conditions</span>
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <button type="submit">Submit</button>
-                    </div>
-                    {serverError && <div className="error-message">{serverError}</div>}
-                </form>
-            </div>
+                </div>
+            )}
         </div>
     );
 };
-
 export default SignUpPage;

@@ -1,0 +1,142 @@
+.job-postings-page {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: black;
+}
+
+.create-job-page {
+    margin: 0 auto;
+    padding: 20px;
+    max-height: calc(100vh - 40px); /* Subtracting header and footer heights */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.create-job-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.job-form {
+    margin: 20px 0;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-field {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.button-container {
+    text-align: right;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.create-job-btn, .view-post-btn {
+    background-color: #2575fc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.create-job-btn:hover, .view-post-btn:hover {
+    background-color: #0e47a1;
+}
+
+.button-container .view-post-btn {
+    background-color: #3498db;
+}
+
+.button-container .view-post-btn:hover {
+    background-color: #1b6ba1;
+}
+.search-bar {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(to right, #8b0000, #2575fc);
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar input[type="text"] {
+    padding: 10px;
+    width: 60%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+.edit-icon {
+    color: blue;
+}
+
+.delete-icon {
+    color: red;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+.create-job-container {
+    max-width: 600px; /* Adjust the maximum width as needed */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 20px; /* Add padding to the sides */
+    box-sizing: border-box;
+}

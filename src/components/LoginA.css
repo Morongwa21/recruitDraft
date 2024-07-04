@@ -1,0 +1,245 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+ 
+  
+  .login-logo {
+    position: absolute;
+    top: 10px;
+    left: 2px;
+    font-size: 24px;
+    height: 40px;
+  }
+  .gradient-lines {
+    position: absolute;
+    top: 130px; /* Adjust as needed based on logo size */
+    width: 200%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  label {
+    display: block;
+    text-align: left;
+    margin-left: 10px;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+  }
+  .gradient-line {
+    width: 80%;
+    height: 4px;
+    background: linear-gradient(to right, #007BFF, #8B0000);
+    margin: 5px 0;
+  }
+  .login-heading {
+    color:black;
+    margin-top: 140px;
+     } 
+
+     .signup-heading {
+        color:black;
+        margin-top: 380px;
+         } 
+  .login-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+  }
+  
+  .Login-input-field {
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .login-button, .signup-button {
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .login-button:hover, .signup-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .forgot-password {
+    display: block;
+    margin: 10px 0;
+    color: #007BFF;
+    text-decoration: none;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  .separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .separator .line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #000;
+    margin: 0 10px;
+  }
+  
+  .separator .or-text {
+    font-weight: bold;
+    font-size: 14px;
+    color: #777;
+  }
+  .error-message
+  {
+    color: red;
+  }
+  .otp-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* Ensure modal is on top of other content */
+}
+
+.otp-modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 90%; /* Adjust maximum width */
+    width: 100%;
+    max-height: 90%; /* Adjust maximum height */
+    overflow-y: auto; /* Enable scrolling if content exceeds height */
+    text-align: center;
+    color: black;
+}
+
+.otp-modal-content h3 {
+    margin-bottom: 10px;
+}
+
+.otp-modal-content p {
+    margin-bottom: 20px;
+}
+
+.otp-modal-content button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+/*Angel*/
+/* Modal Overlay */
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+}
+
+/* Modal Content */
+.auth-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  max-width: 500px;
+  width: 90%;
+}
+
+/* Modal Heading */
+.auth-modal h2 {
+  margin-top: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Modal Text */
+.auth-modal p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-modal {
+    width: 80%;
+    padding: 15px;
+  }
+
+  .auth-modal h2 {
+    font-size: 20px;
+  }
+
+  .auth-modal p {
+    font-size: 14px;
+  }
+
+  .auth-modal-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+.otp-modal-content button:hover {
+    background-color: #0056b3;
+}
+.auth-modal-button {
+  background: linear-gradient(to bottom, #8B0000 0%, #00008B 100%); /* Dark red to blue gradient */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.auth-modal-button:hover {
+  background-color: #0056b3;
+}

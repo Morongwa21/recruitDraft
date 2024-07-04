@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import './components/ResetPass.css'; // Import CSS for styling
+import './components/LoginA.css';
+import logo from './company logo.jpg';
 
 const ResetPass = () => {
+
+  console.log("reset")
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  console.log("my token " + token);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -13,68 +23,82 @@ const ResetPass = () => {
     setConfirmPassword(e.target.value);
   };
 
-  const validatePassword = (password) => {
-    // Password must be at least 8 characters with letters and numbers
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return regex.test(password);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      if (!validatePassword(password)) {
-      alert('Password must be at least 8 characters and include both letters and numbers.');
-      return;
-    }
+   
 
-    // Check if passwords match
     if (password !== confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
 
-    console.log('Password reset successful:', password);
-    // Add your logic to handle password reset (e.g., send request to update password)
+
+    // Create a form element to submit as POST
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://recruitment-portal-l0n5.onrender.com/forgot-password'; // Adjust to the correct URL
+
+    // Create hidden input elements for password, passwordConfirm, and token
+    const passwordInput = document.createElement('input');
+    passwordInput.type = 'hidden';
+    passwordInput.name = 'password';
+    passwordInput.value = password;
+
+    const passwordConfirmInput = document.createElement('input');
+    passwordConfirmInput.type = 'hidden';
+    passwordConfirmInput.name = 'passwordConfirm';
+    passwordConfirmInput.value = confirmPassword;
+
+    const tokenInput = document.createElement('input');
+    tokenInput.type = 'hidden';
+    tokenInput.name = 'token';
+    tokenInput.value = token;
+
+    form.appendChild(passwordInput);
+    form.appendChild(passwordConfirmInput);
+    form.appendChild(tokenInput);
+
+    document.body.appendChild(form);
+    form.submit();
   };
 
   return (
-    <div className="reset-password-page">
-      {/* IKUSASATECH subheading */}
-      <div className="ikusasatech-header">IKUSASATECH</div>
-      
-      {/* Reset Password heading */}
-      <h2 className="reset-password-heading">Reset Password</h2>
+    <div className="login-page">
+            <div className="login-logo">
+                <img src={logo} alt="Company Logo" />
+            </div>
+            <div className="gradient-lines">
+                <div className="gradient-line"></div>
+                <div className="gradient-line"></div>
+            </div>
+      <h2 className="login-heading">Reset Password</h2>
 
-      {/* Gray container with password form */}
-      <div className="form-container">
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="password-input"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password:</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-              className="password-input"
-              required
-            />
-          </div>
-          <button type="submit" className="reset-password-button">
-            Reset Password
-          </button>
-        </form>
-      </div>
-    </div>
+      <form className="login-container" onSubmit={handleSubmit}>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+              <label htmlFor="password">New Password:</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                className="Login-input-field"
+                required
+              />
+              <label htmlFor="confirmPassword">Confirm Password:</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                className="Login-input-field"
+                required
+              />
+            <button type="submit" className="login-button">Reset Password</button>
+          </form>
+        </div>
+    
   );
 };
 

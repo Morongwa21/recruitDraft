@@ -1,102 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import './components/AuthPage.css'; // Import CSS file for AuthPage styles
-import axios from 'axios'; // Import Axios for making HTTP requests
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
+import './components/LoginA.css';
+import logo from './company logo.jpg';
 
+axios.defaults.withCredentials = true;
 
-const AuthPage = () => {
-    const [otpCode, setOtpCode] = useState('');
-    const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
-    const [errorMessage, setErrorMessage] = useState(''); // State to handle error messages
-    const navigate = useNavigate();
+Modal.setAppElement('#root'); // Set the app root element for accessibility
 
+function AuthPage() {
+  const [otp, setOtp] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state?.email || '';
 
-
-    const location = useLocation();
-    const email = location.state?.email || '';
-
-    useEffect(() => {
-        let timeout;
-        if (showPopup) {
-            timeout = setTimeout(() => {
-                setShowPopup(false);
-            }, 3000);
-        }
-
-        return () => clearTimeout(timeout);
-    }, [showPopup]); // Run this effect when showPopup changes
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        /////
-        console.log('OTP:', otpCode);
-        try {
-            const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/verify-otp', { otpCode });
-            
-           
-
-                navigate('/LoginPage');
-                console.log('Server Response:', response.data); // Log server response
-
-
-           
-        } catch (error) {
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.error('Server responded with an error status:', error.response.status);
-                console.error('Error message from server:', error.response.data);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error('No response received from server:', error.request);
-            } else {
-                // Something happened in setting up the request that triggered an error
-                console.error('Error setting up the request:', error.message);
-            }
-            setErrorMessage('Error verifying OTP. Please try again.');
-        }
+  useEffect(() => {
+    let timeout;
+    if (showPopup) {
+      timeout = setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
     }
-    return (
-        <div className="auth-container">
-        {/* IKUSASATECH text */}
-        <div className="brand-text">IKUSASATECH</div>
+    return () => clearTimeout(timeout);
+  }, [showPopup]);
 
-        {/* Heading */}
-        <div className="heading">
-            <h2>Account Verification</h2>
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const response = await axios.post(
+        'https://recruitment-portal-l0n5.onrender.com/verify-otp',
+        { otp }
+      );
+      setLoading(false);
+      if (response.status === 200) {
+        console.log(response.data);
+        setShowPopup(true);
+        setModalIsOpen(true);
+      } else {
+        setError('OTP verification failed. Please check your OTP.');
+      }
+    } catch (error) {
+      setLoading(false);
+      if (error.response) {
+        console.error('Error response:', error.response);
+        setError(error.response.data.message || 'An error occurred. Please try again.');
+      } else {
+        console.error('Error:', error.message);
+        setError('An error occurred. Please try again.');
+      }
+    }
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const goToCompleteProfile = () => {
+    setModalIsOpen(false);
+    navigate('/LoginPageA');
+  };
+
+  const goToJobSearch = () => {
+    setModalIsOpen(false);
+    navigate('/UserViewPost');
+  };
+
+
+  return (
+    <div className="login-page">
+      <div className="login-logo">
+        <img src={logo} alt="Company Logo" />
+      </div>
+      <div className="gradient-lines">
+        <div className="gradient-line"></div>
+        <div className="gradient-line"></div>
+      </div>
+      <div className="login-heading">
+        <h2>Account Verification</h2>
+      </div>
+
+      <form className="login-container" onSubmit={handleSubmit}>
+        <div className="otp-input-wrapper">
+          <label htmlFor="otpInput">OTP Code:</label>
+          <input
+            id="otpInput"
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP"
+            className="Login-input-field"
+            required
+          />
         </div>
 
-        {/* Main Content */}
-        <div className="main-content">
-            {/* Display email and trigger OTP entry */}
-            <form onSubmit={handleSubmit} className="otp-form">
-                <div className="otp-input-wrapper">
-                    <label htmlFor="otpInput" className="otp-label">OTP Code:</label>
-                    <input
-                        id="otpInput"
-                        type="text"
-                        value={otpCode}
-                        onChange={(e) => setOtpCode(e.target.value)}
-                        placeholder="Enter OTP"
-                        required
-                    />
-                </div>
-                <button type="submit">Verify</button>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
-            </form>
-        </div>
+        <button type="submit" disabled={loading} className="login-button">
+          {loading ? 'Verifying...' : 'Verify'}
+        </button>
 
-        {/* Overlay Popup for OTP */}
-        {showPopup && (
-            <div className="overlay-popup">
-                <div className="popup-content">
-                    <p className="popup-email-info">OTP has been sent to {email}</p>
-                </div>
-            </div>
-        )}
+        {error && <p className="error-message">{error}</p>}
+      </form>
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Welcome Modal"
+        className="modal"
+        overlayClassName="modal-overlay"
+      >
+        <h2>Welcome!</h2>
+        <p>We have created your account. Complete your profile for personalized search results.</p>
+        <button onClick={goToCompleteProfile} className="auth-modal-button">Complete Profile</button>
+        <button onClick={goToJobSearch} className="auth-modal-button">Job Search</button>
+      </Modal>
     </div>
-);
-};
+  );
+}
 
 export default AuthPage;

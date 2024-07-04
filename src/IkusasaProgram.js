@@ -1,51 +1,126 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './components/UserViewPosts.css';
+import logo from './company logo.jpg';  // Adjust the import as necessary
 import { useNavigate } from 'react-router-dom';
-import './components/IkusasaProgram.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const IkusasaProgram = () => {
+    const [username, setUsername] = useState('');
+    const [jobs, setJobs] = useState([]);
+    const [filteredJobs, setFilteredJobs] = useState([]);
+    const [keyword, setKeyword] = useState('');
+    const [location, setLocation] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
+    const [dropdownVisible, setDropdownVisible] = useState(false);
 
-    const handleEducationClick = () => {
-        navigate('/EducationPage');
+    useEffect(() => {
+        fetchJobs();
+    }, [currentPage]);
+
+    const fetchJobs = async () => {
+        try {
+            const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/jobs?page=${currentPage}`);
+            const totalCount = parseInt(response.headers['x-total-count'], 10);
+            setJobs(response.data);
+            setFilteredJobs(response.data);
+        } catch (error) {
+            console.error('Error fetching jobs:', error);
+        }
     };
 
-    const handleNextClick = () => {
-        navigate('/personalinfo');
+    const handleSearch = () => {
+        const filtered = jobs.filter(job =>
+            job.title.toLowerCase().includes(keyword.toLowerCase()) &&
+            job.location.toLowerCase().includes(location.toLowerCase())
+        );
+        setFilteredJobs(filtered);
     };
 
-    const handleWorkExperienceClick = () => {
-        navigate('/WorkExperience');
+    const handleUserInfoClick = () => {
+        setDropdownVisible(!dropdownVisible);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        navigate('/login');
+    };
+
+    const handleChangePassword = () => {
+        navigate('/changepassword');
     };
 
     return (
-        <div className="cv-container">
-            <div className="brand-text">IKUSASATECH</div>
-            <div className="title-container">
-                <div className="title-text">CURRICULUM VITAE</div>
-            </div>
-
-            <div className="button-container">
-                <button className="yellow-button" onClick={handleNextClick}>Personal Info</button>
-                <button className="yellow-button" onClick={handleEducationClick}>Education</button>
-                <button className="yellow-button" onClick={handleWorkExperienceClick}>Work Experience</button>
-            </div>
-
-            <div className="info-container">
-                <div className="field-text">Fields with * indicate required</div>
-                <div className="question-text">
-                    Have you ever attended an Ikusasa program before?
+        <div className="admin-page">
+            <header className="admin-header">
+                <div className="logo">
+                    <img src={logo} alt="Company Logo" />
                 </div>
-                <input type="text" className="edit-box" />
-
-                <div className="question-text">Which role best describes you?</div>
-                <input type="text" className="edit-box" />
-                <div className="question-text">Professional Skills</div>
-                <input type="text" className="edit-box" />
-
-                <button className="blue-button" onClick={handleNextClick}>Next</button>
+                <div className="user-info" onClick={handleUserInfoClick}>
+                    Welcome, {username}
+                    {dropdownVisible && (
+                        <div className="dropdown-menu">
+                            <button onClick={handleLogout}>Logout</button>
+                            <button onClick={handleChangePassword}>Change Password</button>
+                        </div>
+                    )}
+                </div>
+            </header>
+            <div className="admin-content">
+                <aside className="side">
+                    <ul>
+                         {/* <li><a href="#home">Home</a></li> */}
+            <li><a href="/ProfileUsers">Profile</a></li>
+            <li><a href="/ViewPosts">Documents</a></li>
+            <li><a href="/IkusasaProgram">Job Listings</a></li> 
+            <li><a href="/ViewAJobs">Job Applications</a></li>
+            <li><a href="/ApplicationTemplates">Templates</a></li>
+                    </ul>
+                </aside>
+                <div className="main-content">
+                    <div className="search-bar">
+                        <input
+                            type="text"
+                            placeholder="Keyword"
+                            value={keyword}
+                            onChange={(e) => setKeyword(e.target.value)}
+                            className="input"
+                        />
+                        <input
+                            type="text"
+                            placeholder="Location"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            className="input"
+                        />
+                        <button onClick={handleSearch} className="search-button">
+                            <FontAwesomeIcon icon={faSearch} />
+                        </button>
+                    </div>
+                    <div className="job-listings">
+                        {filteredJobs.map((job) => (
+                            <div key={job._id} className="job-container">
+                                <div className="job-card" onClick={() => navigate(`/UserApply/${job._id}`)}>
+                                    <h3>{job.title}</h3>
+                                    <p>Company: {job.company}</p>
+                                    <p>Location: {job.location}</p>
+                                    <p>Posted On: {new Date(job.createdAt).toLocaleDateString()}</p>
+                                    <p>Job Type: {job.jobType}</p>
+                                    <p>Number of Applications: {job.numApplications}</p>
+                                    <button className="button" onClick={() => navigate(`/UserApply/${job._id}`)}>View Details</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );
 };
+
+
 
 export default IkusasaProgram;

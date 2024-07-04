@@ -1,124 +1,89 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-import axios from 'axios';
+import axios from 'axios'; // Import Axios for making HTTP requests
 import logo from './company logo.jpg';
 import './components/AdminDash.css';
 import './components/ModalContent.css';
 
-const WorkExperience = () => {
+const WorkUpdate = () => {
     const navigate = useNavigate();
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState(""); 
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [formVisible, setFormVisible] = useState(false);
-    const [hasExperience, setHasExperience] = useState('');
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-    const [responsibilities, setResponsibilities] = useState([]);
+
     const [company, setCompany] = useState('');
     const [position, setPosition] = useState('');
-    const [inProgress, setInProgress] = useState(false);
-    const [formData, setFormData] = useState({
-        userData: {},
-        educationData: {},
-        profData: {},
-        data: {},
-        workExperienceData: {},
-    });
+    const [responsibilities, setResponsibilities] = useState([]);
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+
+    const [status, setStatus] = useState('');
 
     useEffect(() => {
-        const fetchUserDetails = async () => {
-            try {
-                const userId = localStorage.getItem('userId');
-                const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
-                if (response.status === 200) {
-                    setUsername(response.data.username);
-                    setFormData(prevState => ({
-                        ...prevState,
-                        profData: response.data, 
-                    }));
-                } else {
-                    console.error('Failed to fetch user details');
-                }
-            } catch (error) {
-                console.error('Error fetching user details:', error.message);
-            }
-        };
-
-        const data = JSON.parse(localStorage.getItem('data')) || {};
-        const educationData = JSON.parse(localStorage.getItem('educationData')) || {};
-        const workExperienceData = JSON.parse(localStorage.getItem('workExperienceData')) || {};
-
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            data,
-            educationData,
-            workExperienceData,
-        }));
-
         fetchUserDetails();
     }, []);
 
-    const handleNextClick = async () => {
-        if (hasExperience === 'Yes' && responsibilities.length === 0) {
-            alert('Please select at least one responsibility.');
-            return;
-        }
-
-        const workExperienceData = {
-            hasExperience,
-            company,
-            position,
-            responsibilities: responsibilities.map(option => option.value),
-            startDate: startDate.toISOString(),
-            endDate: inProgress ? 'Present' : endDate.toISOString(),
-        };
-
-        console.log('WorkExperience Data:', workExperienceData);
-        localStorage.setItem('workExperienceData', JSON.stringify(workExperienceData));
-
-        const combinedData = {
-            ...formData.data,
-            ...formData.educationData,
-            workExperienceData,
-        };
-
-        console.log('Data to be stored:', combinedData);
-
+    const fetchUserDetails = async () => {
         try {
-            const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', combinedData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            console.log('POST request successful:', response.data);
-            navigate('/ProfileUsers');
+            const userId = localStorage.getItem('userId');
+            const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
+            const profileResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
+
+            if (response.status === 200) {
+                setUsername(response.data.username);
+            } else {
+                console.error('Failed to fetch user details');
+            }
+
+            // Fetch work experience data from profile
+            if (profileResponse.status === 200) {
+                const workExperienceData = profileResponse.data.workExperience;
+                if (workExperienceData && workExperienceData.length > 0) {
+                    const latestWorkExperience = workExperienceData[workExperienceData.length - 1];
+                    setCompany(latestWorkExperience.company || '');
+                    setPosition(latestWorkExperience.position || '');
+                    setResponsibilities(latestWorkExperience.responsibilities || []);
+                    setStartDate(new Date(latestWorkExperience.startDate) || new Date());
+                    setEndDate(new Date(latestWorkExperience.endDate) || new Date());
+
+                    setStatus(latestWorkExperience.status || '');
+                }
+            } else {
+                console.error('Failed to fetch work experience data');
+            }
         } catch (error) {
-            console.error('Error making POST request:', error);
+            console.error('Error fetching user details or work experience data:', error.message);
         }
-
-        localStorage.removeItem('workExperienceData');
     };
 
-    const handleExperienceChange = (e) => {
-        setHasExperience(e.target.value);
-    };
+    const handleUpdateClick = async () => {
+        try {
+            const userId = localStorage.getItem('userId');
+            const workExperienceData = {
+                company,
+                position,
+                responsibilities,
+                startDate,
+                endDate,
+                status,
+            };
 
-    const handleStartDateChange = (date) => {
-        setStartDate(date);
-    };
+            // Send work experience data to API
+            const response = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, {
+                workExperience: workExperienceData,
+            });
 
-    const responsibilityOptions = [
-        { value: 'Project Management', label: 'Project Management' },
-        { value: 'Team Leadership', label: 'Team Leadership' },
-        { value: 'Software Development', label: 'Software Development' },
-        { value: 'Customer Relations', label: 'Customer Relations' },
-        { value: 'Marketing', label: 'Marketing' },
-        { value: 'Other', label: 'Other' },
-    ];
-
-    const handleViewPost = () => {
-        navigate('/ViewPost');
+            if (response.status === 200) {
+                console.log('Work experience data updated successfully');
+                // Optionally handle success UI update or navigation
+                navigate('/SomePage'); // Navigate to a success page or another route
+            } else {
+                console.error('Failed to update work experience data');
+            }
+        } catch (error) {
+            console.error('Error updating work experience data:', error.message);
+        }
     };
 
     const handleUserInfoClick = () => {
@@ -137,9 +102,20 @@ const WorkExperience = () => {
         setFormVisible(false);
     };
 
-    const handleProgressChange = () => {
-        setInProgress(!inProgress);
-    };
+    const statusOptions = [
+        { value: 'Full-time', label: 'Full-time' },
+        { value: 'Part-time', label: 'Part-time' },
+        { value: 'Freelance', label: 'Freelance' },
+    ];
+
+    const responsibilityOptions = [
+        { value: 'Project Management', label: 'Project Management' },
+        { value: 'Team Leadership', label: 'Team Leadership' },
+        { value: 'Software Development', label: 'Software Development' },
+        { value: 'Customer Relations', label: 'Customer Relations' },
+        { value: 'Marketing', label: 'Marketing' },
+        { value: 'Other', label: 'Other' },
+    ];
 
     return (
         <div className="admin-page">
@@ -174,13 +150,23 @@ const WorkExperience = () => {
                         <button className="red-button" onClick={() => navigate('/WorkExperience')}>Work Experience</button>
                     </div>
                     <div className="Redbutton-container">
-                        <button className="redish-button" onClick={toggleFormVisibility}>+ Click to Add Work Experience</button>
+                        <button className="redish-button" onClick={toggleFormVisibility}>+Click to Add Work Experience</button>
                     </div>
+                    <div className="existing-work-experience">
+                        <h2>Current Work Experience</h2>
+                        <p><strong>Company:</strong> {company}</p>
+                        <p><strong>Position:</strong> {position}</p>
+                        <p><strong>Responsibilities:</strong> {responsibilities.map(res => res.label).join(', ')}</p>
+                        <p><strong>Start Date:</strong> {startDate.toISOString().substr(0, 10)}</p>
+                        <p><strong>End Date:</strong> {endDate.toISOString().substr(0, 10)}</p>
+
+                        <button className="blue-button" onClick={toggleFormVisibility}>Update Work Experience</button>
+                    </div>
+
                     {formVisible && (
                         <div className="modal-overlay">
                             <div className="modal-content">
-                                <div className="modal-close" onClick={handleCloseClick}>X</div>
-                                <div className="field-text">Fields with * indicate required</div>
+                                <div className="close-button" onClick={handleCloseClick}>X</div>
                                 <div className="form-columns">
                                     <div className="form-column">
                                         <div className="question-text">Company</div>
@@ -222,32 +208,18 @@ const WorkExperience = () => {
                                             required
                                         />
                                     </div>
-                                    {!inProgress && (
-                                        <div className="form-column">
-                                            <div className="question-text">End Date:</div>
-                                            <input
-                                                type="date"
-                                                id="endDate"
-                                                className="edit-box"
-                                                value={endDate.toISOString().substr(0, 10)}
-                                                onChange={(e) => setEndDate(new Date(e.target.value))}
-                                            />
-                                        </div>
-                                    )}
                                     <div className="form-column">
-                                        <div className="question-text">Progress</div>
-                                        <div className="checkbox-container">
-                                            <input
-                                                type="checkbox"
-                                                id="inProgress"
-                                                className="checkbox-input"
-                                                checked={inProgress}
-                                                onChange={handleProgressChange}
-                                            />
-                                        </div>
+                                        <div className="question-text">Status</div>
+                                        <Select
+                                            options={statusOptions}
+                                            value={status}
+                                            onChange={(selectedOption) => setStatus(selectedOption)}
+                                            className="edit-box"
+                                            placeholder="Select Status"
+                                        />
                                     </div>
                                 </div>
-                                <button className="blue-button" onClick={handleNextClick}>Submit</button>
+                                <button className="blue-button" onClick={handleUpdateClick}>Update Work Experience</button>
                             </div>
                         </div>
                     )}
@@ -257,4 +229,4 @@ const WorkExperience = () => {
     );
 };
 
-export default WorkExperience;
+export default WorkUpdate;
