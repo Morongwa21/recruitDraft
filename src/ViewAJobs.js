@@ -116,11 +116,7 @@ const ViewAJobs = () => {
                     </ul>
                 </aside>
                 <div className="main-content">
-                    <div className="button-container">
-                        <button className="red-button" onClick={() => navigate('/ProfileEdit')}>Personal Info</button>
-                        <button className="red-button" onClick={() => navigate('/EducationPage')}>Education</button>
-                        <button className="red-button" onClick={() => navigate('/WorkExperience')}>Work Experience</button>
-                    </div>
+               
                     <div className="applications">
                         <h2>Your Job Applications</h2>
                         {jobs.length > 0 ? (

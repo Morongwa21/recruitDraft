@@ -13,17 +13,20 @@ const ProfileUsers = () => {
 
   const navigate = useNavigate();
     const [jobsAvailable, setJobsAvailable] = useState(0);
-    const jobsShortlisted = 3;
+    const jobsShortlisted = 0;
 
     useEffect(() => {
       fetchUserDetails();
+      fetchJobs();
       const storedImage = localStorage.getItem('profileImage');
       if (storedImage) {
         setProfileImage(storedImage);
       }
   }, []);
 
-
+  useEffect(() => {
+    console.log('Number of jobs available:', jobsAvailable);
+  }, [jobsAvailable]);
 
     const fetchUserDetails = async () => {
     
@@ -54,6 +57,8 @@ const ProfileUsers = () => {
         if (response.status === 200) {
             const jobs = response.data;
             setJobsAvailable(jobs.length);
+            console.log('Number of jobs available:', jobs.length);
+
         } else {
             console.error('Failed to fetch jobs');
         }

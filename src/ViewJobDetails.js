@@ -42,7 +42,7 @@ const ViewJobDetails = () => {
     } = job;
     const handleSignIn = () => {
         // Navigate to the login page
-        navigate('/LoginPage');
+        navigate('/LoginPageA');
     };
 
     return (

@@ -34,10 +34,11 @@ import ProfileEdit from './ProfileEdit';
 import ScreeningPage from './ScreeningPage';
 import WorkUpdate from './WorkUpdate';
 import JobDetails from './JobDetails';
+import OneProfile from './OneProfile';
 
 
 
-// JobDetails
+// OneProfile
 const App = () => {
 
   return (
@@ -48,6 +49,8 @@ const App = () => {
       <Route path="/" element={<LandingPage />} />
       <Route path="/UserProfile" element={<UserProfile />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/OneProfile" element={<OneProfile />} />
+
         <Route path="/CreateJob" element={<CreateJob />} />
         <Route path="/UserViewPost" element={<UserViewPost />} />
         <Route path="/ViewJobDetails/:id" element={<ViewJobDetails />} />

@@ -59,7 +59,7 @@ const LoginPageA = () => {
             if (accountType === 'recruiter') {
               navigate('/AdminDash');
             } else {
-              navigate('/ProfileUsers');
+              navigate('/OneProfile');
             }
           } else {
             alert('Failed to fetch user details.');

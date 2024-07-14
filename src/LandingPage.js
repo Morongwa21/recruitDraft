@@ -47,11 +47,7 @@ const LandingPage = () => {
                 </div>
           
             </main>
-            {/* <footer>
-               
-                <p>Email: example@example.com</p>
-                <p>Phone: +1234567890</p>
-            </footer> */}
+          
              </div>
                
     );

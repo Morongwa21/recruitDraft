@@ -12,7 +12,6 @@ const UserViewPost = () => {
     const [filteredJobs, setFilteredJobs] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,23 +23,20 @@ const UserViewPost = () => {
             const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/jobs'); 
             console.log('API Response:', response); 
             console.log('Response Headers:', response.headers); 
-            const totalCount = response.headers['x-total-count'];
-            console.log('Total Count:', totalCount);
-            const calculatedTotalPages = Math.ceil(totalCount / 5);
-            console.log('Calculated Total Pages:', calculatedTotalPages);
+        
             setJobs(response.data);
             setFilteredJobs(response.data);
-            setTotalPages(calculatedTotalPages);
 
         } catch (error) {
             console.error('Error fetching jobs:', error);
         }
     };
 
-    const handleSearch = (keyword, location) => {
+    const handleSearch = (keyword) => {
         const filtered = jobs.filter(job =>
-            job.title.toLowerCase().includes(keyword.toLowerCase()) &&
-            job.location.toLowerCase().includes(location.toLowerCase())
+            job.title.toLowerCase().includes(keyword.toLowerCase()) ||
+            job.company.toLowerCase().includes(keyword.toLowerCase()) ||
+            job.location.toLowerCase().includes(keyword.toLowerCase())
         );
         setFilteredJobs(filtered);
     };
@@ -54,10 +50,7 @@ const UserViewPost = () => {
         setSelectedJob(job);
     };
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
- 
+
     
     return (
         <div>
@@ -74,7 +67,6 @@ const Header = () => (
      <img src={logo}alt="Company Logo" className="logo" />
         <nav className="nav">
             <a href="/" className="nav-link">Home</a>
-            {/* <a href="/jobs" className="nav-link">Jobs</a> */}
             <a href="/LoginPageA" className="nav-link">Sign-In|Sign-Up</a>
         </nav>
     </header>
