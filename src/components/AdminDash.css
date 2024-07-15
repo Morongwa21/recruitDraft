@@ -227,20 +227,29 @@
     color: #3498db;
   }
   
-.edit-profile-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px; /* Spacing between button and profile icon */
-    transition: background-color 0.3s;
-}
 
-.edit-profile-btn:hover {
-    background-color: #0056b3;
-}
+
+  .experience-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+    padding: 20px;
+    background-color: #f9f9f9; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Experience {
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd; 
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+  }
+  
+  .Experience p {
+    margin: 5px 0; 
+  }
 
 .profile-icon-wrapper {
     display: flex;
@@ -249,7 +258,7 @@
 }
 
 .profile-upload-input {
-    display: none; /* Hide the actual file input */
+    display: none; 
 }
 
 .profile-icon-label {

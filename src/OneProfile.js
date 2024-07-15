@@ -45,8 +45,8 @@ const OneProfile = () => {
   const [institutionType, setInstitutionType] = useState('');
   const [degree, setDegree] = useState('');
   const [fieldOfStudy, setFieldOfStudy] = useState('');
-  const [educationItems, setEducationItems] = useState([]);
-  const [experience, setExperienceItems] = useState([]);
+  const [educationItem, setEducationItems] = useState([]);
+  const [experienceItem, setExperienceItems] = useState([]);
   const [resume, setResume] = useState(null);
 
   const navigate = useNavigate();
@@ -64,11 +64,12 @@ const OneProfile = () => {
 
   useEffect(() => {
     console.log('Number of jobs available:', jobsAvailable);
-  }, [jobsAvailable]);
+    console.log('Length of education items:', educationItem.length);
+    console.log('Length of experience items:', experienceItem.length);
+  }, [jobsAvailable, educationItem, experienceItem]);
 
   const fetchUserDetails = async () => {
     try {
-      // Fetch user details using stored user ID
       const userId = localStorage.getItem('userId');
       console.log('Fetching details for user ID:', userId);
       const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
@@ -78,8 +79,6 @@ const OneProfile = () => {
 
       if (response.status === 200 && profileResponse.status === 200) {
         setUsername(response.data.username);
-        // setProfileData(profileResponse.data);
-
         if (profileResponse.data) {
             const {
               roleDescription,
@@ -105,18 +104,36 @@ const OneProfile = () => {
               } = {},
               Ethnicity,
               idNumber,
-              experience: {
-title ='',
-company ='',
-location ='',
-startDate ='',
-endDate ='',
-employmentType ='',
-responsibilities ='',
+              experience = [],
+              education = [],
+//               experience: {
+// title ='',
+// company ='',
+// location ='',
+// startDate ='',
+// endDate ='',
+// employmentType ='',
+// responsibilities ='',
 
 
 
-              }={},
+//               }={},
+//               education: {
+//                 institution ='',
+//                 institutionType ='',
+//                 fieldOfStudy ='',
+              
+                
+                
+//                 /* institution,
+//     institutionType,
+//     degree,
+//     fieldOfStudy,
+//     startDate: formattedStartDate,
+//     endDate: inProgress ? null : formattedEndDate,
+//     employmentType,*/
+                
+//                               }={},
               
             } = profileResponse.data;
  
@@ -140,6 +157,10 @@ responsibilities ='',
             setCountry(country || '');
             setEthnicity(Ethnicity || '');
             setIdNumber(idNumber || '');
+            setEducationItems(education || []);
+            setExperienceItems(experience || []);
+
+          
           }
           console.log('pppppp:',profileResponse.data)
 
@@ -193,58 +214,55 @@ responsibilities ='',
 
   const calculateProfileCompleteness = () => {
     let completeness = 0;
-
+  
     const requiredFields = [
       firstName, lastName, cellNumber, email,
       roleDescription, gender, citizenship,
       dateOfBirth, disabilityStatus, address,
       city, province, zipCode, country,
-      educationItems.length > 0,
-      experience.length > 0,
+      educationItem.length > 0,
+      experienceItem.length > 0,
     ];
-
+    console.log('Education Items:', educationItem);
+    console.log('Experience Items:', experienceItem);
     const filledFieldsCount = requiredFields.filter(field => !!field).length;
     completeness = (filledFieldsCount / requiredFields.length) * 100;
-
     return completeness.toFixed(2);
-  };
-  const handleUpload = () => {
-    // Implement your file upload logic here
-    if (resume) {
-      // Example: Simulating file upload (replace with actual upload logic)
-      console.log(`Uploading resume: ${resume.name}`);
-      // Clear the file input after upload
-      setResume(null);
-    } else {
-      // Handle case where no file is selected
-      console.log('No file selected for upload');
-    }
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setResume(file);
-      // You can optionally handle file validation or preview here
     }
   };
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onloadend = () => {
-//         setCvFile(reader.result); // base64 string
-//       };
-//       reader.readAsDataURL(file);
-//     } else {
-//       setCvFile(null);
-//     }
-//   };
-
+  const handleUpload = async () => {
+    if (!resume) {
+      console.error('No file selected.');
+      return;
+    }
+    const formData = {
+      resume
+    }
+    console.log('resume:',formData)
+    try {
+      const response = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (response.status === 200) {
+        console.log('Resume uploaded successfully:', response.data.message);
+        setIsSaved(true);
+      } else {
+        console.error('Failed to upload resume:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error uploading resume:', error.message);
+    }
+  };
   const handleSaveClick = async() => {
     const userId = localStorage.getItem('userId');
-   
     const data = {
-       
       roleDescription,
       otherRoleDescription,
       skills,
@@ -257,7 +275,6 @@ responsibilities ='',
       dateOfBirth,
       gender,
       disabilityStatus,
-    //   resume,
     location: {
         city,
         address,
@@ -268,24 +285,19 @@ responsibilities ='',
       },
       idNumber,
       Ethnicity,
-      resume,
     };
     try {
-        // Check if profile exists
         let checkProfileResponse;
         try {
           checkProfileResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
         } catch (error) {
-          // Handle specific error for profile not found
           if (error.response && error.response.status === 404) {
             checkProfileResponse = { status: 404, data: null }; // Simulate response structure
           } else {
             throw error; // Re-throw other errors
           }
         }
-    
         console.log('Existing Profile: ', checkProfileResponse);
-    
         if (checkProfileResponse.status === 200 && checkProfileResponse.data) {
           // Update existing profile
           console.log('data: ', data);
@@ -317,9 +329,6 @@ responsibilities ='',
     'White',
     'Indian',
   ];
-
-
-  //workexperience
 
   const responsibilityOptions = [
     { value: 'Project Management', label: 'Project Management' },
@@ -360,33 +369,19 @@ const handleProgressChange = (e) => {
     employmentType,
     responsibilities: responsibilities.join(', ')
   };
-/*      title: "Software Engineer",
-      company: "Tech Co.",
-      location: "New York",
-      startDate: "2018-01-01",
-      endDate: "2022-06-30",
-      employmentType: "full-time",
-      responsibilities: "Developed backend systems, collaborated with team members."
- */
   try {
-    // Fetch existing profile
     let checkExperienceResponse;
     try {
       checkExperienceResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
-    } catch (error) {
-      // Handle specific error for profile not found
-      if (error.response && error.response.status === 404) {
-        checkExperienceResponse = { status: 404, data: null }; // Simulate response structure
+    } catch (error) {      if (error.response && error.response.status === 404) {
+        checkExperienceResponse = { status: 404, data: null }; 
       } else {
-        throw error; // Re-throw other errors
+        throw error; 
       }
     }
-
     console.log('Existing Profile:', checkExperienceResponse);
     console.log('Experience Item:', experienceItem);
-
     if (checkExperienceResponse.status === 200 && checkExperienceResponse.data) {
-      // Profile exists, update the profile
       const updateResponse = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, { experience: [experienceItem] });
 
       if (updateResponse.status === 200) {
@@ -399,7 +394,6 @@ const handleProgressChange = (e) => {
         console.error('Failed to update work experience:', updateResponse.status, updateResponse.statusText);
       }
     } else {
-      // Profile does not exist, create a new profile
       const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { experience: [experienceItem] });
       console.log('Create Response:', createResponse);
 
@@ -414,52 +408,76 @@ const handleProgressChange = (e) => {
     console.error('Error saving work experience:', error.message);
   }
 };
-  const handleEducation = async () => {
-    const userId = localStorage.getItem('userId');
-    const formattedStartDate = startDate.toISOString().split('T')[0];
-    const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
-    const educationItem = {
-        institution,
+const handleEducation = async () => {
+  const userId = localStorage.getItem('userId');
+  const formattedStartDate = startDate.toISOString().split('T')[0];
+  const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
+  
+  const educationItem = {
+    institution,
+    institutionType,
+    degree,
+    fieldOfStudy,
+    startDate: formattedStartDate,
+    endDate: inProgress ? null : formattedEndDate,
    
-      institutionType,
-      degree,
-      fieldOfStudy,
-      startDate: formattedStartDate,
-      endDate: inProgress ? null : formattedEndDate,
-      employmentType,
-    };
-    console.log('Education Item:', educationItem);
-    let checkEducationResponse;
-    try {
-      const profileResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
-      console.log('Profile Response:', profileResponse);
-  
-      if (profileResponse.status === 200) {
-        
-        const updateResponse = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, { education: educationItem });
-        console.log('Update Response:', updateResponse);
-  
-        if (updateResponse.status === 200) {
-          console.log('Education updated successfully:', updateResponse.data.message);
-          setIsSaved(true);
-        } else {
-          console.error('Failed to update Education:', updateResponse.status, updateResponse.statusText);
-        }
-      } else {
-        const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { education: educationItem });
-        console.log('Create Response:', createResponse);
-  
-        if (createResponse.status === 200) {
-          console.log('Education saved successfully:', createResponse.data.message);
-          setIsSaved(true);
-        } else {
-          console.error('Failed to save Education:', createResponse.status, createResponse.statusText);
-        }
-      }
-    } catch (error) {
-      console.error('Error saving education:', error.message);
-    }
   };
+
+  console.log('Education Item:', educationItem);
+  
+  let checkEducationResponse;
+  
+  try {
+    try {
+      checkEducationResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        checkEducationResponse = { status: 404, data: null }; // Simulate response structure
+      } else {
+        throw error; // Re-throw other errors
+      }
+    }
+    
+    console.log('Existing Profile:', checkEducationResponse);
+    
+    if (checkEducationResponse.status === 200 && checkEducationResponse.data) {
+      // Profile exists, update the profile
+      const existingProfile = checkEducationResponse.data;
+      const updatedProfile = { ...existingProfile, education: [...(existingProfile.education || []), educationItem] };
+      
+      const updateResponse = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, updatedProfile);
+      
+      if (updateResponse.status === 200) {
+        console.log('Education has been updated successfully:', updateResponse.data.message);
+        if (updateResponse.data.profile) {
+          console.log('Updated Profile Data:', updateResponse.data.profile); // Log updated profile data if available
+        }
+        setIsSaved(true);
+      } else {
+        console.error('Failed to update education:', updateResponse.status, updateResponse.statusText);
+      }
+    } else {
+      const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { education: [educationItem] });
+      console.log('Create Response:', createResponse);
+      if (createResponse.status === 201) {
+        console.log('Education saved successfully:', createResponse.data.message);
+        setIsSaved(true);
+      } else {
+        console.error('Failed to save education:', createResponse.status, createResponse.statusText);
+      }
+    }
+  } catch (error) {
+    console.error('Error saving education:', error.message);
+  }
+};
+//Handle Delete
+const handleDelete = (index) => {
+  const updatedEducationItems = [...educationItem];
+  updatedEducationItems.splice(index, 1);
+  setEducationItems(updatedEducationItems);
+  console.log('Deleted education item at index:', index);
+};
+
   
   return (
     <div className="admin-page">
@@ -711,13 +729,8 @@ const handleProgressChange = (e) => {
         </div>
       )}
     </div>
-              
-    
-    
      <div className="jobseekerBox">
        <h1><strong>Work Experience</strong></h1>
-
-    
        <div className="form-container">
         <div className="left-column">
           <div className="question-text">Company</div>
@@ -792,19 +805,26 @@ const handleProgressChange = (e) => {
     <div className="button-container">
       <button className="blue-button" onClick={handleSaveWorkExperience}>Add</button>
     </div>
-  </div>
-  {experience.map((exp, index) => (
-  <div key={index} className="Experience">
-    <p><strong>Company:</strong> {exp.company}</p>
-    <p><strong>Title:</strong> {exp.title}</p>
-    <p><strong>Employment Type:</strong> {exp.employmentType}</p>
-    <p><strong>Responsibilities:</strong> {exp.responsibilities}</p>
-    <p><strong>Start Date:</strong> {new Date(exp.startDate).toLocaleDateString()}</p>
-    <p><strong>End Date:</strong> {new Date(exp.endDate).toLocaleDateString()}</p>
-  </div>
-))}
-</div>
+    <div className="experience-container">
+  {experienceItem.map((exp, index) => (
+    <div key={index} className="Experience">
+            <h><strong>Experience</strong></h>
+            <p>----------------</p>
 
+      <p><strong>Company:</strong> {exp.company}</p>
+      <p><strong>Title:</strong> {exp.title}</p>
+      <p><strong>Employment Type:</strong> {exp.employmentType}</p>
+      <p><strong>Responsibilities:</strong> {exp.responsibilities}</p>
+      <p><strong>Start Date:</strong> {new Date(exp.startDate).toLocaleDateString()}</p>
+      <p><strong>End Date:</strong> {new Date(exp.endDate).toLocaleDateString()}</p>
+      <button onClick={() => handleDelete(index)}>Delete</button>
+
+    </div>
+  ))}
+</div>
+  </div>
+ 
+</div>
             <div class="jobsekerBox">
             <h><strong>Education</strong></h>
                   <div className="form-container">
@@ -813,6 +833,16 @@ const handleProgressChange = (e) => {
                         <div className="question-text">Institution *</div>
                         <input type="text" className="edit-box" value={institution} onChange={(e) => setInstitution(e.target.value)} required />
                       </div>
+                      <div className="right-column">
+      <div className="question-text">Institution Type *</div>
+      <select className="edit-box" value={institutionType} onChange={(e) => setInstitutionType(e.target.value)} required>
+        <option value="">Select Institution Type</option>
+        <option value="University">University</option>
+        <option value="College">College</option>
+        <option value="High School">High School</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
                       <div className="right-column">
                         <div className="question-text">Degree *</div>
                         <input type="text" className="edit-box" value={degree} onChange={(e) => setDegree(e.target.value)} required />
@@ -832,9 +862,7 @@ const handleProgressChange = (e) => {
     onChange={(e) => setStartDate(new Date(e.target.value))} 
     required 
   />
-</div>
-                    
-                 
+</div>              
 {!inProgress && (
       <div className="left-column">
         <div className="question-text">End Date</div>
@@ -861,28 +889,35 @@ const handleProgressChange = (e) => {
     </div>
     <div className="button-container">
       <button className="blue-button" onClick={handleEducation}>Add</button>
+    </div>                     <div className="experience-container">
+  {educationItem.map((edu, index) => (
+    <div key={index} className="Experience">
+            <h><strong>Education</strong></h>
+            <p>----------------</p>
+
+      <p><strong>Institution:</strong> {edu.institution}</p>
+      <p><strong>Institution Type:</strong> {edu.institutionType}</p>
+      <p><strong>Field Of Study:</strong> {edu.fieldOfStudy}</p>
+      <p><strong>Degree:</strong> {edu.degree}</p>
+      <p><strong>Start Date:</strong> {new Date(edu.startDate).toLocaleDateString()}</p>
+      <p><strong>End Date:</strong> {new Date(edu.endDate).toLocaleDateString()}</p>
+      <button onClick={() => handleDelete(index)}>Delete</button>
+
     </div>
-                   
+  ))}
+</div>
                   </div>
+
+
                 </div>
 
                 </div>
-
-
-
             </div>
         </div>
     </div>
- 
-    
-    
- 
 </div>
-
             </div>
         
       );
   };
-  
-
 export default OneProfile;
