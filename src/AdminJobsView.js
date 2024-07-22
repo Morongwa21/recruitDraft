@@ -16,6 +16,7 @@ const AdminJobsView = () => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
     const navigate = useNavigate();
+    const employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Temporary', 'Internship'];
 
     useEffect(() => {
         fetchJobPostings();
@@ -42,7 +43,7 @@ const AdminJobsView = () => {
 
     const fetchJobPostings = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/jobs');
+            const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/jobs/org/recruiter');
             setJobPostings(response.data);
         } catch (error) {
             console.error('Error fetching job postings:', error.message);
@@ -86,7 +87,14 @@ const AdminJobsView = () => {
         job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
         job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchQuery.toLowerCase())
+        job.description.toLowerCase().includes(searchQuery.toLowerCase())||
+        job.workExperience.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.employmentType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.closingDate.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.requirements.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.skills.toLowerCase().includes(searchQuery.toLowerCase())
+   
+        
     );
 
     const handleUserInfoClick = () => {
@@ -125,9 +133,9 @@ const AdminJobsView = () => {
                         <li><a href="#dashboard"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
                         <li><Link to="/AdminJobPosting"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
                         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
-                        <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li>
+                        {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}
                         <li><a href="#analytics"><FontAwesomeIcon icon={faChartBar} /> Analytics</a></li>
-                        <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li>
+                        {/* <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li> */}
                     </ul>
                 </aside>
                 <div className="main-content">
@@ -152,8 +160,14 @@ const AdminJobsView = () => {
                                     <th>Location</th>
                                     <th>Salary</th>
                                     <th>Description</th>
+                                    <th>Work Experience</th>
+                                    <th>Employment Type</th>
+                                    <th>Closing Data</th>
+                                    <th>Requirements</th>
+                                    <th>Skills</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
+       
                                 </tr>
                             </thead>
                             <tbody>
@@ -202,6 +216,52 @@ const AdminJobsView = () => {
                                                     />
                                                 </td>
                                                 <td>
+                                                    <input
+                                                        type="text"
+                                                        name="workExperience"
+                                                        value={editedJob.workExperience}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <select
+                                                        name="employmentType"
+                                                        value={editedJob.employmentType}
+                                                        onChange={handleInputChange}
+                                                    >
+                                                        {employmentTypes.map((type) => (
+                                                            <option key={type} value={type}>
+                                                                {type}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="closingDate"
+                                                        value={editedJob.closingDate}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="requirements"
+                                                        value={editedJob.requirements}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="skills"
+                                                        value={editedJob.skills}
+                                                        onChange={handleInputChange}
+                                                    />
+                                                </td>
+                                                <td>
+                                          
                                                     <button onClick={handleSaveClick}>Save</button>
                                                 </td>
                                             </>
@@ -212,6 +272,13 @@ const AdminJobsView = () => {
                                                 <td>{job.location}</td>
                                                 <td>{job.salary}</td>
                                                 <td>{job.description}</td>
+                                                <td>{job.workExperience}</td>
+                                                <td>{job.employmentType}</td>
+                                                <td>{job.closingDate}</td>
+                                                <td>{job.requirements}</td>
+                                                <td>{job.skills}</td>
+
+
                                                 <td>
                                                     <FontAwesomeIcon icon={faPen} className="edit-icon" onClick={() => handleEditClick(job)} />
                                                 </td>

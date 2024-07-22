@@ -7,7 +7,7 @@ import logo from './company logo.jpg';
 
 axios.defaults.withCredentials = true;
 
-Modal.setAppElement('#root'); // Set the app root element for accessibility
+Modal.setAppElement('#root');
 
 function AuthPage() {
   const [otp, setOtp] = useState('');
@@ -15,6 +15,9 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [errorModalIsOpen, setErrorModalIsOpen] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || '';
@@ -58,13 +61,41 @@ function AuthPage() {
     }
   };
 
+  const handleResendOTP = async () => {
+    setResendLoading(true);
+    setError('');
+    try {
+      const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/resend-otp', {});
+      setResendLoading(false);
+      if (response.status === 200) {
+        console.log(response.data);
+        setShowPopup(true);
+      } else {
+        setError('Failed to resend OTP. Please try again.');
+      }
+    } catch (error) {
+      setResendLoading(false);
+      if (error.response) {
+        console.error('Error response:', error.response);
+        const errorMessage = error.response.data.message;
+        if (errorMessage === "User already verified, please login") {
+          setErrorModalIsOpen(true);
+        } else {
+          setError(errorMessage || 'An error occurred. Please try again.');
+        }
+      } else {
+        console.error('Error:', error.message);
+        setError('An error occurred. Please try again.');
+      }
+    }
+  };
   const closeModal = () => {
     setModalIsOpen(false);
   };
 
   const goToCompleteProfile = () => {
     setModalIsOpen(false);
-    navigate('/LoginPageA');
+    navigate('/LoginA');
   };
 
   const goToJobSearch = () => {
@@ -72,7 +103,9 @@ function AuthPage() {
     navigate('/UserViewPost');
   };
 
-
+  const closeErrorModal = () => {
+    setErrorModalIsOpen(false);
+  };
   return (
     <div className="login-page">
       <div className="login-logo">
@@ -105,8 +138,12 @@ function AuthPage() {
         </button>
 
         {error && <p className="error-message">{error}</p>}
+        <button onClick={handleResendOTP} disabled={resendLoading} className="login-button">
+        {resendLoading ? 'Resending...' : 'Resend OTP'}
+      </button>
       </form>
 
+     
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -118,6 +155,17 @@ function AuthPage() {
         <p>We have created your account. Complete your profile for personalized search results.</p>
         <button onClick={goToCompleteProfile} className="auth-modal-button">Complete Profile</button>
         <button onClick={goToJobSearch} className="auth-modal-button">Job Search</button>
+      </Modal>
+      <Modal
+        isOpen={errorModalIsOpen}
+        onRequestClose={closeErrorModal}
+        contentLabel="Error Modal"
+        className="modal"
+        overlayClassName="modal-overlay"
+      >
+        <h2>Error</h2>
+        <p>User already verified, please login.</p>
+        <button onClick={closeErrorModal} className="auth-modal-button">Close</button>
       </Modal>
     </div>
   );

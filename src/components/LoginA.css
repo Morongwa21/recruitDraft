@@ -57,7 +57,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 300px;
+    width: 700px;
   }
   
   .Login-input-field {
@@ -117,6 +117,17 @@ body {
   .error-message
   {
     color: red;
+  }
+  @media (max-width: 768px) {
+    .login-container {
+      width: 80%; /* Use percentage for flexible width on smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .login-container {
+      width: 90%; /* Further increase the width for very small screens */
+    }
   }
   /* Modal Overlay */
 .otp-modal {

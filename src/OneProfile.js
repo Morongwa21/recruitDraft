@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import logo from './company logo.jpg';
 import './components/AdminDash.css'; 
+import './components/OneProfile.css'; 
+import { toast, ToastContainer } from 'react-toastify';
+
 import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEdit, FaUserCircle } from 'react-icons/fa';
+import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 const OneProfile = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenEdu, setIsModalOpenEdu] = useState(false);
+  const [isModalOpenExp, setIsModalOpenExp] = useState(false);
+
   const [username, setUsername] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
@@ -47,7 +54,10 @@ const OneProfile = () => {
   const [fieldOfStudy, setFieldOfStudy] = useState('');
   const [educationItem, setEducationItems] = useState([]);
   const [experienceItem, setExperienceItems] = useState([]);
+
   const [resume, setResume] = useState(null);
+  const [saveMessage, setSaveMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const [jobsAvailable, setJobsAvailable] = useState(0);
@@ -61,13 +71,30 @@ const OneProfile = () => {
       setProfileImage(storedImage);
     }
   }, []);
-
+  useEffect(() => {
+    // Load resume from local storage if it exists
+    const storedResume = localStorage.getItem('resume');
+    if (storedResume) {
+      setResume(storedResume);
+    }
+  }, []);
   useEffect(() => {
     console.log('Number of jobs available:', jobsAvailable);
     console.log('Length of education items:', educationItem.length);
     console.log('Length of experience items:', experienceItem.length);
   }, [jobsAvailable, educationItem, experienceItem]);
-
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        localStorage.setItem('resume', e.target.result); // Store file as Base64 string
+        setResume(file);
+      };
+      reader.readAsDataURL(file); // Convert file to Base64
+    }
+  };
+  
   const fetchUserDetails = async () => {
     try {
       const userId = localStorage.getItem('userId');
@@ -93,7 +120,7 @@ const OneProfile = () => {
               dateOfBirth,
               gender,
               disabilityStatus,
-
+resume,
               location: {
                 city = '',
                 address = '',
@@ -157,6 +184,8 @@ const OneProfile = () => {
             setCountry(country || '');
             setEthnicity(Ethnicity || '');
             setIdNumber(idNumber || '');
+            setIdNumber(resume || '');
+
             setEducationItems(education || []);
             setExperienceItems(experience || []);
 
@@ -192,7 +221,7 @@ const OneProfile = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    navigate('/login');
+    navigate('/LoginPageA');
   };
 
   const handleUserInfoClick = () => {
@@ -215,26 +244,60 @@ const OneProfile = () => {
   const calculateProfileCompleteness = () => {
     let completeness = 0;
   
+    // List of required fields
     const requiredFields = [
-      firstName, lastName, cellNumber, email,
-      roleDescription, gender, citizenship,
-      dateOfBirth, disabilityStatus, address,
-      city, province, zipCode, country,
-      educationItem.length > 0,
-      experienceItem.length > 0,
+      firstName,
+      lastName,
+      cellNumber,
+      email,
+      roleDescription,
+      gender,
+      citizenship,
+      dateOfBirth,
+      disabilityStatus,
+      address,
+      city,
+      province,
+      zipCode,
+      country,
+      resume, // Resume as a string
     ];
-    console.log('Education Items:', educationItem);
-    console.log('Experience Items:', experienceItem);
-    const filledFieldsCount = requiredFields.filter(field => !!field).length;
-    completeness = (filledFieldsCount / requiredFields.length) * 100;
+  
+    // Check if education and experience items are present
+    const isEducationFilled = educationItem.length > 0;
+    const isExperienceFilled = experienceItem.length > 0;
+  
+    // Calculate the filled fields count
+    const filledFieldsCount = requiredFields.filter(field => {
+      // Check if the field is not null, undefined, or empty
+      if (field === undefined || field === null) return false;
+      if (typeof field === 'string' && field.trim() === '') return false;
+      if (Array.isArray(field) && field.length === 0) return false;
+      return true;
+    }).length;
+  
+    // Add the boolean checks for education and experience items
+    const totalFilledFieldsCount = filledFieldsCount + (isEducationFilled ? 1 : 0) + (isExperienceFilled ? 1 : 0);
+    const totalFieldsCount = requiredFields.length + 2; // Adding 2 for education and experience items
+  
+    // Calculate the completeness percentage
+    completeness = (totalFilledFieldsCount / totalFieldsCount) * 100;
+  
     return completeness.toFixed(2);
   };
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setResume(file);
-    }
-  };
+  
+  const completenessPercentage = calculateProfileCompleteness();
+  const progressDeg = (completenessPercentage / 100) * 360;
+  const clampedPercentage = Math.max(0, Math.min(completenessPercentage, 100));
+
+  console.log('Profile progressDeg:', progressDeg);
+
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     setResume(file);
+  //   }
+  // };
   const handleUpload = async () => {
     if (!resume) {
       console.error('No file selected.');
@@ -261,6 +324,8 @@ const OneProfile = () => {
     }
   };
   const handleSaveClick = async() => {
+    setLoading(true); 
+    setSaveMessage('');
     const userId = localStorage.getItem('userId');
     const data = {
       roleDescription,
@@ -304,9 +369,10 @@ const OneProfile = () => {
           const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', data);
           if (updateResponse.status === 200) {
             console.log('Profile updated successfully');
+            setSaveMessage('Profile updated successfully!');
             setIsSaved(true);
           } else {
-            console.error('Failed to update profile:', updateResponse.status, updateResponse.statusText);
+            setSaveMessage(`Failed to update profile: ${updateResponse.statusText}`);
           }
         } else {
           // Create new profile
@@ -319,7 +385,9 @@ const OneProfile = () => {
           }
         }
       } catch (error) {
-        console.error('Error saving profile:', error.response ? error.response.data : error.message);
+        setSaveMessage(`Error saving profile: ${error.response ? error.response.data : error.message}`);
+      } finally {
+        setLoading(false); // Hide loading indicator
       }
     };
   const ethnicityOptions = [
@@ -361,7 +429,8 @@ const handleProgressChange = (e) => {
   const formattedStartDate = startDate.toISOString().split('T')[0];
   const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
 
-  const experienceItem = {
+  const experienceItem ={
+  
     title,
     company,
     startDate: formattedStartDate,
@@ -478,7 +547,30 @@ const handleDelete = (index) => {
   console.log('Deleted education item at index:', index);
 };
 
-  
+const handleEditClick = () => {
+  setIsModalOpen(true);
+};
+const handleEditClickEdu = () => {
+  setIsModalOpenEdu(true);
+};
+const handleEditClickExp = () => {
+  setIsModalOpenExp(true);
+};
+const handleCloseModal = () => {
+  setIsModalOpen(false);
+
+};
+const handleCloseModalEdu = () => {
+  setIsModalOpenEdu(false);
+
+};
+const handleCloseModalExp = () => {
+  setIsModalOpenExp(false);
+
+};
+// };const UserInfo = ({ username, handleLogout }) => {
+//   const [dropdownVisible, setDropdownVisible] = useState(false);
+// };
   return (
     <div className="admin-page">
       <header className="admin-header">
@@ -486,20 +578,21 @@ const handleDelete = (index) => {
           <img src={logo} alt="Company Logo" />
         </div>
         <div className="user-info" onClick={handleUserInfoClick}>
-          Welcome, {username}
-          {dropdownVisible && (
-            <div className="dropdown-menu">
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          )}
+        <FaUser className="user-icon" />{username}
+      </div>
+      {dropdownVisible && (
+        <div className="dropdown-menu">
+          <button onClick={handleLogout}>Logout</button>
         </div>
+      )}
       </header>
+
       <div className="admin-content">
         <aside className="side">
           <ul>
             {/* <li><a href="#home">Home</a></li> */}
             <li><a href="/OneProfile">Profile</a></li>
-            <li><a href="/ViewPosts">Documents</a></li>
+            {/* <li><a href="/ViewPosts">Documents</a></li> */}
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
             <li><a href="/ApplicationTemplates">Templates</a></li>
@@ -516,14 +609,15 @@ const handleDelete = (index) => {
             <div className="job-stat-box">
             <div className="profile-completeness">
           <h3>Profile Completeness</h3>
-          <div className="circle-progress">
-            <div
-              className="progress-fill"
-              style={{ transform: `rotate(${(calculateProfileCompleteness() / 100) * 360}deg)` }}
-            ></div>
-            <div className="progress-label">{calculateProfileCompleteness()}%</div>
-          </div>
+          <div className="progress-bar-container">
+          <div 
+            className="progress-bar-fill" 
+            style={{ width: `${clampedPercentage}%` }}
+          />
         </div>
+        <div className="progress-label">{clampedPercentage}%</div>
+      </div>
+        
             </div>
           </div>
           <p></p>
@@ -532,6 +626,8 @@ const handleDelete = (index) => {
             <div className="jobsekerWrapper">
               <div className="jobsekerLeft">
               <div class="jobsekerBox">
+              <div className="job-stat-box">
+
                     <h><strong>Personal Information</strong></h>
                     <div className="profile-icon-wrapper">
                     <p>Click the icon to upload a picture:</p>
@@ -554,8 +650,38 @@ const handleDelete = (index) => {
                         <FaUserCircle className="profile-icon" />
                       )}
                     </label>
+                    <FaEdit className="edit-icon" onClick={handleEditClick} />
+                    {(firstName || lastName || city || email || cellNumber) && (
+                  <div className="personal-info">
+                    {firstName && lastName && (
+                      <p><FaUser className="info-icon" /> <strong>Name:</strong> {firstName} {lastName}</p>
+                    )}
+                    {city && (
+                      <p><FaCity className="info-icon" /> <strong>City:</strong> {city}</p>
+                    )}
+                    {email && (
+                      <p><FaEnvelope className="info-icon" /> <strong>Email:</strong> {email}</p>
+                    )}
+                    {cellNumber && (
+                      <p><FaPhone className="info-icon" /> <strong>Phone Number:</strong> {cellNumber}</p>
+                    )}
                   </div>
-                
+                )}
+      </div>
+      </div>
+      </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <button className="close-button" onClick={handleCloseModal}>
+                &times;
+              </button>
+            </div>
+            <div className="modal-body">
+            <h1><strong>Personal Details</strong></h1>
+
                 <div className="form-container">
   <div className="row">
     <div className="left-column">
@@ -710,26 +836,41 @@ const handleDelete = (index) => {
 </div>
 
 </div>
+   )}
+   </div>
+
+</div>
 
               
               <div className="jobsekerRight">
       <div className="jobsekerBox">
       <h2>Resume</h2>
       <div>
-        <input type="file" onChange={handleFileChange} />
+      <input type="file" onChange={handleFileChange} />
 
-        <div className="button-container">
-    <button className="blue-button" onClick={handleUpload}>Upload Resume</button>
-  </div>
-      </div>
-      {resume && (
-        <div>
-          <p>Selected file: {resume.name}</p>
-          {/* Optionally add a preview or details of the selected file */}
-        </div>
+<div className="button-container">
+  <button className="blue-button" onClick={handleUpload}>Upload Resume</button>
+</div>
+</div>
+{resume && (
+<div>
+  <p>Selected file: {resume ? 'Resume file' : 'No file selected'}</p>
+  <a href={resume} target="_blank" rel="noopener noreferrer">
+    View Resume
+  </a>
+</div>
       )}
     </div>
-     <div className="jobseekerBox">
+    {isModalOpenExp && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <button className="close-button" onClick={handleCloseModalExp}>
+                &times;
+              </button>
+            </div>
+            <div className="modal-body">
+
        <h1><strong>Work Experience</strong></h1>
        <div className="form-container">
         <div className="left-column">
@@ -804,27 +945,50 @@ const handleDelete = (index) => {
         </div>
     <div className="button-container">
       <button className="blue-button" onClick={handleSaveWorkExperience}>Add</button>
-    </div>
-    <div className="experience-container">
-  {experienceItem.map((exp, index) => (
-    <div key={index} className="Experience">
-            <h><strong>Experience</strong></h>
-            <p>----------------</p>
+      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            )}
+          <div className="job-stat-box">
+      <h2><strong>Experience</strong></h2>
+      <p>----------------</p>
+      <button className="blue-button" onClick={handleEditClickExp}>
+        <FaPlus className="icon" /> Add New Experience
+      </button>
 
-      <p><strong>Company:</strong> {exp.company}</p>
-      <p><strong>Title:</strong> {exp.title}</p>
-      <p><strong>Employment Type:</strong> {exp.employmentType}</p>
-      <p><strong>Responsibilities:</strong> {exp.responsibilities}</p>
-      <p><strong>Start Date:</strong> {new Date(exp.startDate).toLocaleDateString()}</p>
-      <p><strong>End Date:</strong> {new Date(exp.endDate).toLocaleDateString()}</p>
-      <button onClick={() => handleDelete(index)}>Delete</button>
-
+      {experienceItem.length === 0 ? (
+        <p>No experience added yet. Click the button above to add.</p>
+      ) : (
+        experienceItem.map((exp, index) => (
+          <div key={index} className="experience-item">
+            <div className="personal-info">
+              <p><FaBuilding className="info-icon" /> <strong>Company:</strong> {exp.company}</p>
+              <p><FaBriefcase className="info-icon" /> <strong>Title:</strong> {exp.title}</p>
+              <p><FaClock className="info-icon" /> <strong>Employment Type:</strong> {exp.employmentType}</p>
+              <p><FaTasks className="info-icon" /> <strong>Responsibilities:</strong> {exp.responsibilities}</p>
+              <p><FaCalendarAlt className="info-icon" /> <strong>Start Date:</strong> {new Date(exp.startDate).toLocaleDateString()}</p>
+              <p><FaCalendarAlt className="info-icon" /> <strong>End Date:</strong> {new Date(exp.endDate).toLocaleDateString()}</p>
+              <FaTrash
+                onClick={() => handleDelete(index)}
+                className="delete-icon"
+              />
+            </div>
+          </div>
+        ))
+      )}
     </div>
-  ))}
-</div>
-  </div>
- 
-</div>
+     {isModalOpenEdu && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <button className="close-button" onClick={handleCloseModalEdu}>
+                &times;
+              </button>
+            </div>
+            <div className="modal-body">
+
             <div class="jobsekerBox">
             <h><strong>Education</strong></h>
                   <div className="form-container">
@@ -889,23 +1053,43 @@ const handleDelete = (index) => {
     </div>
     <div className="button-container">
       <button className="blue-button" onClick={handleEducation}>Add</button>
-    </div>                     <div className="experience-container">
-  {educationItem.map((edu, index) => (
-    <div key={index} className="Experience">
-            <h><strong>Education</strong></h>
-            <p>----------------</p>
-
-      <p><strong>Institution:</strong> {edu.institution}</p>
-      <p><strong>Institution Type:</strong> {edu.institutionType}</p>
-      <p><strong>Field Of Study:</strong> {edu.fieldOfStudy}</p>
-      <p><strong>Degree:</strong> {edu.degree}</p>
-      <p><strong>Start Date:</strong> {new Date(edu.startDate).toLocaleDateString()}</p>
-      <p><strong>End Date:</strong> {new Date(edu.endDate).toLocaleDateString()}</p>
-      <button onClick={() => handleDelete(index)}>Delete</button>
-
+    </div>           
     </div>
-  ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+              <div className="job-stat-box">
+      <h2><strong>Education</strong></h2>
+      <p>----------------</p>
+      <button className="blue-button" onClick={handleEditClickEdu}>
+        <FaPlus className="icon" /> Add New Education
+      </button>
+
+      {educationItem.length === 0 ? (
+        <p>No education added yet. Click the button above to add.</p>
+      ) : (
+        educationItem.map((edu, index) => (
+          <div key={index} className="experience-item">
+            <div className="personal-info">
+              <p><FaUniversity className="info-icon" /> <strong>Institution:</strong> {edu.institution}</p>
+              <p><FaBook className="info-icon" /> <strong>Institution Type:</strong> {edu.institutionType}</p>
+              <p><FaBook className="info-icon" /> <strong>Field Of Study:</strong> {edu.fieldOfStudy}</p>
+              <p><FaGraduationCap className="info-icon" /> <strong>Degree:</strong> {edu.degree}</p>
+              <p><FaCalendarAlt className="info-icon" /> <strong>Start Date:</strong> {new Date(edu.startDate).toLocaleDateString()}</p>
+              <p><FaCalendarAlt className="info-icon" /> <strong>End Date:</strong> {new Date(edu.endDate).toLocaleDateString()}</p>
+              <FaTrash
+                onClick={() => handleDelete(index)}
+                className="delete-icon"
+              />
+            </div>
+          </div>
+        ))
+      )}
 </div>
+</div>
+
                   </div>
 
 
@@ -914,9 +1098,7 @@ const handleDelete = (index) => {
                 </div>
             </div>
         </div>
-    </div>
-</div>
-            </div>
+ 
         
       );
   };
