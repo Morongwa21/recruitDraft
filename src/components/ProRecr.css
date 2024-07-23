@@ -1,0 +1,96 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: auto; /* Allow page to scroll */
+}
+.cv-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-height: 80vh; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling within the container */
+    margin: 20px auto; /* Center the container */
+    max-width: 800px;  /* Enable vertical scrolling */
+}
+
+.brand-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.title-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.title-text {
+    font-size: 32px;
+    color: #333;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background-color: #f9f9f9; /* Same background as the container to blend in */
+    z-index: 10; /* Ensure it stays on top */
+    padding: 10px 0;
+}
+
+
+
+.info-container {
+    background-color: #A9A9A9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.field-text {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.question-text {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.edit-box {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    background-color: #f0f0f0; /* Ensure the input boxes are gray */
+}
+
+
+.brand-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 120px; /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.brand-container img {
+    width: 100%;
+    height: auto;
+}

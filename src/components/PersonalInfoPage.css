@@ -1,0 +1,101 @@
+.cv-container {
+    display: flex;
+}
+
+.brand-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Add margin at the bottom for spacing */
+}
+
+.title-container {
+    margin-bottom: 20px; /* Add margin at the bottom for spacing */
+}
+
+.title-text {
+    font-size: 20px;
+    text-align: center; /* Center align the text */
+    margin-top: 70px;
+    font-weight: bold;
+}
+
+.gray-container {
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 4px;
+    position: relative; /* Enable positioning within the cv-container */
+    top: -20px; /* Adjust position to overlap with the title-text */
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.yellow-button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: rgb(255, 174, 0);
+    margin-bottom: 5px; /* Reduce the bottom margin between buttons */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Add spacing between buttons */
+.yellow-button + .yellow-button {
+    margin-left: 10px;
+}
+
+.field-text {
+    margin-bottom: 10px;
+}
+
+.question-text {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.edit-box {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.blue-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100px; /* Set fixed width for button */
+    flex-shrink: 0; /* Prevent button from shrinking */
+    align-self: flex-end; 
+}
+
+/* Custom styles for PersonalInfoPage */
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: #fff; 
+
+}
+
+.input-container .question-text {
+    flex-basis: 40%; /* Adjust width of question text column */
+}
+
+.input-container .edit-box {
+    flex-basis: 55%; /* Adjust width of edit box column */
+}

@@ -1,0 +1,164 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  /* Modal Container */
+  .modal {
+    background: white;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding: 20px;
+  }
+  
+  /* Modal Header */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  /* Modal Body */
+  .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  /* Form Styles */
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .left-column,
+  .right-column {
+    flex: 1;
+  }
+  
+  .question-text {
+    margin-bottom: 5px;
+  }
+  
+  .edit-box {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Button Styles */
+  .button-container {
+    text-align: right;
+    margin-top: 20px;
+  }
+  
+  .blue-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .blue-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Profile Icon Styles */
+  .profile-icon-wrapper {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-icon {
+    font-size: 100px;
+    color: #ccc;
+  }
+  
+  .profile-icon-label img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+  .personal-info {
+    margin-top: 20px;
+    align-items: center;
+
+  }
+  
+ 
+  
+  .personal-info p {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .info-icon {
+    margin-right: 10px;
+    color: #007bff;
+  }
+  .user-icon {
+    margin-right: 8px;
+    font-size: 20px;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #f02626;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-top: 5px;
+  }
+  
+  .dropdown-menu button {
+    padding: 10px 20px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .dropdown-menu button:hover {
+    background-color: #f5f5f5;}
+    
+  

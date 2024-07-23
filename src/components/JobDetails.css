@@ -1,0 +1,42 @@
+.job-details-container {
+    max-width: 800px;
+    margin: 100px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color:black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.bin-icon {
+    margin-left: 760px;
+    color: #dc3545; 
+    cursor: pointer;
+}
+.job-details-container h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.job-details-container p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.job-details-container .description {
+    margin-top: 20px;
+}
+
+.job-details-container .back-link {
+    margin-top: 20px;
+}
+
+.job-details-container .back-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.job-details-container .back-link a:hover {
+    text-decoration: underline;
+}
