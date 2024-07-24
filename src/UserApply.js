@@ -75,7 +75,9 @@ const UserApply = () => {
             <div className="logos">
                 <img src={logo} alt="Company Logo" />
             </div>
-          
+            <button className="back-button" onClick={handleBack}>
+                <FontAwesomeIcon icon={faArrowLeft} /> 
+            </button>
             <h1 className="job-details-heading">Job Details</h1>
             
             <div className="user-view-post-container">
@@ -125,6 +127,7 @@ const UserApply = () => {
                 </div>
                 <div className="user-view-post-buttons">
                 <button onClick={handleApply}>Apply</button>
+                
                 </div>
 
             </div>

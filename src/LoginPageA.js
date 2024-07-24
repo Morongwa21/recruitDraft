@@ -7,6 +7,8 @@ axios.defaults.withCredentials = true;
 const LoginPageA = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
   
     const handleEmailChange = (e) => {
@@ -32,7 +34,7 @@ const LoginPageA = () => {
         alert('Please enter your email and password.');
         return;
       }
-  
+      setLoading(true);
       try {
         const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/login', {
           email: email,
@@ -70,17 +72,24 @@ const LoginPageA = () => {
       } catch (error) {
         console.error('Error during login:', error.message);
         alert('An error occurred during login. Please try again later.');
+      } finally {
+        setLoading(false);   
       }
     };
   return (
     <div className="login-page">
-            <div className="login-logo">
-        <img src={logo} alt="Company Logo" />
-    </div>
-    <div className="gradient-lines">
-        <div className="gradient-line"></div>
-        <div className="gradient-line"></div>
-      </div>
+    <header className="login-header">
+          <div className="logo">
+            <img src={logo} alt="Company logo" />
+          </div>
+          <nav>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="/UserViewPost">Job Listings</a></li>
+            </ul>
+          </nav>
+        </header>
+   
       <div className="login-heading">
       
       <h2>Login</h2>
@@ -113,6 +122,11 @@ const LoginPageA = () => {
         </div>
         <button type="button" className="signup-button" onClick={handleSignUpClick}>Sign Up</button>
         </form>
+        {loading && (
+        <div className="spinner-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
       </div>
 
   );
