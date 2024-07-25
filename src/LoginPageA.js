@@ -71,7 +71,7 @@ const LoginPageA = () => {
         }
       } catch (error) {
         console.error('Error during login:', error.message);
-        alert('An error occurred during login. Please try again later.');
+        alert('Incorect Email or Password, Please check if your credentials are corect!');
       } finally {
         setLoading(false);   
       }
