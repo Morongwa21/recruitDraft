@@ -38,10 +38,9 @@ const ProfEdu = () => {
 
     const handleEducation = async () => {
         setLoading(true);
-    
         const formattedStartDate = startDate.toISOString().split('T')[0];
         const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
-    
+
         const educationItem = {
             institution,
             institutionType,
@@ -50,33 +49,25 @@ const ProfEdu = () => {
             startDate: formattedStartDate,
             endDate: inProgress ? null : formattedEndDate,
         };
-    
-        console.log('Education Item:', educationItem);
-    
+
         try {
             const checkEducationResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
-            console.log('Existing Profile:', checkEducationResponse);
-    
             if (checkEducationResponse.status === 200 && checkEducationResponse.data) {
                 const existingProfile = checkEducationResponse.data;
                 const updatedProfile = { ...existingProfile, education: [...(existingProfile.education || []), educationItem] };
-    
+
                 const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', updatedProfile);
-    
+
                 if (updateResponse.status === 200) {
                     console.log('Education has been updated successfully:', updateResponse.data.message);
-                    setIsSaved(true);
                     handleCloseModalEdu(); // Close modal after saving
                 } else {
                     console.error('Failed to update education:', updateResponse.status, updateResponse.statusText);
                 }
             } else {
                 const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { education: [educationItem] });
-                console.log('Create Response:', createResponse);
-    
                 if (createResponse.status === 201) {
                     console.log('Education saved successfully:', createResponse.data.message);
-                    setIsSaved(true);
                     handleCloseModalEdu(); // Close modal after saving
                 } else {
                     console.error('Failed to save education:', createResponse.status, createResponse.statusText);
@@ -124,10 +115,11 @@ const ProfEdu = () => {
         <div>
             {isModalOpenEdu && (
                 <div className="modal-overlay">
-                    <div className="modal">  {loading && (
-              <div className="spinner-overlay">
-                <div className="spinner"></div>
-              </div>
+                    <div className="modal"> 
+               {loading && (
+                <div className="spinner-overlay">
+                    <div className="spinner"></div>
+                </div>
             )}
                         <div className="modal-header">
                             <button className="close-button" onClick={handleCloseModalEdu}>

@@ -41,6 +41,7 @@
    
     position: fixed;
     top: 0;
+    
     left: 0;
     width: 200px;
     height: 100%;
@@ -55,10 +56,12 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    
 }
 
 .side ul li {
     margin: 1rem 0;
+
 }
 
 .side ul li a {
@@ -182,6 +185,48 @@
     border: 1px solid #007bff;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+@media only screen and (max-width: 600px) {
+    .jobsekerWrapper {
+        flex-direction: column;
+    }
+
+    .jobsekerLeft {
+        margin-right: 0;
+        margin-bottom: 20px; /* Add space below for better separation */
+    }
+
+    .jobsekerContainer {
+        height: auto; /* Allow height to adjust based on content */
+        margin-right: 0;
+    }
+}
+
+/* Tablets (portrait and landscape) */
+@media only screen and (max-width: 768px) {
+    .jobsekerWrapper {
+        flex-direction: column;
+    }
+
+    .jobsekerLeft {
+        margin-right: 0;
+        margin-bottom: 20px; /* Add space below for better separation */
+    }
+
+    .jobsekerRight {
+        gap: 10px; /* Reduce space between the two right-side containers */
+    }
+}
+
+/* Laptops and larger tablets */
+@media only screen and (max-width: 1024px) {
+    .jobsekerWrapper {
+        flex-direction: row;
+    }
+
+    .jobsekerLeft {
+        margin-right: 20px; /* Space between left and right sections */
+    }
 }
 .profile-completeness {
     display: flex;

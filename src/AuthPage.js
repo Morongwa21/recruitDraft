@@ -95,7 +95,7 @@ function AuthPage() {
 
   const goToCompleteProfile = () => {
     setModalIsOpen(false);
-    navigate('/LoginA');
+    navigate('/OneProfile');
   };
 
   const goToJobSearch = () => {
