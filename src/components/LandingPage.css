@@ -249,3 +249,50 @@ main {
         transform: translateY(0);
     }
 }
+
+@media (max-width: 1200px) {
+    .blue-container {
+        padding: 30px;
+    }
+
+    .content h1 {
+        font-size: 32px;
+    }
+
+    .content p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 992px) {
+    .blue-container {
+        padding: 20px;
+    }
+
+    .content h1 {
+        font-size: 28px;
+    }
+
+    .content p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .blue-container {
+        padding: 15px;
+    }
+
+    .content h1 {
+        font-size: 24px;
+    }
+
+    .content p {
+        font-size: 12px;
+    }
+
+    .get-started-btn {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}

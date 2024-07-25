@@ -4,7 +4,6 @@ import './components/AdminDash.css';
 import './components/OneProfile.css'; 
 import Prof from './Prof'; 
 import ProfEdu from './ProfEdu'; 
-
 import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -435,7 +434,7 @@ const handleCloseModalExp = () => {
             {/* <li><a href="/ViewPosts">Documents</a></li> */}
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
-            <li><a href="/ApplicationTemplates">Templates</a></li>
+            <li><a href="/CV">Templates</a></li>
 
           </ul>
         </aside>
