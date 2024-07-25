@@ -50,6 +50,7 @@ const OneProfile = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [jobsAvailable, setJobsAvailable] = useState(0);
+  const [resumeFileName, setResumeFileName] = useState('');
 
   useEffect(() => {
     fetchUserDetails();
@@ -78,6 +79,7 @@ const OneProfile = () => {
       reader.onload = (e) => {
         localStorage.setItem('resume', e.target.result); // Store file as Base64 string
         setResume(file);
+        setResumeFileName(file.name); // Set the file name
       };
       reader.readAsDataURL(file); // Convert file to Base64
     }
@@ -284,6 +286,65 @@ resume,
       console.error('Error uploading resume:', error.message);
     }
   };
+
+
+  const handleResumeSave = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const userId = localStorage.getItem('userId'); // Assuming you have userId stored in localStorage
+    if (!resume) {
+      console.error('Resume is empty');
+      setSaveMessage('Please upload a resume.');
+      setLoading(false);
+      return;
+    }
+  
+    const payload = {
+      resume,
+    };
+  
+    console.log('payload:::::::: ', payload);
+  
+    try {
+      const response = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, payload);
+      console.log('Save response:', response);
+  
+      if (response.status === 200) {
+        setSaveMessage('Profile saved successfully.');
+        setIsSaved(true);
+        localStorage.setItem('resumeFileName', resumeFileName);
+
+      } else {
+        setSaveMessage('Failed to save profile.');
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error.message);
+      setSaveMessage('An error occurred while saving the profile.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  useEffect(() => {
+    const storedResume = localStorage.getItem('resume');
+    if (storedResume) {
+      setResume(storedResume);
+    }
+    
+    const storedResumeFileName = localStorage.getItem('resumeFileName');
+    if (storedResumeFileName) {
+      setResumeFileName(storedResumeFileName);
+    }
+  
+    fetchEducationItem();
+  }, []);
+
+
+
+
+
   const handleSaveClick = async() => {
     setLoading(true); 
     setSaveMessage('');
@@ -407,9 +468,7 @@ const handleCloseModalExp = () => {
   setIsModalOpenExp(false);
 
 };
-// };const UserInfo = ({ username, handleLogout }) => {
-//   const [dropdownVisible, setDropdownVisible] = useState(false);
-// };
+
   return (
     <div className="admin-page">
       <header className="admin-header">
@@ -417,7 +476,7 @@ const handleCloseModalExp = () => {
           <img src={logo} alt="Company Logo" />
         </div>
         <div className="user-info" onClick={handleUserInfoClick}>
-        <FaUser className="user-icon" />{username}
+        <FaUser className="user-icon" />
       </div>
       {dropdownVisible && (
         <div className="dropdown-menu">
@@ -513,6 +572,11 @@ const handleCloseModalExp = () => {
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
+          {loading && (
+              <div className="spinner-overlay">
+                <div className="spinner"></div>
+              </div>
+            )}
             <div className="modal-header">
               <button className="close-button" onClick={handleCloseModal}>
                 &times;
@@ -688,18 +752,20 @@ const handleCloseModalExp = () => {
       <input type="file" onChange={handleFileChange} />
 
 <div className="button-container">
-  <button className="blue-button" onClick={handleUpload}>Upload Resume</button>
+  <button className="blue-button" onClick={handleResumeSave}>Upload Resume</button>
 </div>
 </div>
 {resume && (
 <div>
-  <p>Selected file: {resume ? 'Resume file' : 'No file selected'}</p>
-  <a href={resume} target="_blank" rel="noopener noreferrer">
-    View Resume
+<p>Selected file: {resumeFileName || 'No file selected'}</p>
+        <a href={resume} target="_blank" rel="noopener noreferrer">
+          View Resume
+
   </a>
 </div>
       )}
     </div>
+    
     <Prof />
 
     <ProfEdu />

@@ -131,35 +131,89 @@
   .info-icon {
     margin-right: 10px;
     color: #007bff;
-  }
-  .user-icon {
+    font-size: 24px; /* Increased icon size */
+    background-color: #e0e0e0; /* Grey background color */
+    border-radius: 50%; /* Circular shape */
+    padding: 8px; /* Space around the icon */
+    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
+
+.info-icon:hover {
+    color: #0056b3;
+    background-color: #c0c0c0; /* Darker grey on hover */
+    transform: scale(1.1); /* Slightly increase size on hover */
+}
+
+.user-icon {
     margin-right: 8px;
-    font-size: 20px;
-  }
-  
-  .dropdown-menu {
+    font-size: 24px; /* Increased icon size */
+    color: #007bff;
+    background-color: #e0e0e0; /* Grey background color */
+    border-radius: 50%; /* Circular shape */
+    padding: 8px; /* Space around the icon */
+    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
+
+.user-icon:hover {
+    color: #0056b3;
+    background-color: #c0c0c0; /* Darker grey on hover */
+    transform: scale(1.1); /* Slightly increase size on hover */
+}
+
+.dropdown-menu {
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: #f02626;
+    background: linear-gradient(to bottom, #8B0000 0%, #00008B 100%); /* Dark red to blue gradient */
     border: 1px solid #ccc;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     margin-top: 5px;
-  }
-  
-  .dropdown-menu button {
+    width: 200px; /* Set a fixed width for consistency */
+    z-index: 1000;
+}
+
+.dropdown-menu button {
     padding: 10px 20px;
     width: 100%;
     text-align: left;
     background: none;
     border: none;
     cursor: pointer;
-    color: #333;
-  }
-  
-  .dropdown-menu button:hover {
-    background-color: #f5f5f5;}
+    color: #f5f5f5;
+}
+
+.dropdown-menu button:hover {
+    background-color: #0056b3;
+}
+
+/* Medium screens (tablets) */
+@media (max-width: 768px) {
+    .info-icon, .user-icon {
+        font-size: 20px; /* Adjusted icon size for medium screens */
+    }
+
+    .dropdown-menu {
+        width: 150px; /* Adjust dropdown width for medium screens */
+    }
+}
+
+/* Small screens (phones) */
+@media (max-width: 480px) {
+    .info-icon, .user-icon {
+        font-size: 18px; /* Adjusted icon size for small screens */
+    }
+
+    .dropdown-menu {
+        width: 50%; /* Make dropdown width responsive */
+        right: 0; /* Align dropdown to the right */
+        margin-top: -19px; /* Increase margin for better spacing */
+    }
+
+    .dropdown-menu button {
+        padding: 10px 15px; /* Adjust padding for small screens */
+    }
+}
     .experience-item {
       display: grid;
       grid-template-columns: 30fr 1fr;

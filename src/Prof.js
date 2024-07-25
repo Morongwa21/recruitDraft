@@ -16,6 +16,7 @@ const Prof = () => {
   const [title, setTitle] = useState('');
   const [inProgress, setInProgress] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [responsibilityInput, setResponsibilityInput] = useState('');
 
   const employmentTypeOptions = [
     { value: 'full-time', label: 'Full-Time' },
@@ -115,8 +116,16 @@ const Prof = () => {
     setEmploymentType(selectedOption ? selectedOption.value : '');
   };
 
-  const handleResponsibilityChange = (selectedOptions) => {
-    setResponsibilities(selectedOptions ? selectedOptions.map(option => option.value) : []);
+  const handleResponsibilityInputChange = (e) => {
+    setResponsibilityInput(e.target.value);
+  };
+
+  const handleResponsibilityKeyDown = (e) => {
+    if (e.key === 'Enter' && responsibilityInput.trim()) {
+      setResponsibilities([...responsibilities, responsibilityInput.trim()]);
+      setResponsibilityInput('');
+      e.preventDefault(); // Prevent form submission
+    }
   };
 
   const handleProgressChange = (e) => {
@@ -170,12 +179,19 @@ const Prof = () => {
                 </div>
                 <div className="left-column">
                   <div className="question-text">Responsibilities</div>
-                  <Select
-                    options={responsibilityOptions}
-                    value={responsibilities.map(res => ({ value: res, label: res }))}
-                    isMulti
-                    onChange={handleResponsibilityChange}
+                  <input
+                    type="text"
+                    className="edit-box"
+                    value={responsibilityInput}
+                    onChange={handleResponsibilityInputChange}
+                    onKeyDown={handleResponsibilityKeyDown}
+                    placeholder="Type responsibility and press Enter"
                   />
+                  <ul className="responsibility-list">
+                    {responsibilities.map((res, index) => (
+                      <li key={index}>{res}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="left-column">
                   <div className="question-text">Start Date</div>
@@ -201,7 +217,7 @@ const Prof = () => {
                   </div>
                 )}
                 <div className="left-column">
-                  <div className="question-text">Progress</div>
+                  <div className="question-text">Current Working Here</div>
                   <div className="checkbox-container">
                     <input
                       type="checkbox"
