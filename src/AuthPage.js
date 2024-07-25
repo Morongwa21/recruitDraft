@@ -108,13 +108,17 @@ function AuthPage() {
   };
   return (
     <div className="login-page">
-      <div className="login-logo">
-        <img src={logo} alt="Company Logo" />
-      </div>
-      <div className="gradient-lines">
-        <div className="gradient-line"></div>
-        <div className="gradient-line"></div>
-      </div>
+             <header className="login-header">
+          <div className="logo">
+            <img src={logo} alt="Company logo" />
+          </div>
+          <nav>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="/UserViewPost">Job Listings</a></li>
+            </ul>
+          </nav>
+        </header>
       <div className="login-heading">
         <h2>Account Verification</h2>
       </div>
@@ -142,7 +146,11 @@ function AuthPage() {
         {resendLoading ? 'Resending...' : 'Resend OTP'}
       </button>
       </form>
-
+      {loading && (
+        <div className="spinner-overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
      
       <Modal
         isOpen={modalIsOpen}

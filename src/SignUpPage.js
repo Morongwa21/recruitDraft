@@ -7,6 +7,7 @@ import logo from './company logo.jpg';
 const SignUpPage = () => {
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [serverError, setServerError] = useState('');
+    const [isLoading, setIsLoading] = useState(false); 
     const navigate = useNavigate();
     const [showOTPModal, setShowOTPModal] = useState(false); 
     const [showUserExistsMessage, setShowUserExistsMessage] = useState(false); // State for showing user exists message
@@ -40,7 +41,7 @@ const SignUpPage = () => {
             password,
             accountType,
         };
-
+        setIsLoading(true);
         try {
             const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/register', formData, {
                 headers: {
@@ -60,6 +61,8 @@ const SignUpPage = () => {
             } else {
                 console.error('Request error:', error.message);
             }
+        } finally {
+            setIsLoading(false);
         }
     };
     const LoginClick = () => {
@@ -72,15 +75,19 @@ const SignUpPage = () => {
 
     return (
         <div className="login-page">
-            <div className="login-logo">
-                <img src={logo} alt="Company Logo" />
-            </div>
-            <div className="gradient-lines">
-                <div className="gradient-line"></div>
-                <div className="gradient-line"></div>
-            </div>
+        <header className="login-header">
+          <div className="logo">
+            <img src={logo} alt="Company logo" />
+          </div>
+          <nav>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="/UserViewPost">Job Listings</a></li>
+            </ul>
+          </nav>
+        </header>
             <div className="signup-heading">
-                <h2>Create Account</h2>
+                <h2>SIGN UP</h2>
             </div>
             <form className="login-container" onSubmit={handleSubmit}>
                 <label htmlFor="accountType">Account Type:</label>
@@ -151,14 +158,14 @@ const SignUpPage = () => {
                     &nbsp;I accept the <span className="terms-link">Terms and Conditions</span>
                 </label>
                 <button type="submit" className="login-button">
-          Register
+          SIGN UP
         </button>
         <div className="separator">
           <div className="line"></div>
           <div className="or-text">OR</div>
           <div className="line"></div>
         </div>
-        <button type="button" className="signup-button" onClick={LoginClick}>Login</button>
+        <button type="button" className="signup-button" onClick={LoginClick}>I HAVE AN ACCOUNT</button>
                 {serverError && <div className="error-message">{serverError}</div>}
                 {showUserExistsMessage && (
                     <div className="error-message">
@@ -166,6 +173,11 @@ const SignUpPage = () => {
                     </div>
                 )}
             </form>
+            {isLoading && (
+                <div className="spinner-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showOTPModal && (
                 <div className="otp-modal">
                     <div className="otp-modal-content">

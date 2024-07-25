@@ -109,7 +109,7 @@ const ViewAJobs = () => {
                     <ul>
                           {/* <li><a href="#home">Home</a></li> */}
             <li><a href="/ProfileUsers">Profile</a></li>
-            <li><a href="/ViewPosts">Documents</a></li>
+            {/* <li><a href="/ViewPosts">Documents</a></li> */}
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
             <li><a href="/ApplicationTemplates">Templates</a></li>

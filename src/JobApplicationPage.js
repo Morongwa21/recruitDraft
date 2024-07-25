@@ -3,7 +3,8 @@ import axios from 'axios';
 import './components/UserViewPosts.css';
 import logo from './company logo.jpg';
 import { useParams, useNavigate } from 'react-router-dom';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBuilding, faMapMarkerAlt, faBriefcase, faCalendarAlt, faUsers, faClipboardList, faCheckCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 const JobApplicationPage = () => {
   const [coverLetter, setCoverLetter] = useState('');
   const [job, setJob] = useState(null);
@@ -79,6 +80,7 @@ const JobApplicationPage = () => {
 
       console.log('Application submitted:', response.data);
       alert('Application submitted successfully!');
+      navigate('/ViewAJobs');
     } catch (error) {
       console.error('Error submitting application:', error);
       alert('Failed to submit application. Please try again later.');
@@ -95,12 +97,17 @@ const JobApplicationPage = () => {
     location,
     createdAt,
   } = job;
-
+  const handleBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
   return (
     <div>
       <div className="logos">
         <img src={logo} alt="Company Logo" />
       </div>
+      <button className="back-button" onClick={handleBack}>
+                <FontAwesomeIcon icon={faArrowLeft} /> 
+            </button>
       <div className="apply-container">
         <header className="apply-header">
           <h1>{title}</h1>

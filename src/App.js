@@ -25,6 +25,8 @@ import ScreeningPage from './ScreeningPage';
 import WorkUpdate from './WorkUpdate';
 import JobDetails from './JobDetails';
 import OneProfile from './OneProfile';
+import Prof from './Prof';
+import ProfEdu from './ProfEdu';
 
 const App = () => {
 
@@ -36,6 +38,9 @@ const App = () => {
       <Route path="/" element={<LandingPage />} />
       <Route path="/UserProfile" element={<UserProfile />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/Prof" element={<Prof />} />
+        <Route path="/ProfEdu" element={<ProfEdu />} />
+
         <Route path="/OneProfile" element={<OneProfile />} />
         <Route path="/CreateJob" element={<CreateJob />} />
         <Route path="/UserViewPost" element={<UserViewPost />} />
