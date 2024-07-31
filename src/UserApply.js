@@ -5,12 +5,15 @@ import './components/ViewJobDetails.css';
 import logo from './company logo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faMapMarkerAlt, faBriefcase, faCalendarAlt, faUsers, faClipboardList, faCheckCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 const UserApply = () => {
     const { id } = useParams();
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+
     const navigate = useNavigate();
 
 
@@ -67,17 +70,31 @@ const UserApply = () => {
         navigate('/JobApplicationPage');
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        navigate('/LoginPage');
+      };
 
-
-    
+      const handleUserInfoClick = () => {
+        setDropdownVisible(!dropdownVisible);
+      };
     return (
-        <div>
-            <div className="logos">
-                <img src={logo} alt="Company Logo" />
-            </div>
-            <button className="back-button" onClick={handleBack}>
-                <FontAwesomeIcon icon={faArrowLeft} /> 
-            </button>
+        <div className="admin-page">
+        <header className="admin-header">
+          <div className="logo">
+            <img src={logo} alt="Company Logo" />
+          </div>
+          <div className="user-info" onClick={handleUserInfoClick}>
+          <FaUser className="user-icon" />
+        </div>
+        {dropdownVisible && (
+          <div className="dropdown-menu">
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+        </header>
+           
             <h1 className="job-details-heading">Job Details</h1>
             
             <div className="user-view-post-container">
@@ -127,6 +144,9 @@ const UserApply = () => {
                 </div>
                 <div className="user-view-post-buttons">
                 <button onClick={handleApply}>Apply</button>
+                <button className="back-button" onClick={handleBack}>
+                <FontAwesomeIcon icon={faArrowLeft} />  Back
+            </button>
                 
                 </div>
 

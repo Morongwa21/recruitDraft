@@ -7,7 +7,7 @@ import './components/OneProfile.css';
 
 const Prof = () => {
   const [experienceItems, setExperienceItems] = useState([]);
-  const [isModalOpenExp, setIsModalOpen] = useState(false);
+  const [isModalOpenExp, setIsModalOpenExp] = useState(false);
   const [employmentType, setEmploymentType] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
@@ -17,7 +17,11 @@ const Prof = () => {
   const [inProgress, setInProgress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [responsibilityInput, setResponsibilityInput] = useState('');
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editingExperienceId, setEditingExperienceId] = useState(null);
 
+
+  
   const employmentTypeOptions = [
     { value: 'full-time', label: 'Full-Time' },
     { value: 'part-time', label: 'Part-Time' },
@@ -36,6 +40,7 @@ const Prof = () => {
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const experience = Array.isArray(profile.experience) ? profile.experience : [];
+        console.log('experience------->', response)
         setExperienceItems(experience);
       } else {
         console.error('Failed to fetch profile:', response.status, response.statusText);
@@ -49,15 +54,15 @@ const Prof = () => {
     fetchExperience();
   }, []);
 
+
   const handleSaveWorkExperience = async () => {
     setLoading(true);
-
-
-    const userId = localStorage.getItem('userId');
+  
     const formattedStartDate = startDate.toISOString().split('T')[0];
     const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
-
+  
     const experienceItem = {
+      _id: editingExperienceId,
       title,
       company,
       startDate: formattedStartDate,
@@ -65,34 +70,78 @@ const Prof = () => {
       employmentType,
       responsibilities: responsibilities.join(', ')
     };
-
+  
     try {
-      const checkExperienceResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
-      const existingExperiences = checkExperienceResponse.status === 200 ? checkExperienceResponse.data.experience || [] : [];
-      const updatedExperiences = [...existingExperiences, experienceItem];
-
-      const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', { experience: updatedExperiences });
-
-      if (updateResponse.status === 200) {
-        console.log('Work experience updated successfully:', updateResponse.data.message);
-        setIsModalOpen(false);
-        fetchExperience();
+      if (editingExperienceId) {
+        // Update existing experience
+        const updateResponse = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, { experience: [experienceItem] });
+        if (updateResponse.status === 200) {
+          console.log('Work experience updated successfully:', updateResponse.data.message);
+          fetchExperience();
+          setIsModalOpenExp(false);
+        } else {
+          console.error('Failed to update work experience:', updateResponse.status, updateResponse.statusText);
+        }
       } else {
-        console.error('Failed to update work experience:', updateResponse.status, updateResponse.statusText);
+        // Add new experience
+        const checkExperienceResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+        if (checkExperienceResponse.status === 200 && checkExperienceResponse.data) {
+          const existingExperiences = checkExperienceResponse.data.experience || [];
+          const updatedProfile = { experience: [...existingExperiences, experienceItem] };
+  
+          // Update profile with new experience
+          const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', updatedProfile);
+          if (updateResponse.status === 200) {
+            console.log('Work experience updated successfully:', updateResponse.data.message);
+            setIsModalOpenExp(false);
+            fetchExperience();
+          } else {
+            console.error('Failed to update work experience:', updateResponse.status, updateResponse.statusText);
+          }
+        } else {
+          // Create profile if it doesn't exist
+          const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { experience: [experienceItem] });
+          if (createResponse.status === 201) {
+            console.log('Work experience created successfully:', createResponse.data.message);
+            setIsModalOpenExp(false);
+            fetchExperience();
+          } else {
+            console.error('Failed to save experience:', createResponse.status, createResponse.statusText);
+          }
+        }
       }
     } catch (error) {
       console.error('Error saving work experience:', error.message);
     } finally {
-        setLoading(false);
-      }
+      setLoading(false);
+    }
   };
 
-  const handleEditClickExp = () => {
-    setIsModalOpen(true);
+  const handleEditClickExp = (index) => {
+    if (index < 0 || index >= experienceItems.length) {
+      console.error('Invalid index:', index);
+      return;
+    }
+    const exp = experienceItems[index];
+    if (!exp) {
+      console.error('Experience item not found at index:', index);
+      return;
+    }
+    setTitle(exp.title);
+    setCompany(exp.company);
+    setStartDate(new Date(exp.startDate));
+    setEndDate(exp.endDate ? new Date(exp.endDate) : null);
+    setEmploymentType(exp.employmentType);
+    setResponsibilities(exp.responsibilities ? exp.responsibilities.split(', ') : []);
+    setInProgress(exp.endDate === null);
+    setEditingIndex(index);
+    setEditingExperienceId(exp._id); // Set the experience ID for editing
+    setIsModalOpenExp(true);
   };
 
   const handleCloseModalExp = () => {
-    setIsModalOpen(false);
+    setIsModalOpenExp(false);
+    setEditingExperienceId(null);
   };
 
   const handleDelete = async (experienceId, index) => {
@@ -127,10 +176,33 @@ const Prof = () => {
       e.preventDefault(); // Prevent form submission
     }
   };
-
+  const handleAddExperienceClick = () => {
+    setTitle('');
+    setCompany('');
+    setStartDate(new Date());
+    setEndDate(null);
+    setEmploymentType('');
+    setResponsibilities([]);
+    setInProgress(false);
+    setEditingIndex(null);
+    setEditingExperienceId(null); // Clear the experience ID for adding a new experience
+    setIsModalOpenExp(true);
+  };
   const handleProgressChange = (e) => {
     setInProgress(e.target.checked);
   };
+//   const handleEditClickExp = (index) => {
+//     const exp = experienceItems[index];
+//     setTitle(exp.title);
+//     setCompany(exp.company);
+//     setStartDate(new Date(exp.startDate));
+//     setEndDate(exp.endDate ? new Date(exp.endDate) : null);
+//     setEmploymentType(exp.employmentType);
+//     setResponsibilities(exp.responsibilities ? exp.responsibilities.split(', ') : []);
+//     setInProgress(exp.endDate === null);
+//     setEditingIndex(index);
+//     setIsModalOpen(true);
+//   };
 
   return (
     <div>
@@ -229,7 +301,7 @@ const Prof = () => {
                   </div>
                 </div>
                 <div className="button-container">
-                  <button className="blue-button" onClick={handleSaveWorkExperience}>Add</button>
+                  <button className="blue-button" onClick={handleSaveWorkExperience} disabled={loading}>Add</button>
                 </div>
               </div>
             </div>
@@ -255,6 +327,10 @@ const Prof = () => {
                 <p><FaTasks className="info-icon" /> <strong>Responsibilities:</strong> {exp.responsibilities || 'N/A'}</p>
                 <p><FaCalendarAlt className="info-icon" /> <strong>Start Date:</strong> {new Date(exp.startDate).toLocaleDateString()}</p>
                 <p><FaCalendarAlt className="info-icon" /> <strong>End Date:</strong> {exp.endDate ? new Date(exp.endDate).toLocaleDateString() : 'Present'}</p>
+                <FaEdit
+                  onClick={() => handleEditClickExp(index)}
+                  className="edit-icon"
+                />
                 <FaTrash
                   onClick={() => handleDelete(exp._id, index)}
                   className="delete-icon"
