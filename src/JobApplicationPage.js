@@ -5,12 +5,16 @@ import logo from './company logo.jpg';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faMapMarkerAlt, faBriefcase, faCalendarAlt, faUsers, faClipboardList, faCheckCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+
 const JobApplicationPage = () => {
   const [coverLetter, setCoverLetter] = useState('');
   const [job, setJob] = useState(null);
   const [username, setUsername] = useState(""); 
   const [profileData, setProfileData] = useState(null); 
   const { id } = useParams();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -100,14 +104,27 @@ const JobApplicationPage = () => {
   const handleBack = () => {
     navigate(-1); // Go back to the previous page
   };
+
+
+  const handleUserInfoClick = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
   return (
-    <div>
-      <div className="logos">
+    <div className="admin-page">
+    <header className="admin-header">
+      <div className="logo">
         <img src={logo} alt="Company Logo" />
       </div>
-      <button className="back-button" onClick={handleBack}>
-                <FontAwesomeIcon icon={faArrowLeft} /> 
-            </button>
+      <div className="user-info" onClick={handleUserInfoClick}>
+      <FaUser className="user-icon" />
+    </div>
+    {dropdownVisible && (
+      <div className="dropdown-menu">
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+    )}
+    </header>
+    
       <div className="apply-container">
         <header className="apply-header">
           <h1>{title}</h1>
@@ -126,6 +143,9 @@ const JobApplicationPage = () => {
         </section>
         <div className="user-view-post-buttons">
           <button onClick={handleApply}>Apply</button>
+          <button className="back-button" onClick={handleBack}>
+                <FontAwesomeIcon icon={faArrowLeft} /> 
+            </button>
         </div>
       </div>
     </div>

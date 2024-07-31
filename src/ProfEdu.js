@@ -15,8 +15,8 @@ const ProfEdu = () => {
     const [educationItem, setEducationItems] = useState([]);
     const [inProgress, setInProgress] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [isSaved, setIsSaved] = useState(false); // New state to track saving status
-
+    const [isSaved, setIsSaved] = useState(false); 
+    const [editId, setEditId] = useState(null);    
     const fetchEducation = async () => {
         try {
             const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
@@ -42,6 +42,8 @@ const ProfEdu = () => {
         const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
 
         const educationItem = {
+            _id: editId,
+
             institution,
             institutionType,
             degree,
@@ -51,26 +53,42 @@ const ProfEdu = () => {
         };
 
         try {
-            const checkEducationResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
-            if (checkEducationResponse.status === 200 && checkEducationResponse.data) {
-                const existingProfile = checkEducationResponse.data;
-                const updatedProfile = { ...existingProfile, education: [...(existingProfile.education || []), educationItem] };
-
-                const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', updatedProfile);
-
+            if (editId) {
+                // Patch the existing education item
+                const updateResponse = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, { education: [educationItem] });
+                console.log('updateResponse to send', updateResponse)
                 if (updateResponse.status === 200) {
-                    console.log('Education has been updated successfully:', updateResponse.data.message);
+                    console.log('Education updated successfully:', updateResponse.data.message);
+                    fetchEducation();
                     handleCloseModalEdu(); // Close modal after saving
                 } else {
                     console.error('Failed to update education:', updateResponse.status, updateResponse.statusText);
                 }
             } else {
-                const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { education: [educationItem] });
-                if (createResponse.status === 201) {
-                    console.log('Education saved successfully:', createResponse.data.message);
-                    handleCloseModalEdu(); // Close modal after saving
+                // Add a new education item
+                const checkEducationResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+                if (checkEducationResponse.status === 200 && checkEducationResponse.data) {
+                    const existingProfile = checkEducationResponse.data;
+                    const updatedProfile = { ...existingProfile, education: [...(existingProfile.education || []), educationItem] };
+
+                    const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', updatedProfile);
+
+                    if (updateResponse.status === 200) {
+                        console.log('Education has been updated successfully:', updateResponse.data.message);
+                        fetchEducation();
+                        handleCloseModalEdu(); // Close modal after saving
+                    } else {
+                        console.error('Failed to update education:', updateResponse.status, updateResponse.statusText);
+                    }
                 } else {
-                    console.error('Failed to save education:', createResponse.status, createResponse.statusText);
+                    const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { education: [educationItem] });
+                    if (createResponse.status === 201) {
+                        console.log('Education saved successfully:', createResponse.data.message);
+                        fetchEducation();
+                        handleCloseModalEdu(); // Close modal after saving
+                    } else {
+                        console.error('Failed to save education:', createResponse.status, createResponse.statusText);
+                    }
                 }
             }
         } catch (error) {
@@ -96,13 +114,31 @@ const ProfEdu = () => {
         }
     };
 
-    const handleEditClickEdu = () => {
+    
+    const handleEditClickEdu = (index) => {
+        const edu = educationItem[index];
+        setInstitution(edu.institution);
+        setInstitutionType(edu.institutionType);
+        setDegree(edu.degree);
+        setFieldOfStudy(edu.fieldOfStudy);
+        setStartDate(new Date(edu.startDate));
+        setEndDate(edu.endDate ? new Date(edu.endDate) : null);
+        setInProgress(!edu.endDate);
+        setEditId(edu._id);
         setIsModalOpenEdu(true);
     };
 
     const handleCloseModalEdu = () => {
         setIsModalOpenEdu(false);
-    };
+        setInstitution('');
+        setInstitutionType('');
+        setDegree('');
+        setFieldOfStudy('');
+        setStartDate(new Date());
+        setEndDate(null);
+        setInProgress(false);
+        setEditId(null); 
+    }
 
     const handleProgressChange = (e) => {
         setInProgress(e.target.checked);
@@ -214,6 +250,10 @@ const ProfEdu = () => {
                                 <p><FaBook className="info-icon" /> <strong>Field Of Study:</strong> {edu.fieldOfStudy}</p>
                                 <p><FaCalendarAlt className="info-icon" /> <strong>Start Date:</strong> {new Date(edu.startDate).toLocaleDateString()}</p>
                                 <p><FaCalendarAlt className="info-icon" /> <strong>End Date:</strong> {edu.endDate ? new Date(edu.endDate).toLocaleDateString() : 'Present'}</p>
+                                <FaEdit
+                                    onClick={() => handleEditClickEdu(index)}
+                                    className="edit-icon"
+                                />
                                 <FaTrash
                                     onClick={() => handleDelete(edu._id, index)}
                                     className="delete-icon"

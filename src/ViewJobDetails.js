@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners'; 
 import './components/ViewJobDetails.css';
 import logo from './company logo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +10,8 @@ import { faBuilding, faMapMarkerAlt, faBriefcase, faCalendarAlt, faUsers, faClip
 const ViewJobDetails = () => {
     const { id } = useParams();
     const [job, setJob] = useState(null);
+    const [loading, setLoading] = useState(true);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,16 +22,21 @@ const ViewJobDetails = () => {
                 console.log('Job Details:', response.data); // Log the job details
             } catch (error) {
                 console.error('Error fetching job details:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchJobDetails();
     }, [id]);
 
-    if (!job) {
-        return <div>No job details available</div>;
+    if (loading) {
+        return (
+            <div className="spinner-container">
+                <ClipLoader size={50} color={"#123abc"} loading={loading} />
+            </div>
+        );
     }
-
     const {
         company,
         title,

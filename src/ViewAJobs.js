@@ -5,6 +5,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons'; 
+import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+
 const ViewAJobs = () => {
     const [username, setUsername] = useState('');
     const [applications, setApplications] = useState([]);
@@ -92,18 +94,18 @@ const ViewAJobs = () => {
     return (
         <div className="admin-page">
             <header className="admin-header">
-                <div className="logo">
-                    <img src={logo} alt="Company Logo" />
-                </div>
-                <div className="user-info" onClick={handleUserInfoClick}>
-                    Welcome, {username}
-                    {dropdownVisible && (
-                        <div className="dropdown-menu">
-                            <button onClick={handleLogout}>Logout</button>
-                        </div>
-                    )}
-                </div>  
-            </header>
+            <div className="logo">
+          <img src={logo} alt="Company Logo" />
+        </div>
+        <div className="user-info" onClick={handleUserInfoClick}>
+        <FaUser className="user-icon" />
+      </div>
+      {dropdownVisible && (
+        <div className="dropdown-menu">
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      )}
+      </header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
