@@ -43,7 +43,6 @@ const ProfEdu = () => {
 
         const educationItem = {
             _id: editId,
-
             institution,
             institutionType,
             degree,
@@ -220,6 +219,8 @@ const ProfEdu = () => {
                                                 checked={inProgress}
                                                 onChange={handleProgressChange}
                                             />
+                                                                                        <span className="slider round"></span>
+
                                         </div>
                                     </div>
                                     <div className="button-container">
@@ -234,9 +235,9 @@ const ProfEdu = () => {
             <div className="job-stat-box">
                 <h2><strong>Education</strong></h2>
                 <p>----------------</p>
-                <button className="blue-button" onClick={handleEditClickEdu}>
-                    <FaPlus className="icon" /> Add New Education
-                </button>
+                <button className="blue-button" onClick={() => setIsModalOpenEdu(true)}>
+                <FaPlus className="icon" /> Add New Education
+            </button>
 
                 {educationItem.length === 0 ? (
                     <p>No education added yet. Click the button above to add.</p>
