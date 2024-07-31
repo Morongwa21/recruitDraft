@@ -311,7 +311,7 @@ const Prof = () => {
     <div className="job-stat-box">
         <h2><strong>Experience</strong></h2>
         <p>----------------</p>
-        <button className="blue-button" onClick={handleEditClickExp}>
+        <button className="blue-button" onClick={handleAddExperienceClick}>
           <FaPlus className="icon" /> Add New Experience
         </button>
 
