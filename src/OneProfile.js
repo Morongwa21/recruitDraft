@@ -206,16 +206,33 @@ resume,
     setDropdownVisible(!dropdownVisible);
   };
 
-  const handleImageChange = (event) => {
-    const userId = localStorage.getItem('userId');
-    if (event.target.files && event.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageData = e.target.result;
-        setProfileImage(imageData);
-        localStorage.setItem(`profileImage-${userId}`, imageData); // Save image data to localStorage with user ID
-      };
-      reader.readAsDataURL(event.target.files[0]);
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('profilePicture', file);
+  
+      // Log the formData content for verification
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+  
+      try {
+        const response = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('profile response:', response);
+        if (response.data.success) {
+          setProfileImage(response.data.profile.profilePicture);
+          localStorage.setItem('profileImage', response.data.profile.profilePicture); // Save to localStorage
+        } else {
+          console.error('Failed to update profile picture:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error uploading profile picture:', error);
+      }
     }
   };
 
@@ -248,13 +265,12 @@ resume,
     }).length;
   
     const totalFilledFieldsCount = filledFieldsCount + (isEducationFilled ? 1 : 0) + (isExperienceFilled ? 1 : 0);
-    const totalFieldsCount = requiredFields.length + 2; // Adding 2 for education and experience items
+    const totalFieldsCount = requiredFields.length + 2; 
   
     completeness = (totalFilledFieldsCount / totalFieldsCount) * 100;
   
     return completeness.toFixed(2);
   };
-  
   const completenessPercentage = calculateProfileCompleteness();
   const progressDeg = (completenessPercentage / 100) * 360;
   const clampedPercentage = Math.max(0, Math.min(completenessPercentage, 100));
@@ -468,8 +484,7 @@ const handleCloseModalExp = () => {
   setIsModalOpenExp(false);
 
 };
-
-  return (
+return (
     <div className="admin-page">
       <header className="admin-header">
         <div className="logo">
@@ -524,7 +539,6 @@ const handleCloseModalExp = () => {
             <div className="jobsekerWrapper">
               <div className="jobsekerLeft">
               <div class="jobsekerBox">
-              <div className="job-stat-box">
 
                     <h><strong>Personal Information</strong></h>
                     <div className="profile-icon-wrapper">
@@ -565,7 +579,6 @@ const handleCloseModalExp = () => {
                     )}
                   </div>
                 )}
-      </div>
       </div>
       </div>
 
@@ -768,7 +781,7 @@ const handleCloseModalExp = () => {
     
     <Prof />
 
-    <ProfEdu />
+<ProfEdu />
 
 
 </div>
