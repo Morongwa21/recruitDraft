@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import logo from './company logo.jpg';
 import './components/AdminDash.css'; 
-import './components/OneProfile.css'; 
+import './components/OneProfile.css';
 import Prof from './Prof'; 
 import ProfEdu from './ProfEdu'; 
-import Select from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import { FaEdit, FaUserCircle, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 const OneProfile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpenEdu, setIsModalOpenEdu] = useState(false);
-  const [isModalOpenExp, setIsModalOpenExp] = useState(false);
-
-  const [username, setUsername] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
-  // const [profileData, setProfileData] = useState(null);
   const [roleDescription, setRoleDescription] = useState('');
   const [otherRoleDescription, setOtherRoleDescription] = useState('');
   const [skills, setSkills] = useState('');
@@ -39,11 +33,7 @@ const OneProfile = () => {
   const [Ethnicity, setEthnicity] = useState('');
   const [idNumber, setIdNumber] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-  const [employmentType, setEmploymentType] = useState('');
-  const [responsibilities, setResponsibilities] = useState([]);
-  const [inProgress, setInProgress] = useState(false);
-  const [institutionType, setInstitutionType] = useState('');
-  const [educationItem, setEducationItems] = useState([]);
+  const [educationItems, setEducationItems] = useState([]);
   const [experienceItems, setExperienceItems] = useState([]);
   const [resume, setResume] = useState(null);
   const [saveMessage, setSaveMessage] = useState('');
@@ -65,13 +55,14 @@ const OneProfile = () => {
     if (storedResume) {
       setResume(storedResume);
     };
-    fetchEducationItem();
+  
   }, []);
   useEffect(() => {
     console.log('Number of jobs available:', jobsAvailable);
-    console.log('Length of education items:', educationItem.length);
+    console.log('Length of education items:', educationItems.length);
     console.log('Length of experience items:', experienceItems.length);
-  }, [jobsAvailable, educationItem, experienceItems]);
+  }, [jobsAvailable, educationItems, experienceItems]);
+  
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -87,11 +78,12 @@ const OneProfile = () => {
 
   const fetchEducationItem = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const education = Array.isArray(profile.education) ? profile.education : [];
         setEducationItems(education);
+        console.log('edu', education);
       } else {
         console.error('Failed to fetch profile:', response.status, response.statusText);
       }
@@ -99,78 +91,90 @@ const OneProfile = () => {
       console.error('Error fetching education items:', error.message);
     }
   };
-  
+  const fetchExperience = async () => {
+    try {
+      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
+      if (response.status === 200) {
+        const profile = response.data.profile || {};
+        const experience = Array.isArray(profile.experience) ? profile.experience : [];
+        console.log('experience------->', response)
+        setExperienceItems(experience);
+      } else {
+        console.error('Failed to fetch profile:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching experience:', error.message);
+    }
+  };
   const fetchUserDetails = async () => {
     try {
       const userId = localStorage.getItem('userId');
       console.log('Fetching details for user ID:', userId);
-      const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
-      const profileResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
-      console.log('Profile response:', profileResponse);
-      console.log('User details response:', response);
-
-      if (response.status === 200 && profileResponse.status === 200) {
-        setUsername(response.data.username);
-        if (profileResponse.data) {
-            const {
-              roleDescription,
-              otherRoleDescription,
-              skills,
-              firstName,
-              lastName,
-              cellNumber,
-              altNumber,
-              citizenship,
-              email,
-              dateOfBirth,
-              gender,
-              disabilityStatus,
-resume,
-              location: {
-                city = '',
-                address = '',
-                province = '',
-                street = '',
-                zipCode = '',
-                country = '',
-              } = {},
-              Ethnicity,
-              idNumber,
-              experience = [],
-              education = [],
-
-              
-            } = profileResponse.data;
- 
-            setRoleDescription(roleDescription || '');
-            setOtherRoleDescription(otherRoleDescription || '');
-            setSkills(skills || '');
-            setFirstName(firstName || '');
-            setLastName(lastName || '');
-            setCellNumber(cellNumber || '');
-            setAltNumber(altNumber || '');
-            setCitizenship(citizenship || '');
-            setEmail(email || '');
-            setDob(dateOfBirth || '');
-            setGender(gender || '');
-            setDisability(disabilityStatus || '');
-            setCity(city || '');
-            setAddress(address || '');
-            setProvince(province || '');
-            setStreet(street || '');
-            setZipCode(zipCode || '');
-            setCountry(country || '');
-            setEthnicity(Ethnicity || '');
-            setIdNumber(idNumber || '');
-            setIdNumber(resume || '');
-
-            setEducationItems(education || []);
-            setExperienceItems(experience || []);
-
-          
-          }
-          console.log('pppppp:',profileResponse.data)
-
+  
+      if (!userId) {
+        console.error('User ID not found in localStorage');
+        return;
+      }
+  
+      // Update the URL to include userId
+      const profileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile`);
+  
+      if (profileResponse.status === 200) {
+        const response = profileResponse.data.profile;
+        console.log(response);
+  
+        const {
+          roleDescription,
+          otherRoleDescription,
+          skills,
+          firstName,
+          lastName,
+          cellNumber,
+          altNumber,
+          citizenship,
+          email,
+          dateOfBirth,
+          gender,
+          disabilityStatus,
+          resume,
+          location: {
+            city = '',
+            address = '',
+            province = '',
+            street = '',
+            zipCode = '',
+            country = '',
+          } = {},
+          Ethnicity,
+          idNumber,
+          experience = [],
+          education = [],
+        } = response;
+  
+        setRoleDescription(roleDescription || '');
+        setOtherRoleDescription(otherRoleDescription || '');
+        setSkills(skills || '');
+        setFirstName(firstName || '');
+        setLastName(lastName || '');
+        setCellNumber(cellNumber || '');
+        setAltNumber(altNumber || '');
+        setCitizenship(citizenship || '');
+        setEmail(email || '');
+        setDob(dateOfBirth || '');
+        setGender(gender || '');
+        setDisability(disabilityStatus || '');
+        setCity(city || '');
+        setAddress(address || '');
+        setProvince(province || '');
+        setStreet(street || '');
+        setZipCode(zipCode || '');
+        setCountry(country || '');
+        setEthnicity(Ethnicity || '');
+        setIdNumber(idNumber || '');
+        setResume(resume || '');
+  
+        setEducationItems(education || []);
+        setExperienceItems(experience || []);
       } else {
         console.error('Failed to fetch user details or profile data');
       }
@@ -181,7 +185,7 @@ resume,
 
   const fetchJobs = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/jobs');
+      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/jobs');
       console.log('Jobs response:', response);
 
       if (response.status === 200) {
@@ -211,14 +215,12 @@ resume,
     if (file) {
       const formData = new FormData();
       formData.append('profilePicture', file);
-  
-      // Log the formData content for verification
-      for (let [key, value] of formData.entries()) {
+        for (let [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
       }
   
       try {
-        const response = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', formData, {
+        const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -255,7 +257,7 @@ resume,
       country,
       resume, 
     ];
-      const isEducationFilled = educationItem.length > 0;
+      const isEducationFilled = educationItems.length > 0;
     const isExperienceFilled = experienceItems.length > 0;
       const filledFieldsCount = requiredFields.filter(field => {
       if (field === undefined || field === null) return false;
@@ -266,17 +268,14 @@ resume,
   
     const totalFilledFieldsCount = filledFieldsCount + (isEducationFilled ? 1 : 0) + (isExperienceFilled ? 1 : 0);
     const totalFieldsCount = requiredFields.length + 2; 
-  
     completeness = (totalFilledFieldsCount / totalFieldsCount) * 100;
-  
     return completeness.toFixed(2);
   };
   const completenessPercentage = calculateProfileCompleteness();
   const progressDeg = (completenessPercentage / 100) * 360;
   const clampedPercentage = Math.max(0, Math.min(completenessPercentage, 100));
-
   console.log('Profile progressDeg:', progressDeg);
-
+  
   const handleUpload = async () => {
     if (!resume) {
       console.error('No file selected.');
@@ -287,7 +286,7 @@ resume,
     }
     console.log('resume:',formData)
     try {
-      const response = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, formData, {
+      const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -323,7 +322,7 @@ resume,
     console.log('payload:::::::: ', payload);
   
     try {
-      const response = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, payload);
+      const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, payload);
       console.log('Save response:', response);
   
       if (response.status === 200) {
@@ -356,11 +355,6 @@ resume,
   
     fetchEducationItem();
   }, []);
-
-
-
-
-
   const handleSaveClick = async() => {
     setLoading(true); 
     setSaveMessage('');
@@ -392,19 +386,18 @@ resume,
     try {
         let checkProfileResponse;
         try {
-          checkProfileResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
+          checkProfileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile`);
         } catch (error) {
           if (error.response && error.response.status === 404) {
-            checkProfileResponse = { status: 404, data: null }; // Simulate response structure
+            checkProfileResponse = { status: 404, data: null }; 
           } else {
-            throw error; // Re-throw other errors
+            throw error; 
           }
         }
         console.log('Existing Profile: ', checkProfileResponse);
         if (checkProfileResponse.status === 200 && checkProfileResponse.data) {
-          // Update existing profile
           console.log('data: ', data);
-          const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', data);
+          const updateResponse = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', data);
           if (updateResponse.status === 200) {
             console.log('Profile updated successfully');
             setSaveMessage('Profile updated successfully!');
@@ -413,8 +406,7 @@ resume,
             setSaveMessage(`Failed to update profile: ${updateResponse.statusText}`);
           }
         } else {
-          // Create new profile
-          const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', data);
+          const createResponse = await axios.post('https://recruitment-portal-rl5g.onrender.com/profile', data);
           if (createResponse.status === 200) {
             console.log('Profile created successfully');
             setIsSaved(true);
@@ -425,7 +417,7 @@ resume,
       } catch (error) {
         setSaveMessage(`Error saving profile: ${error.response ? error.response.data : error.message}`);
       } finally {
-        setLoading(false); // Hide loading indicator
+        setLoading(false); 
       }
     };
   const ethnicityOptions = [
@@ -436,54 +428,17 @@ resume,
     'Indian',
   ];
 
-  const responsibilityOptions = [
-    { value: 'Project Management', label: 'Project Management' },
-    { value: 'Team Leadership', label: 'Team Leadership' },
-    { value: 'Software Development', label: 'Software Development' },
-    { value: 'Customer Relations', label: 'Customer Relations' },
-    { value: 'Marketing', label: 'Marketing' },
-    { value: 'Other', label: 'Other' },
-];
-const handleProgressChange = (e) => {
-    setInProgress(e.target.checked);
-  };
-  const employmentTypeOptions = [
-    { value: 'full-time', label: 'full-time' },
-    { value: 'part-time', label: 'part-time' },
-    { value: 'contract', label: 'contract' },
-    { value: 'internship', label: 'internship' },
-  ];
-  const handleResponsibilityChange = (selectedOptions) => {
-    const selectedValues = selectedOptions.map((option) => option.value);
-    setResponsibilities(selectedValues);
-  };
-
-  const handleEmploymentTypeChange = (selectedOption) => {
-    setEmploymentType(selectedOption.value);
-  };
-
 
 const handleEditClick = () => {
   setIsModalOpen(true);
 };
-const handleEditClickEdu = () => {
-  setIsModalOpenEdu(true);
-};
-const handleEditClickExp = () => {
-  setIsModalOpenExp(true);
-};
+
 const handleCloseModal = () => {
   setIsModalOpen(false);
 
 };
-const handleCloseModalEdu = () => {
-  setIsModalOpenEdu(false);
 
-};
-const handleCloseModalExp = () => {
-  setIsModalOpenExp(false);
 
-};
 return (
     <div className="admin-page">
       <header className="admin-header">
@@ -503,12 +458,10 @@ return (
       <div className="admin-content">
         <aside className="side">
           <ul>
-            {/* <li><a href="#home">Home</a></li> */}
             <li><a href="/OneProfile">Profile</a></li>
-            {/* <li><a href="/ViewPosts">Documents</a></li> */}
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
-            <li><a href="/CV">Templates</a></li>
+            <li><a href="/CVTemplate">Templates</a></li>
 
           </ul>
         </aside>
@@ -562,9 +515,7 @@ return (
                         <FaUserCircle className="profile-icon" />
                       )}
                     </label>
-                    <FaEdit className="edit-icon" onClick={handleEditClick} />
-                    {(firstName || lastName || city || email || cellNumber) && (
-                  <div className="personal-info">
+                    <div className="personal-info">
                     {firstName && lastName && (
                       <p><FaUser className="info-icon" /> <strong>Name:</strong> {firstName} {lastName}</p>
                     )}
@@ -578,10 +529,9 @@ return (
                       <p><FaPhone className="info-icon" /> <strong>Phone Number:</strong> {cellNumber}</p>
                     )}
                   </div>
-                )}
+                    <FaEdit className="edit-icon" onClick={handleEditClick} />
       </div>
       </div>
-
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -684,7 +634,6 @@ return (
     </div>
   </div>
   <div className="row">
-
     <div className="right-column">
       <div className="question-text">Ethnicity *</div>
       <select className="edit-box" value={Ethnicity} onChange={(e) => setEthnicity(e.target.value)} required>
@@ -694,8 +643,6 @@ return (
         ))}
       </select>
     </div>
- 
- 
     <div className="left-column">
       <div className="question-text">Home Address *</div>
       <input type="text" className="edit-box" value={address} onChange={(e) => setAddress(e.target.value)} required />
@@ -706,8 +653,6 @@ return (
       <div className="question-text">Street</div>
       <input type="text" className="edit-box" value={street} onChange={(e) => setStreet(e.target.value)} />
     </div>
-
- 
     <div className="left-column">
       <div className="question-text">City *</div>
       <input type="text" className="edit-box" value={city} onChange={(e) => setCity(e.target.value)} required />
@@ -729,9 +674,6 @@ return (
         <option value="Western Cape">Western Cape</option>
       </select>
     </div>
-
-  
- 
     <div className="left-column">
       <div className="question-text">Zip Code *</div>
       <input type="text" className="edit-box" value={zipCode} onChange={(e) => setZipCode(e.target.value)} required />
@@ -748,22 +690,16 @@ return (
   </div>
 </div>
 </div>
-
 </div>
-
 </div>
    )}
    </div>
-
-</div>
-
-              
+</div> 
               <div className="jobsekerRight">
       <div className="jobsekerBox">
       <h2>Resume</h2>
       <div>
       <input type="file" onChange={handleFileChange} />
-
 <div className="button-container">
   <button className="blue-button" onClick={handleResumeSave}>Upload Resume</button>
 </div>
@@ -773,29 +709,18 @@ return (
 <p>Selected file: {resumeFileName || 'No file selected'}</p>
         <a href={resume} target="_blank" rel="noopener noreferrer">
           View Resume
-
   </a>
 </div>
       )}
     </div>
-    
     <Prof />
-
 <ProfEdu />
-
-
 </div>
-
                   </div>
-
-
                 </div>
-
                 </div>
             </div>
         </div>
- 
-        
       );
   };
 export default OneProfile;

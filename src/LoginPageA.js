@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './components/LoginA.css';
 import logo from './company logo.jpg';
 import axios from 'axios'; 
+import axiosInstance from './axiosConfig'; 
+
 axios.defaults.withCredentials = true;
 const LoginPageA = () => {
     const [email, setEmail] = useState('');
@@ -36,7 +38,7 @@ const LoginPageA = () => {
       }
       setLoading(true);
       try {
-        const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/login', {
+        const response = await axios.post('https://recruitment-portal-rl5g.onrender.com/login', {
           email: email,
           password: password
         });
@@ -47,7 +49,7 @@ const LoginPageA = () => {
           const { token } = response.data; 
           localStorage.setItem('token', token);
   console.log('token: ', token)
-          const userResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/user/me', {
+          const userResponse = await axios.get('https://recruitment-portal-rl5g.onrender.com/user/me', {
             headers: { Authorization: `Bearer ${token}` }
           });
   

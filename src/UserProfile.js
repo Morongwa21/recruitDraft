@@ -9,7 +9,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+                const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
                 console.log('Profile data:', response.data); // Add this line for debugging
                 setProfileData(response.data);
                 setLoading(false);

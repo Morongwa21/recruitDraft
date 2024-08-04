@@ -19,7 +19,7 @@ const ProfEdu = () => {
     const [editId, setEditId] = useState(null);    
     const fetchEducation = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+            const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
             if (response.status === 200) {
                 const profile = response.data.profile || {};
                 const education = Array.isArray(profile.education) ? profile.education : [];
@@ -54,7 +54,7 @@ const ProfEdu = () => {
         try {
             if (editId) {
                 // Patch the existing education item
-                const updateResponse = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, { education: [educationItem] });
+                const updateResponse = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, { education: [educationItem] });
                 console.log('updateResponse to send', updateResponse)
                 if (updateResponse.status === 200) {
                     console.log('Education updated successfully:', updateResponse.data.message);
@@ -65,12 +65,12 @@ const ProfEdu = () => {
                 }
             } else {
                 // Add a new education item
-                const checkEducationResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+                const checkEducationResponse = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
                 if (checkEducationResponse.status === 200 && checkEducationResponse.data) {
                     const existingProfile = checkEducationResponse.data;
                     const updatedProfile = { ...existingProfile, education: [...(existingProfile.education || []), educationItem] };
 
-                    const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', updatedProfile);
+                    const updateResponse = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', updatedProfile);
 
                     if (updateResponse.status === 200) {
                         console.log('Education has been updated successfully:', updateResponse.data.message);
@@ -80,7 +80,7 @@ const ProfEdu = () => {
                         console.error('Failed to update education:', updateResponse.status, updateResponse.statusText);
                     }
                 } else {
-                    const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { education: [educationItem] });
+                    const createResponse = await axios.post('https://recruitment-portal-rl5g.onrender.com/profile', { education: [educationItem] });
                     if (createResponse.status === 201) {
                         console.log('Education saved successfully:', createResponse.data.message);
                         fetchEducation();
@@ -99,7 +99,7 @@ const ProfEdu = () => {
 
     const handleDelete = async (educationId, index) => {
         try {
-            const response = await axios.delete(`https://recruitment-portal-l0n5.onrender.com/profile/education/${educationId}`);
+            const response = await axios.delete(`https://recruitment-portal-rl5g.onrender.com/profile/education/${educationId}`);
             if (response.status === 200) {
                 console.log('Education deleted successfully');
                 const updatedEducationItems = [...educationItem];

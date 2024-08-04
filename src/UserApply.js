@@ -21,7 +21,7 @@ const UserApply = () => {
     useEffect(() => {
         const fetchJobDetails = async () => {
             try {
-                const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/jobs/${id}`);
+                const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${id}`);
                 setJob(response.data);
                 localStorage.setItem('jobId', response.data._id);
             } catch (error) {

@@ -43,7 +43,7 @@ const SignUpPage = () => {
         };
         setIsLoading(true);
         try {
-            const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/register', formData, {
+            const response = await axios.post('https://recruitment-portal-rl5g.onrender.com/register', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

@@ -32,7 +32,7 @@ const JobApplicationPage = () => {
         setUsername(userResponse.data);
 
         try {
-          const profileResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
+          const profileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile`);
           setProfileData(profileResponse.data); // Set the profile data
 
           console.log('Profile response:', profileResponse);
@@ -76,7 +76,7 @@ const JobApplicationPage = () => {
     formData.append('resume', profileData.resume); // Use the resume from the profile
 
     try {
-      const response = await axios.post(`https://recruitment-portal-l0n5.onrender.com/applications/${job._id}/submit`, formData, {
+      const response = await axios.post(`https://recruitment-portal-rl5g.onrender.com/applications/${job._id}/submit`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

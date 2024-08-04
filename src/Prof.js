@@ -25,7 +25,8 @@ const Prof = () => {
   const employmentTypeOptions = [
     { value: 'full-time', label: 'Full-Time' },
     { value: 'part-time', label: 'Part-Time' },
-    // Add more options as needed
+    { value: 'contract', label: 'Contract' },
+    { value: 'internship', label: 'Internship' },
   ];
 
   const responsibilityOptions = [
@@ -36,7 +37,7 @@ const Prof = () => {
 
   const fetchExperience = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const experience = Array.isArray(profile.experience) ? profile.experience : [];
@@ -74,7 +75,7 @@ const Prof = () => {
     try {
       if (editingExperienceId) {
         // Update existing experience
-        const updateResponse = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, { experience: [experienceItem] });
+        const updateResponse = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, { experience: [experienceItem] });
         if (updateResponse.status === 200) {
           console.log('Work experience updated successfully:', updateResponse.data.message);
           fetchExperience();
@@ -84,13 +85,13 @@ const Prof = () => {
         }
       } else {
         // Add new experience
-        const checkExperienceResponse = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+        const checkExperienceResponse = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
         if (checkExperienceResponse.status === 200 && checkExperienceResponse.data) {
           const existingExperiences = checkExperienceResponse.data.experience || [];
           const updatedProfile = { experience: [...existingExperiences, experienceItem] };
   
           // Update profile with new experience
-          const updateResponse = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', updatedProfile);
+          const updateResponse = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', updatedProfile);
           if (updateResponse.status === 200) {
             console.log('Work experience updated successfully:', updateResponse.data.message);
             setIsModalOpenExp(false);
@@ -100,7 +101,7 @@ const Prof = () => {
           }
         } else {
           // Create profile if it doesn't exist
-          const createResponse = await axios.post('https://recruitment-portal-l0n5.onrender.com/profile', { experience: [experienceItem] });
+          const createResponse = await axios.post('https://recruitment-portal-rl5g.onrender.com/profile', { experience: [experienceItem] });
           if (createResponse.status === 201) {
             console.log('Work experience created successfully:', createResponse.data.message);
             setIsModalOpenExp(false);
@@ -146,7 +147,7 @@ const Prof = () => {
 
   const handleDelete = async (experienceId, index) => {
     try {
-      const response = await axios.delete(`https://recruitment-portal-l0n5.onrender.com/profile/experience/${experienceId}`);
+      const response = await axios.delete(`https://recruitment-portal-rl5g.onrender.com/profile/experience/${experienceId}`);
       if (response.status === 200) {
         console.log('Experience deleted successfully');
         const updatedExperienceItems = [...experienceItems];

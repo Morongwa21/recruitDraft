@@ -25,7 +25,7 @@ const IkusasaProgram = () => {
 
     const fetchJobs = async () => {
         try {
-            const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/jobs?page=${currentPage}`);
+            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs?page=${currentPage}`);
             const totalCount = parseInt(response.headers['x-total-count'], 10);
             setJobs(response.data);
             setFilteredJobs(response.data);
@@ -79,7 +79,7 @@ const IkusasaProgram = () => {
             {/* <li><a href="/ViewPosts">Documents</a></li> */}
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
-            <li><a href="/ApplicationTemplates">Templates</a></li>
+            <li><a href="/CVTemplate">Templates</a></li>
                     </ul>
                 </aside>
                 <div className="main-content">
