@@ -23,7 +23,7 @@ const ViewAJobs = () => {
         try {
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
-            const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
   
             if (response.status === 200) {
                 const userData = response.data;
@@ -39,7 +39,7 @@ const ViewAJobs = () => {
 
     const fetchUserApplications = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/applications/me');
+            const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/applications/me');
   
             if (response.status === 200) {
                 const applicationData = response.data;
@@ -58,7 +58,7 @@ const ViewAJobs = () => {
         try {
             const jobIds = applications.map(application => application.jobId);
             const jobDetailsPromises = jobIds.map(jobId =>
-                axios.get(`https://recruitment-portal-l0n5.onrender.com/jobs/${jobId}`)
+                axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${jobId}`)
             );
             const jobDetailsResponses = await Promise.all(jobDetailsPromises);
             const jobDetails = jobDetailsResponses.map(response => response.data);
@@ -77,7 +77,7 @@ const ViewAJobs = () => {
         // Handle logout logic here
     };
     const handleDeleteApplication = async (appId) => {
-        const deleteUrl = `https://recruitment-portal-l0n5.onrender.com/applications/${appId}/withdraw`;
+        const deleteUrl = `https://recruitment-portal-rl5g.onrender.com/applications/${appId}/withdraw`;
         console.log('Delete URL:', deleteUrl);  // Log the URL
         try {
             const response = await axios.delete(deleteUrl);
@@ -114,7 +114,7 @@ const ViewAJobs = () => {
             {/* <li><a href="/ViewPosts">Documents</a></li> */}
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
-            <li><a href="/ApplicationTemplates">Templates</a></li>
+            <li><a href="/CVTemplate">Templates</a></li>
                     </ul>
                 </aside>
                 <div className="main-content">

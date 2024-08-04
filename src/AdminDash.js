@@ -42,7 +42,7 @@ const AdminPage = ({}) => {
             // Fetch user details using stored user ID
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
-            const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
             console.log('User details response:', response); // Log the full response
 
             if (response.status === 200) {

@@ -37,7 +37,7 @@ const ResetPass = () => {
     // Create a form element to submit as POST
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'https://recruitment-portal-l0n5.onrender.com/forgot-password'; // Adjust to the correct URL
+    form.action = 'https://recruitment-portal-rl5g.onrender.com/forgot-password'; // Adjust to the correct URL
 
     // Create hidden input elements for password, passwordConfirm, and token
     const passwordInput = document.createElement('input');
@@ -65,13 +65,18 @@ const ResetPass = () => {
 
   return (
     <div className="login-page">
-            <div className="login-logo">
-                <img src={logo} alt="Company Logo" />
-            </div>
-            <div className="gradient-lines">
-                <div className="gradient-line"></div>
-                <div className="gradient-line"></div>
-            </div>
+         <header className="login-header">
+          <div className="logo">
+            <img src={logo} alt="Company logo" />
+          </div>
+          <nav>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="/UserViewPost">Job Listings</a></li>
+            </ul>
+          </nav>
+        </header>
+        
       <h2 className="login-heading">Reset Password</h2>
 
       <form className="login-container" onSubmit={handleSubmit}>

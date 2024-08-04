@@ -30,7 +30,7 @@ const WorkExperience = () => {
         const fetchUserDetails = async () => {
             try {
                 const userId = localStorage.getItem('userId');
-                const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
+                const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
                 if (response.status === 200) {
                     setUsername(response.data.username);
                     setFormData(prevState => ({

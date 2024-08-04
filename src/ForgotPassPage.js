@@ -31,7 +31,7 @@ const ForgotPassPage = () => {
 
         try {
             // Make a POST request to the specified endpoint
-            const response = await axios.post('https://recruitment-portal-l0n5.onrender.com/forgot-password', {
+            const response = await axios.post('https://recruitment-portal-rl5g.onrender.com/forgot-password', {
                 email: email
             });
 

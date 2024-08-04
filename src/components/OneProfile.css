@@ -252,7 +252,122 @@
       outline: none;
   }
   
-  
+  .cv-content {
+    margin-top: 4rem; 
+    flex: 1;
+    padding: 1rem;
+    color:black;
+    overflow-y: auto;
+    text-align: center;
+
+}
+.download-button {
+  background: linear-gradient(to right, #8b0000, #2575fc); /* Gradient color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.download-button:hover {
+  background-color: #00509e;
+}
+.cvb-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.back-icon {
+  margin-right: 8px;
+}
+
+.cvb-button:hover {
+  background-color: #a00000;
+}
+/* Default Theme */
+.cv-theme-default {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.cv-theme-default .header {
+  color: #003366;
+}
+
+/* Dark Theme */
+.cv-theme-dark {
+  background-color: #333;
+  color: #f4f4f4;
+}
+
+.cv-theme-dark .header {
+  color: #f4f4f4;
+}
+
+/* Elegant Theme */
+.cv-theme-elegant {
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.cv-theme-elegant .header {
+  color: #800000;
+}
+
+.template-selector {
+  margin: 20px;
+  padding: 15px;
+  background-color: #f9f9f9; /* Light grey background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.template-selector label {
+  font-size: 16px;
+  color: #333; /* Dark grey color for text */
+  margin-right: 10px;
+}
+
+.template-selector select {
+  padding: 8px 12px;
+  border: 1px solid #dcdcdc; /* Light border */
+  border-radius: 4px; /* Slightly rounded corners */
+  font-size: 14px;
+  color: #dcdcdc;
+  background: linear-gradient(to right, #8b0000, #2575fc); /* Gradient color */
+  cursor: pointer;
+  outline: none; /* Remove default outline */
+  transition: border-color 0.3s ease;
+}
+
+.template-selector select:focus {
+  border-color: #800000; /* Dark blue border on focus */
+}
+
+.template-selector select option {
+  padding: 10px;
+  background-color: #ffffff; /* White background for options */
+  color: #333;
+}
+
+.template-selector select option:hover {
+  background-color: #f1f1f1; /* Light grey background on hover */
+}
+   
     
    
     

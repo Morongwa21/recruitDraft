@@ -27,7 +27,9 @@ import JobDetails from './JobDetails';
 import OneProfile from './OneProfile';
 import Prof from './Prof';
 import ProfEdu from './ProfEdu';
-import CV from './CV';
+import CVTemplate from './CVTemplate';
+import ProfileModal from './ProfileModal';
+import Theme from './TemplateSelector';
 
 const App = () => {
 
@@ -41,7 +43,9 @@ const App = () => {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/Prof" element={<Prof />} />
         <Route path="/ProfEdu" element={<ProfEdu />} />
-        <Route path="/cv/:userId" element={<CV />} />
+        <Route path="/CVTemplate" element={<CVTemplate />} />
+        <Route path="/ProfileModal" element={<ProfileModal />} />
+        <Route path="/Theme" element={<Theme />} />
 
         <Route path="/OneProfile" element={<OneProfile />} />
         <Route path="/CreateJob" element={<CreateJob />} />

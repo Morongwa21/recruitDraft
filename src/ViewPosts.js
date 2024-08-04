@@ -23,7 +23,7 @@ const ViewPosts = () => {
       // Fetch user details using stored user ID
       const userId = localStorage.getItem('userId');
       console.log('Fetching details for user ID:', userId);
-      const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
+      const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
       console.log('User details response:', response); // Log the full response
 
       if (response.status === 200) {
@@ -38,7 +38,7 @@ const ViewPosts = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
       console.log('User details response:', response);
       setUserData(response.data);
       setIsLoading(false);
@@ -78,7 +78,7 @@ const ViewPosts = () => {
       formData.append('otherDocuments', editableOtherDocumentsFile);
 
       // Send PATCH request with form data to update user documents
-      const response = await axios.patch('https://recruitment-portal-l0n5.onrender.com/profile', formData, {
+      const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

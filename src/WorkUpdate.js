@@ -27,8 +27,8 @@ const WorkUpdate = () => {
     const fetchUserDetails = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`);
-            const profileResponse = await axios.get(`https://recruitment-portal-l0n5.onrender.com/profile`);
+            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
+            const profileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile`);
 
             if (response.status === 200) {
                 setUsername(response.data.username);
@@ -70,7 +70,7 @@ const WorkUpdate = () => {
             };
 
             // Send work experience data to API
-            const response = await axios.patch(`https://recruitment-portal-l0n5.onrender.com/profile`, {
+            const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, {
                 workExperience: workExperienceData,
             });
 
