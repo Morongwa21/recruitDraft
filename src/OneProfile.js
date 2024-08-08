@@ -41,7 +41,16 @@ const OneProfile = () => {
   const navigate = useNavigate();
   const [jobsAvailable, setJobsAvailable] = useState(0);
   const [resumeFileName, setResumeFileName] = useState('');
-
+  const [file, setFile] = useState(null);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [showStatusMessage, setShowStatusMessage] = useState(false);
+  useEffect(() => {
+    if (showStatusMessage) {
+      const timer = setTimeout(() => setShowStatusMessage(false), 3000); // Hide after 3 seconds
+      return () => clearTimeout(timer); // Clear timeout if component unmounts
+    }
+  }, [showStatusMessage]);
   useEffect(() => {
     fetchUserDetails();
     fetchJobs();
@@ -137,6 +146,7 @@ const OneProfile = () => {
           gender,
           disabilityStatus,
           resume,
+profilePicture,
           location: {
             city = '',
             address = '',
@@ -211,33 +221,46 @@ const OneProfile = () => {
   };
 
   const handleImageChange = async (event) => {
+    event.preventDefault();
     const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('profilePicture', file);
-        for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
+    if (!file) {
+      setError('Please select a file');
+      return;
+    }
   
-      try {
-        const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        console.log('profile response:', response);
-        if (response.data.success) {
-          setProfileImage(response.data.profile.profilePicture);
-          localStorage.setItem('profileImage', response.data.profile.profilePicture); // Save to localStorage
-        } else {
-          console.error('Failed to update profile picture:', response.data.message);
-        }
-      } catch (error) {
-        console.error('Error uploading profile picture:', error);
+    if (!file.type.startsWith('image/')) {
+      setError('Selected file is not an image');
+      return;
+    }
+  
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('profilePicture', file);
+  
+    try {
+      const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (response.data.success) {
+        // Assume the server returns a URL for the uploaded image
+        const imageURL = response.data.imageURL;
+        setProfileImage(imageURL);
+        localStorage.setItem('profileImage', imageURL); // Save URL from server
+        setSuccess('Profile picture updated successfully!');
+      } else {
+        setError('Failed to update profile picture.');
       }
+    } catch (error) {
+      setError('Error uploading profile picture');
+      console.error('Error uploading profile picture:', error);
+    } finally {
+      setLoading(false);
     }
   };
-
+  
+  
   const calculateProfileCompleteness = () => {
     let completeness = 0;
     const requiredFields = [
@@ -402,6 +425,9 @@ const OneProfile = () => {
             console.log('Profile updated successfully');
             setSaveMessage('Profile updated successfully!');
             setIsSaved(true);
+            handleCloseModal();
+            setShowStatusMessage(true);
+
           } else {
             setSaveMessage(`Failed to update profile: ${updateResponse.statusText}`);
           }
@@ -410,6 +436,8 @@ const OneProfile = () => {
           if (createResponse.status === 200) {
             console.log('Profile created successfully');
             setIsSaved(true);
+            setShowStatusMessage(true);
+
           } else {
             console.error('Failed to create profile:', createResponse.status, createResponse.statusText);
           }
@@ -706,7 +734,7 @@ return (
 </div>
 {resume && (
 <div>
-<p>Selected file: {resumeFileName || 'No file selected'}</p>
+<p>{resumeFileName || 'No file selected'}</p>
         <a href={resume} target="_blank" rel="noopener noreferrer">
           View Resume
   </a>

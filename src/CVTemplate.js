@@ -40,7 +40,11 @@ const CVTemplate = () => {
   const handleBack = () => {
     navigate(-1); // Go back to the previous page
   };
-
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    navigate('/LoginPageA');
+  };
   const getTemplateComponent = () => {
     switch (selectedTemplate) {
       case 'Elegant':
@@ -64,7 +68,7 @@ const CVTemplate = () => {
         </div>
         {dropdownVisible && (
           <div className="dropdown-menu">
-            <button onClick={() => { /* Implement logout */ }}>Logout</button>
+            <button onClick={handleLogout}>Logout</button>
           </div>
         )}
       </header>

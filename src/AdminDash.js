@@ -59,7 +59,7 @@ const AdminPage = ({}) => {
     const fetchJobPostings = async () => {
         try {
             
-            const response = await axios.get('https://recruitment-portal-l0n5.onrender.com/jobs');
+            const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/jobs');
             setJobPostings(response.data);
             prepareChartData(response.data);
 

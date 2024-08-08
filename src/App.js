@@ -30,6 +30,7 @@ import ProfEdu from './ProfEdu';
 import CVTemplate from './CVTemplate';
 import ProfileModal from './ProfileModal';
 import Theme from './TemplateSelector';
+import ProfilePic from './ProfilePic';
 
 const App = () => {
 
@@ -46,6 +47,7 @@ const App = () => {
         <Route path="/CVTemplate" element={<CVTemplate />} />
         <Route path="/ProfileModal" element={<ProfileModal />} />
         <Route path="/Theme" element={<Theme />} />
+        <Route path="/ProfilePic" element={<ProfilePic />} />
 
         <Route path="/OneProfile" element={<OneProfile />} />
         <Route path="/CreateJob" element={<CreateJob />} />
