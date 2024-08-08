@@ -337,3 +337,36 @@ body {
 .auth-modal-button:hover {
   background-color: #0056b3;
 }
+.password-field {
+  position: relative;
+}
+
+.show-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.show-password-btn:hover {
+  color: #007bff;
+}
+
+/* Adjust input field and icons if needed */
+.Login-input-field {
+  padding-right: 40px; /* Make space for the show/hide password button */
+}
+
+label {
+  display: flex;
+  align-items: center;
+}
+
+label .fa-user,
+label .fa-lock {
+  margin-right: 8px;
+}

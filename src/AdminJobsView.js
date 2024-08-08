@@ -162,7 +162,7 @@ const AdminJobsView = () => {
                                     <th>Description</th>
                                     <th>Work Experience</th>
                                     <th>Employment Type</th>
-                                    <th>Closing Data</th>
+                                    <th>Closing Date</th>
                                     <th>Requirements</th>
                                     <th>Skills</th>
                                     <th>Edit</th>

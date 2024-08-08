@@ -4,7 +4,7 @@ import './components/UserViewPosts.css';
 import logo from './company logo.jpg';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faSignInAlt, faHome } from '@fortawesome/free-solid-svg-icons';
 
 const UserViewPost = () => {
     const [jobs, setJobs] = useState([]);
@@ -68,15 +68,23 @@ const UserViewPost = () => {
     );
 };
 
-const Header = () => (
-    <header className="header">
-        <img src={logo} alt="Company Logo" className="logo" />
-        <nav className="nav">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/LoginPageA" className="nav-link">Sign-In|Sign-Up</a>
-        </nav>
-    </header>
-);
+const Header = () => {
+    const navigate = useNavigate();
+
+    return (
+        <header className="header">
+            <img src={logo} alt="Company Logo" className="logo" />
+            <nav className="nav">
+                <a href="/" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+                    <FontAwesomeIcon icon={faHome} /> Home
+                </a>
+                <a href="/LoginPageA" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/LoginPageA'); }}>
+                    <FontAwesomeIcon icon={faSignInAlt} /> Sign-In|Sign-Up
+                </a>
+            </nav>
+        </header>
+    );
+};
 
 const SearchBar = ({ onSearch }) => {
     const [keyword, setKeyword] = useState('');
