@@ -33,6 +33,8 @@ const AdminViewCandidates = () => {
         try {
             const userId = localStorage.getItem('userId');
             const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
+            console.log('User Details Response:', response); // Log the response
+
             if (response.status === 200) {
                 setUsername(response.data.username);
             } else {
@@ -46,6 +48,7 @@ const AdminViewCandidates = () => {
     const fetchCandidates = async () => {
         try {
             const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/applications');
+            console.log('Candidates Response:', response); // Log the response
 
             setCandidates(response.data);
             // Fetch job details for each candidate's application
@@ -58,17 +61,23 @@ const AdminViewCandidates = () => {
     const fetchJobDetails = async (applications) => {
         try {
             const jobIds = applications.map(application => application.jobId);
-            const jobDetailsPromises = jobIds.map(jobId =>
-                axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${jobId}`)
-            );
+            const jobDetailsPromises = jobIds.map(jobId => {
+              //  console.log('Fetching job details for jobId:', jobId); // Log the jobId
+                return axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/org/recruiter`);
+            });
 
             const jobDetailsResponses = await Promise.all(jobDetailsPromises);
+            console.log('Job Details Responses:', jobDetailsResponses); // Log the responses
+
             const jobDetails = jobDetailsResponses.map(response => response.data);
             setJobs(jobDetails);
 
             // Fetch profile data for each candidate
             await Promise.all(applications.map(async (application) => {
                 const profileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile/${application.userId}`);
+                
+
+                console.log('applicants:',profileResponse)
                 if (profileResponse.status === 200) {
                     setProfData(profileResponse.data);
                     console.log('proo:',profileResponse )
@@ -110,6 +119,7 @@ const AdminViewCandidates = () => {
     const candidatesToDisplay = filteredCandidates.length > 0 ? filteredCandidates : candidates;
     const handleViewProfile = async (userId, appId, jobId) => {
         try {
+            console.log('IDSSSSS:', userId)
             const profileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile/${userId}`);
             const applicationResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/applications/${appId}`);
             const jobResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${jobId}`);
