@@ -4,9 +4,8 @@ import './components/UserViewPosts.css';
 import logo from './company logo.jpg';  // Adjust the import as necessary
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
-
+import { faSearch, faMapMarkerAlt, faBuilding, faCalendarAlt, faTasks, faClock, faBriefcase, faDollarSign, faBook, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
+import { FaUser } from 'react-icons/fa';
 
 
 const IkusasaProgram = () => {
@@ -26,6 +25,7 @@ const IkusasaProgram = () => {
     const fetchJobs = async () => {
         try {
             const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs?page=${currentPage}`);
+            console.log('response:', response)
             const totalCount = parseInt(response.headers['x-total-count'], 10);
             setJobs(response.data);
             setFilteredJobs(response.data);
@@ -103,17 +103,62 @@ const IkusasaProgram = () => {
                         </button>
                     </div>
                     <div className="job-listings">
-                        {filteredJobs.map((job) => (
-                            <div key={job._id} className="job-container">
-                                <div className="job-card" onClick={() => navigate(`/UserApply/${job._id}`)}>
-                                    <h3>{job.title}</h3>
-                                    <p>Company: {job.company}</p>
-                                    <p>Location: {job.location}</p>
-                                    <p>Posted On: {new Date(job.createdAt).toLocaleDateString()}</p>
-                                    <p>Job Type: {job.jobType}</p>
-                                    <p>Number of Applications: {job.numApplications}</p>
-                                    <button className="button" onClick={() => navigate(`/UserApply/${job._id}`)}>View Details</button>
-                                </div>
+    {filteredJobs.map((job) => (
+        <div key={job._id} className="job-container">
+            <div className="job-card" onClick={() => navigate(`/UserApply/${job._id}`)}>
+                <h3 className="job-title">{job.title}</h3>
+
+                <p className="job-description">
+                    <strong>Description: </strong>
+                    <FontAwesomeIcon icon={faBook} className="job-icons" />
+                    {job.description}
+                </p>
+                <p className="job-company">
+                    <strong>Company: </strong>
+                    <FontAwesomeIcon icon={faBuilding} className="job-icons" />
+                    {job.company}
+                </p>
+
+                <p className="job-location">
+                    <strong>Location: </strong>
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="job-icons" />
+                    {job.location}
+                </p>
+
+                <p className="job-posted">
+                    <strong>Posted On: </strong>
+                    <FontAwesomeIcon icon={faCalendarAlt} className="job-icons" />
+                    {new Date(job.createdAt).toLocaleDateString()}
+                </p>
+
+                <p className="job-closure">
+                    <strong>Closing Date: </strong>
+                    <FontAwesomeIcon icon={faCalendarAlt} className="job-icons" />
+                    {new Date(job.closingDate).toLocaleDateString()}
+                </p>
+
+                <p className="job-employment-type">
+                    <strong>Employment Type: </strong>
+                    <FontAwesomeIcon icon={faBriefcase} className="job-icons" />
+                    {job.employmentType}
+                </p>
+
+
+                <p className="job-employment-type">
+                    <strong>Requirements: </strong>
+                    <FontAwesomeIcon icon={faGraduationCap} className="job-icons" />
+                    {job.requirements}
+                </p>
+
+                <p className="job-experience">
+                    <strong>Work Experience: </strong>
+                    <FontAwesomeIcon icon={faClock} className="job-icons" />
+                    {job.workExperience}
+                </p>
+
+                <button className="button" onClick={() => navigate(`/UserApply/${job._id}`)}>View Details</button>
+            </div>
+
                             </div>
                         ))}
                     </div>

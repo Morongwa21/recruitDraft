@@ -110,7 +110,7 @@ const ViewAJobs = () => {
                 <aside className="side">
                     <ul>
                           {/* <li><a href="#home">Home</a></li> */}
-            <li><a href="/ProfileUsers">Profile</a></li>
+            <li><a href="/OneProfile">Profile</a></li>
             {/* <li><a href="/ViewPosts">Documents</a></li> */}
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
@@ -118,50 +118,53 @@ const ViewAJobs = () => {
                     </ul>
                 </aside>
                 <div className="main-content">
-               
                     <div className="applications">
                         <h2>Your Job Applications</h2>
-                        {jobs.length > 0 ? (
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Job Title</th>
-                                        <th>Company</th>
-                                        <th>Status</th>
-                                        <th>View</th>
-                                        <th>Delete</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {applications.map(application => {
-                                        const job = jobs.find(job => job._id === application.jobId);
-                                        if (!job) {
+                        {applications.length > 0 ? (
+                            jobs.length > 0 ? (
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <th>Company</th>
+                                            <th>Status</th>
+                                            <th>View</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {applications.map(application => {
+                                            const job = jobs.find(job => job._id === application.jobId);
+                                            if (!job) {
+                                                return (
+                                                    <tr key={application._id}>
+                                                        <td colSpan="5">Job details not found</td>
+                                                    </tr>
+                                                );
+                                            }
                                             return (
                                                 <tr key={application._id}>
-                                                    <td colSpan="4">Job details not found</td>
+                                                    <td>{job.title}</td>
+                                                    <td>{job.company}</td>
+                                                    <td>{application.status}</td>
+                                                    <td>
+                                                        <Link to={`/JobDetails/${job._id}`}>View Job</Link>
+                                                    </td>
+                                                    <td>
+                                                        <button className="delete-button" onClick={() => handleDeleteApplication(application._id)}>
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             );
-                                        }
-                                        return (
-                                            <tr key={application._id}>
-                                                <td>{job.title}</td>
-                                                <td>{job.company}</td>
-                                                <td>{application.status}</td>
-                                                <td>
-                                                    <Link to={`/JobDetails/${job._id}`}>View Job</Link>
-                                                </td>
-                                                <td> <button className="delete-button" onClick={() => handleDeleteApplication(application._id)}>
-                                                        <FontAwesomeIcon icon={faTrash} />
-                                                    </button>
-</td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+                                        })}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <p>Loading job details...</p>
+                            )
                         ) : (
-                            <p>Loading job details...</p>
+                            <p>No applications found</p>
                         )}
                     </div>
                 </div>
