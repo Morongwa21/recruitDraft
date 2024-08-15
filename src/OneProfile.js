@@ -45,6 +45,8 @@ const OneProfile = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showStatusMessage, setShowStatusMessage] = useState(false);
+  const [preview, setPreview] = useState('');
+
   useEffect(() => {
     if (showStatusMessage) {
       const timer = setTimeout(() => setShowStatusMessage(false), 3000); // Hide after 3 seconds
@@ -75,15 +77,11 @@ const OneProfile = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        localStorage.setItem('resume', e.target.result); // Store file as Base64 string
-        setResume(file);
-        setResumeFileName(file.name); // Set the file name
-      };
-      reader.readAsDataURL(file); // Convert file to Base64
+      setResume(file);
+      setResumeFileName(file.name);
     }
   };
+  
 
   const fetchEducationItem = async () => {
     try {
@@ -182,7 +180,7 @@ profilePicture,
         setEthnicity(Ethnicity || '');
         setIdNumber(idNumber || '');
         setResume(resume || '');
-  
+        setProfileImage(profilePicture || ''); 
         setEducationItems(education || []);
         setExperienceItems(experience || []);
       } else {
@@ -222,29 +220,36 @@ profilePicture,
 
   const handleImageChange = async (event) => {
     event.preventDefault();
-    const file = event.target.files[0];
-    if (!file) {
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) {
       setError('Please select a file');
       return;
     }
-  
-    if (!file.type.startsWith('image/')) {
+
+    if (!selectedFile.type.startsWith('image/')) {
       setError('Selected file is not an image');
       return;
     }
-  
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('profilePicture', file);
-  
+
+    console.log('Selected file details:');
+    console.log('Name:', selectedFile.name);
+    console.log('Type:', selectedFile.type);
+    console.log('Size:', selectedFile.size);
+
     try {
-      const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', formData, {
+      setLoading(true);
+      const base64Image = await fileToBase64(selectedFile);
+      setPreview(base64Image); // Set preview URL
+
+      const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', {
+        profilePicture: base64Image, // Send Base64-encoded image
+      }, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json', // Ensure this matches the server expectations
         },
       });
+console.log('profile picture response:', response)
       if (response.data.success) {
-        // Assume the server returns a URL for the uploaded image
         const imageURL = response.data.imageURL;
         setProfileImage(imageURL);
         localStorage.setItem('profileImage', imageURL); // Save URL from server
@@ -298,22 +303,38 @@ profilePicture,
   const progressDeg = (completenessPercentage / 100) * 360;
   const clampedPercentage = Math.max(0, Math.min(completenessPercentage, 100));
   console.log('Profile progressDeg:', progressDeg);
+ 
   
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+  
+
+
   const handleUpload = async () => {
     if (!resume) {
       console.error('No file selected.');
       return;
     }
-    const formData = {
-      resume
-    }
-    console.log('resume:',formData)
+  
     try {
+      const base64Resume = await fileToBase64(resume);
+      const formData = {
+        resume: base64Resume, // Send the base64 string
+      };
+  
+      console.log('resume:', formData);
       const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json', // Adjust the content type accordingly
         },
       });
+  
       if (response.status === 200) {
         console.log('Resume uploaded successfully:', response.data.message);
         setIsSaved(true);
@@ -324,13 +345,11 @@ profilePicture,
       console.error('Error uploading resume:', error.message);
     }
   };
-
-
+  
   const handleResumeSave = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    const userId = localStorage.getItem('userId'); // Assuming you have userId stored in localStorage
+  
     if (!resume) {
       console.error('Resume is empty');
       setSaveMessage('Please upload a resume.');
@@ -338,21 +357,25 @@ profilePicture,
       return;
     }
   
-    const payload = {
-      resume,
-    };
-  
-    console.log('payload:::::::: ', payload);
-  
     try {
-      const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, payload);
+      const base64Resume = await fileToBase64(resume);
+      const payload = {
+        resume: base64Resume, // Send the base64 string
+      };
+  
+      console.log('payload:::::::: ', payload);
+      const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, payload, {
+        headers: {
+          'Content-Type': 'application/json', // Adjust the content type accordingly
+        },
+      });
+  
       console.log('Save response:', response);
   
       if (response.status === 200) {
         setSaveMessage('Profile saved successfully.');
         setIsSaved(true);
         localStorage.setItem('resumeFileName', resumeFileName);
-
       } else {
         setSaveMessage('Failed to save profile.');
       }
@@ -363,19 +386,17 @@ profilePicture,
       setLoading(false);
     }
   };
-
-
+  
   useEffect(() => {
     const storedResume = localStorage.getItem('resume');
     if (storedResume) {
-      setResume(storedResume);
+      setResume(storedResume); // Assuming storedResume is a base64 string
     }
-    
+  
     const storedResumeFileName = localStorage.getItem('resumeFileName');
     if (storedResumeFileName) {
       setResumeFileName(storedResumeFileName);
     }
-  
     fetchEducationItem();
   }, []);
   const handleSaveClick = async() => {
@@ -598,10 +619,10 @@ return (
     </div>
   </div>
   <div className="row">
-    <div className="left-column">
+    {/* <div className="left-column">
       <div className="question-text">Email *</div>
       <input type="email" className="edit-box" value={email} onChange={(e) => setEmail(e.target.value)} required />
-    </div>
+    </div> */}
     <div className="right-column">
       <div className="question-text">Which role best describes you?</div>
       <select className="edit-box" value={roleDescription} onChange={(e) => setRoleDescription(e.target.value)} required>

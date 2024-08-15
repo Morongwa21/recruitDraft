@@ -328,7 +328,7 @@ body {
 
 /* Modal Content */
 .user-modal-content {
-  background: linear-gradient(45deg, darkred, blue); /* Add gradient background */
+  background:#f9f9f9 ;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -352,4 +352,56 @@ body {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+.action-buttons {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: flex-end; /* Align buttons to the end (right side) */
+  gap: 0.5em; /* Space between buttons */
+}
+
+.action-buttons button {
+  background-color: #28a745; 
+  color: #fff;
+  border: none;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.action-buttons button:hover {
+  background-color: #218838; /* Darker shade for hover */
+}
+
+.action-buttons button.reject {
+  background-color: #dc3545; /* Red for Reject */
+}
+
+.action-buttons button.reject:hover {
+  background-color: #c82333;
+}
+
+.action-buttons button.schedule {
+  background-color: #ffc107; /* Yellow for Schedule Interview */
+}
+
+.action-buttons button.schedule:hover {
+  background-color: #e0a800;
+}
+
+.action-buttons button.offer {
+  background-color: #17a2b8; /* Teal for Offer */
+}
+
+.action-buttons button.offer:hover {
+  background-color: #138496;
+}
+
+.action-buttons button.success {
+  background-color: #28a745; /* Green for Success */
+}
+
+.action-buttons button.success:hover {
+  background-color: #218838;
 }

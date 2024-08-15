@@ -24,8 +24,8 @@ const JobApplicationPage = () => {
         const jobId = localStorage.getItem('jobId') || id;
         
         const [jobResponse, userResponse] = await Promise.all([
-          axios.get(`https://recruitment-portal-l0n5.onrender.com/jobs/${jobId}`),
-          axios.get(`https://recruitment-portal-l0n5.onrender.com/user/${userId}`)
+          axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${jobId}`),
+          axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`)
         ]);
 
         setJob(jobResponse.data);
@@ -127,9 +127,8 @@ const JobApplicationPage = () => {
     
       <div className="apply-container">
         <header className="apply-header">
-          <h1>{title}</h1>
-          <p>Company: {company}</p>
-          <p>Location: {location}</p>
+          <h1>Company: {company}</h1>
+          <p> Location: {location}</p>
           <p>Application Deadline: {new Date(createdAt).toLocaleDateString()}</p>
         </header>
         <section className="apply-section">
