@@ -74,8 +74,10 @@ const ViewAJobs = () => {
     };
 
     const handleLogout = () => {
-        // Handle logout logic here
-    };
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        navigate('/LoginPageA');
+      };
     const handleDeleteApplication = async (appId) => {
         const deleteUrl = `https://recruitment-portal-rl5g.onrender.com/applications/${appId}/withdraw`;
         console.log('Delete URL:', deleteUrl);  // Log the URL
@@ -148,7 +150,7 @@ const ViewAJobs = () => {
                                                     <td>{job.company}</td>
                                                     <td>{application.status}</td>
                                                     <td>
-                                                        <Link to={`/JobDetails/${job._id}`}>View Job</Link>
+                                                        <Link to={`/UserApply/${job._id}`}>View Job</Link>
                                                     </td>
                                                     <td>
                                                     <button className="delete-button" onClick={() => handleDeleteApplication(application._id)}>
