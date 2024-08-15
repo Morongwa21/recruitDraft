@@ -225,22 +225,25 @@ profilePicture,
       setError('Please select a file');
       return;
     }
-
+  
     if (!selectedFile.type.startsWith('image/')) {
       setError('Selected file is not an image');
       return;
     }
-
+  
     console.log('Selected file details:');
     console.log('Name:', selectedFile.name);
     console.log('Type:', selectedFile.type);
     console.log('Size:', selectedFile.size);
-
+  
     try {
       setLoading(true);
       const base64Image = await fileToBase64(selectedFile);
-      setPreview(base64Image); // Set preview URL
-
+      setPreview(base64Image); // Set preview URL immediately
+  
+      // Simulate immediate preview by setting the profile image
+      setProfileImage(base64Image);
+  
       const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', {
         profilePicture: base64Image, // Send Base64-encoded image
       }, {
@@ -248,10 +251,12 @@ profilePicture,
           'Content-Type': 'application/json', // Ensure this matches the server expectations
         },
       });
-console.log('profile picture response:', response)
+  
+      console.log('Profile picture response:', response);
+  
       if (response.data.success) {
         const imageURL = response.data.imageURL;
-        setProfileImage(imageURL);
+        setProfileImage(imageURL); // Update with the final image URL from the server
         localStorage.setItem('profileImage', imageURL); // Save URL from server
         setSuccess('Profile picture updated successfully!');
       } else {
@@ -268,6 +273,8 @@ console.log('profile picture response:', response)
   
   const calculateProfileCompleteness = () => {
     let completeness = 0;
+  
+    // Define required fields
     const requiredFields = [
       firstName,
       lastName,
@@ -283,25 +290,35 @@ console.log('profile picture response:', response)
       province,
       zipCode,
       country,
-      resume, 
     ];
-      const isEducationFilled = educationItems.length > 0;
+  
+    // Check if optional fields are filled
+    const isEducationFilled = educationItems.length > 0;
     const isExperienceFilled = experienceItems.length > 0;
-      const filledFieldsCount = requiredFields.filter(field => {
+  
+    // Count filled required fields
+    const filledFieldsCount = requiredFields.filter(field => {
       if (field === undefined || field === null) return false;
       if (typeof field === 'string' && field.trim() === '') return false;
-      if (Array.isArray(field) && field.length === 0) return false;
       return true;
     }).length;
   
+    // Total number of fields, including optional ones
+    const totalFieldsCount = requiredFields.length + 2; // +2 for education and experience
+  
+    // Total filled fields
     const totalFilledFieldsCount = filledFieldsCount + (isEducationFilled ? 1 : 0) + (isExperienceFilled ? 1 : 0);
-    const totalFieldsCount = requiredFields.length + 2; 
+  
+    // Calculate completeness percentage
     completeness = (totalFilledFieldsCount / totalFieldsCount) * 100;
-    return completeness.toFixed(2);
+  
+    // Clamp percentage between 0 and 100
+    return Math.min(Math.max(completeness, 0), 100).toFixed(2);
   };
+  
   const completenessPercentage = calculateProfileCompleteness();
   const progressDeg = (completenessPercentage / 100) * 360;
-  const clampedPercentage = Math.max(0, Math.min(completenessPercentage, 100));
+  
   console.log('Profile progressDeg:', progressDeg);
  
   
@@ -521,20 +538,20 @@ return (
               <p>Number of jobs available in the portal:</p>
               <p style={{ fontSize: '40px', color: 'blue' }}>{jobsAvailable}</p>
               </div>
-            <div className="job-stat-box">
-            <div className="profile-completeness">
-          <h3>Profile Completeness</h3>
-          <div className="progress-bar-container">
-          <div 
-            className="progress-bar-fill" 
-            style={{ width: `${clampedPercentage}%` }}
-          />
-        </div>
-        <div className="progress-label">{clampedPercentage}%</div>
-      </div>
-        
-            </div>
-          </div>
+              <div className="job-stat-box">
+  <div className="profile-completeness">
+    <h3>Profile Completeness</h3>
+    <div className="progress-bar-container">
+      <div 
+        className="progress-bar-fill" 
+        style={{ width: `${completenessPercentage}%` }}
+      />
+    </div>
+    <div className="progress-label">{completenessPercentage}%</div>
+  </div>
+</div>
+</div>
+
           <p></p>
           <div className="parent-container">
           <div className="jobsekerContainer">
@@ -544,26 +561,33 @@ return (
 
                     <h><strong>Personal Information</strong></h>
                     <div className="profile-icon-wrapper">
-                    <p>Click the icon to upload a picture:</p>
-                    <input
-                      type="file"
-                      id="profile-upload"
-                      className="profile-upload-input"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      style={{ display: 'none' }}
-                    />
-                    <label
-                      htmlFor="profile-upload"
-                      className="profile-icon-label"
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {profileImage ? (
-                        <img src={profileImage} alt="Profile Icon" className="profile-icon" />
-                      ) : (
-                        <FaUserCircle className="profile-icon" />
-                      )}
-                    </label>
+  <p>Click the icon to upload a picture:</p>
+  <input
+    type="file"
+    id="profile-upload"
+    className="profile-upload-input"
+    accept="image/*"
+    onChange={handleImageChange}
+    style={{ display: 'none' }}
+  />
+  <label
+    htmlFor="profile-upload"
+    className="profile-icon-label"
+    style={{ cursor: 'pointer' }}
+  >
+    {loading ? (
+      <div className="loading-spinner">
+        {/* You can replace this with your preferred loading spinner */}
+        <span>Loading...</span>
+      </div>
+    ) : profileImage ? (
+      <img src={profileImage} alt="Profile Icon" className="profile-icon" />
+    ) : (
+      <FaUserCircle className="profile-icon" />
+    )}
+  </label>
+
+
                     <div className="personal-info">
                     {firstName && lastName && (
                       <p><FaUser className="info-icon" /> <strong>Name:</strong> {firstName} {lastName}</p>
@@ -750,8 +774,9 @@ return (
       <div>
       <input type="file" onChange={handleFileChange} />
 <div className="button-container">
-  <button className="blue-button" onClick={handleResumeSave}>Upload Resume</button>
-</div>
+<button className="blue-button" onClick={handleResumeSave} disabled={loading}>
+          {loading ? 'Uploading...' : 'Upload Resume'}
+        </button></div>
 </div>
 {resume && (
 <div>

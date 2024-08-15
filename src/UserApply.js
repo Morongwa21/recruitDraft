@@ -55,7 +55,8 @@ const UserApply = () => {
         company,
         title,
         location,
-        jobType,
+        employmentType
+,
         createdAt,
         numApplications,
         jobSummary,
@@ -107,7 +108,8 @@ const UserApply = () => {
                 <div className="user-view-post-info">
                     <div>
                         <h4><FontAwesomeIcon icon={faBriefcase} /> Job Type:</h4>
-                        <p>{jobType || 'N/A'}</p>
+                        <p>{employmentType
+ || 'N/A'}</p>
                     </div>
                     <div>
                         <h4><FontAwesomeIcon icon={faCalendarAlt} /> Date Posted:</h4>

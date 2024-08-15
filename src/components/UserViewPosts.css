@@ -86,11 +86,109 @@ body {
 }
 
 .job-listings {
-    padding: 20px;
-    background-color: #fff;
-    color: black;
+  padding: 20px;
+  background-color: #f9f9f9; /* Light background color for better contrast */
+  color: #333; /* Dark text color for readability */
+  border-radius: 8px; /* Rounded corners for a softer look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 1200px; /* Maximum width for better content alignment */
+  margin: 0 auto; /* Center content horizontally */
 }
 
+.job-title {
+  font-size: 24px; /* Larger font for emphasis */
+  font-weight: bold; /* Bold to stand out */
+  color: linear-gradient(90deg, #007bff, #8B0000);  
+  margin-bottom: 10px; /* Space below the title */
+}
+
+/* Styling for Job Description */
+.job-description {
+  font-size: 16px; /* Standard font size */
+  font-weight: bold; /* Bold for emphasis */
+  background: linear-gradient(90deg, #007bff, #8B0000); /* Blue to dark red gradient */
+  -webkit-background-clip: text; /* Clipping background to text for gradient effect */
+  -webkit-text-fill-color: transparent; /* Make text fill transparent */
+  margin-bottom: 10px; /* Space below the closure date */
+  display: flex;
+  align-items: center;
+}
+
+/* Styling for Job Company */
+.job-company {
+  font-size: 16px; /* Standard font size */
+  font-weight: bold; /* Bold for emphasis */
+  background: linear-gradient(90deg, #007bff, #8B0000); /* Blue to dark red gradient */
+  -webkit-background-clip: text; /* Clipping background to text for gradient effect */
+  -webkit-text-fill-color: transparent; /* Make text fill transparent */
+  margin-bottom: 10px; /* Space below the closure date */
+  display: flex;
+  align-items: center; /* Space below the company name */
+}
+
+/* Styling for Job Location */
+.job-location {
+  font-size: 16px; /* Standard font size */
+  font-weight: bold; /* Bold for emphasis */
+  background: linear-gradient(90deg, #007bff, #8B0000); /* Blue to dark red gradient */
+  -webkit-background-clip: text; /* Clipping background to text for gradient effect */
+  -webkit-text-fill-color: transparent; /* Make text fill transparent */
+  margin-bottom: 10px; /* Space below the closure date */
+  display: flex;
+  align-items: center; /* Space below the location */
+}
+
+/* Styling for Job Posted Date */
+.job-posted {
+  font-size: 16px; /* Standard font size */
+  font-weight: bold; /* Bold for emphasis */
+  background: linear-gradient(90deg, #007bff, #8B0000); /* Blue to dark red gradient */
+  -webkit-background-clip: text; /* Clipping background to text for gradient effect */
+  -webkit-text-fill-color: transparent; /* Make text fill transparent */
+  margin-bottom: 10px; /* Space below the closure date */
+  display: flex;
+  align-items: center; /* Space below the posted date */
+}
+.job-employment-type {
+  font-size: 16px; /* Standard font size */
+  font-weight: bold; /* Bold for emphasis */
+  background: linear-gradient(90deg, #007bff, #8B0000); /* Blue to dark red gradient */
+  -webkit-background-clip: text; /* Clipping background to text for gradient effect */
+  -webkit-text-fill-color: transparent; /* Make text fill transparent */
+  margin-bottom: 10px; /* Space below the employment type */
+  display: flex;
+  align-items: center; /* Align icon and text */
+}
+
+/* Styling for Job Experience */
+.job-experience {
+  font-size: 16px; /* Standard font size */
+  font-weight: bold; /* Bold for emphasis */
+  background: linear-gradient(90deg, #007bff, #8B0000); /* Blue to dark red gradient */
+  -webkit-background-clip: text; /* Clipping background to text for gradient effect */
+  -webkit-text-fill-color: transparent; /* Make text fill transparent */
+  margin-bottom: 10px; /* Space below the experience */
+  display: flex;
+  align-items: center; /* Align icon and text */
+}
+/* Styling for Job Type */
+.job-type {
+  font-size: 16px; /* Standard font size */
+  color: #555; /* Medium-dark color */
+  display: flex;
+  align-items: center; /* Align icon and text */
+  margin-bottom: 10px; /* Space below the job type */
+}
+.job-closure {
+  font-size: 16px; /* Standard font size */
+  font-weight: bold; /* Bold for emphasis */
+  background: linear-gradient(90deg, #007bff, #8B0000); /* Blue to dark red gradient */
+  -webkit-background-clip: text; /* Clipping background to text for gradient effect */
+  -webkit-text-fill-color: transparent; /* Make text fill transparent */
+  margin-bottom: 10px; /* Space below the closure date */
+  display: flex;
+  align-items: center; /* Align icon and text */
+}
 .job-details {
     padding: 20px;
     background-color: #f9f9f9;
