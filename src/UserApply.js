@@ -5,25 +5,34 @@ import './components/ViewJobDetails.css';
 import logo from './company logo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faMapMarkerAlt, faBriefcase, faCalendarAlt, faUsers, faClipboardList, faCheckCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt, FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 const UserApply = () => {
     const { id } = useParams();
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [hasApplied, setHasApplied] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
     const navigate = useNavigate();
 
-
-
     useEffect(() => {
         const fetchJobDetails = async () => {
             try {
-                const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${id}`);
-                setJob(response.data);
-                localStorage.setItem('jobId', response.data._id);
+                const jobResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${id}`);
+                const jobData = jobResponse.data;
+                setJob(jobData);
+                localStorage.setItem('jobId', jobData._id);
+
+                // Fetch application status
+                const userId = localStorage.getItem('userId');
+                if (userId) {
+                    const applicationResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/applications/me`);
+                    const userApplications = applicationResponse.data;
+                    const applied = userApplications.some(application => application.jobId === jobData._id);
+                    setHasApplied(applied);
+                }
             } catch (error) {
                 setError('Error fetching job details');
             } finally {
@@ -33,9 +42,25 @@ const UserApply = () => {
 
         fetchJobDetails();
     }, [id]);
+
     const handleBack = () => {
         navigate(-1); // Go back to the previous page
     };
+
+    const handleApply = () => {
+        navigate('/JobApplicationPage');
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        navigate('/LoginPage');
+    };
+
+    const handleUserInfoClick = () => {
+        setDropdownVisible(!dropdownVisible);
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -48,15 +73,11 @@ const UserApply = () => {
         return <div>No job details available</div>;
     }
 
-
-
-
     const {
         company,
         title,
         location,
-        employmentType
-,
+        employmentType,
         createdAt,
         numApplications,
         jobSummary,
@@ -64,43 +85,26 @@ const UserApply = () => {
         requirements = [],
     } = job;
 
-
-
-    const handleApply = () => {
-       
-        navigate('/JobApplicationPage');
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        navigate('/LoginPage');
-      };
-
-      const handleUserInfoClick = () => {
-        setDropdownVisible(!dropdownVisible);
-      };
     return (
         <div className="admin-page">
-        <header className="admin-header">
-          <div className="logo">
-            <img src={logo} alt="Company Logo" />
-          </div>
-          <div className="user-info" onClick={handleUserInfoClick}>
-          <FaUser className="user-icon" />
-        </div>
-        {dropdownVisible && (
-          <div className="dropdown-menu">
-            <button onClick={handleLogout}>Logout</button>
-          </div>
-        )}
-        </header>
-           
+            <header className="admin-header">
+                <div className="logo">
+                    <img src={logo} alt="Company Logo" />
+                </div>
+                <div className="user-info" onClick={handleUserInfoClick}>
+                    <FaUser className="user-icon" />
+                </div>
+                {dropdownVisible && (
+                    <div className="dropdown-menu">
+                        <button onClick={handleLogout}>Logout</button>
+                    </div>
+                )}
+            </header>
+
             <h1 className="job-details-heading">Job Details</h1>
-            
+
             <div className="user-view-post-container">
                 <div className="user-view-post-header">
-                    
                     <h2><FontAwesomeIcon icon={faBuilding} /> {company}</h2>
                     <h3><FontAwesomeIcon icon={faBriefcase} /> {title}</h3>
                     <p><FontAwesomeIcon icon={faMapMarkerAlt} /> {location}</p>
@@ -108,8 +112,7 @@ const UserApply = () => {
                 <div className="user-view-post-info">
                     <div>
                         <h4><FontAwesomeIcon icon={faBriefcase} /> Job Type:</h4>
-                        <p>{employmentType
- || 'N/A'}</p>
+                        <p>{employmentType || 'N/A'}</p>
                     </div>
                     <div>
                         <h4><FontAwesomeIcon icon={faCalendarAlt} /> Date Posted:</h4>
@@ -145,13 +148,17 @@ const UserApply = () => {
                     )}
                 </div>
                 <div className="user-view-post-buttons">
-                <button onClick={handleApply}>Apply</button>
-                <button className="back-button" onClick={handleBack}>
-                <FontAwesomeIcon icon={faArrowLeft} />  Back
-            </button>
-                
+                    <button 
+                        onClick={handleApply} 
+                        disabled={hasApplied} 
+                        className={hasApplied ? 'apply-button-disabled' : 'apply-button'}
+                    >
+                        {hasApplied ? 'Already Applied' : 'Apply'}
+                    </button>
+                    <button className="back-button" onClick={handleBack}>
+                        <FontAwesomeIcon icon={faArrowLeft} /> Back
+                    </button>
                 </div>
-
             </div>
         </div>
     );
