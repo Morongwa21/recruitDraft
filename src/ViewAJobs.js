@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons'; 
-import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 const ViewAJobs = () => {
     const [username, setUsername] = useState('');
@@ -82,7 +82,7 @@ const ViewAJobs = () => {
         try {
             const response = await axios.delete(deleteUrl);
             if (response.status === 200) {
-                alert('Application deleted successfully.');
+                alert('Application withdrawn successfully.');
                 // Refresh the applications list after deletion
                 fetchUserApplications();
             }
@@ -129,7 +129,7 @@ const ViewAJobs = () => {
                                             <th>Company</th>
                                             <th>Status</th>
                                             <th>View</th>
-                                            <th>Delete</th>
+                                            <th>Withdraw</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -151,8 +151,8 @@ const ViewAJobs = () => {
                                                         <Link to={`/JobDetails/${job._id}`}>View Job</Link>
                                                     </td>
                                                     <td>
-                                                        <button className="delete-button" onClick={() => handleDeleteApplication(application._id)}>
-                                                            <FontAwesomeIcon icon={faTrash} />
+                                                    <button className="delete-button" onClick={() => handleDeleteApplication(application._id)}>
+                                                            <FaTimesCircle />
                                                         </button>
                                                     </td>
                                                 </tr>
