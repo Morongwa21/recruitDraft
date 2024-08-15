@@ -95,7 +95,7 @@ function AuthPage() {
 
   const goToCompleteProfile = () => {
     setModalIsOpen(false);
-    navigate('/OneProfile');
+    navigate('/LoginPageA');
   };
 
   const goToJobSearch = () => {
@@ -161,7 +161,7 @@ function AuthPage() {
       >
         <h2>Welcome!</h2>
         <p>We have created your account. Complete your profile for personalized search results.</p>
-        <button onClick={goToCompleteProfile} className="auth-modal-button">Complete Profile</button>
+        <button onClick={goToCompleteProfile} className="auth-modal-button">Login</button>
         <button onClick={goToJobSearch} className="auth-modal-button">Job Search</button>
       </Modal>
       <Modal

@@ -15,7 +15,7 @@ const SignUpPage = () => {
     const [username, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [accountType, setAccountType] = useState('jobseeker');
+    const [accountType, setAccountType] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleTermsChange = () => {
@@ -92,16 +92,17 @@ const SignUpPage = () => {
             <form className="login-container" onSubmit={handleSubmit}>
                 <label htmlFor="accountType">Account Type:</label>
                 <select
-                    id="accountType"
-                    name="accountType"
-                    className="Login-input-field"
-                    value={accountType}
-                    onChange={(e) => setAccountType(e.target.value)}
-                    required
-                >
-                    <option value="jobseeker">Jobseeker</option>
-                    <option value="recruiter">Recruiter</option>
-                </select>
+    id="accountType"
+    name="accountType"
+    className="Login-input-field"
+    value={accountType}
+    onChange={(e) => setAccountType(e.target.value)}
+    required
+>
+<option value="" disabled>Select Account Type</option> {/* Default option */}
+<option value="jobseeker">Jobseeker</option>
+    <option value="recruiter">Recruiter</option>
+</select>
                 <label htmlFor="username">Username:</label>
                 <input
                     type="text"

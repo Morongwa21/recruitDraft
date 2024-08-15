@@ -3,6 +3,7 @@ import './components/JobPosting.css'; // Import CSS for styling
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate } from 'react-router-dom';
 import logo from './company logo.jpg';
+import jobOpenning from './job vector.jpg'; // Import your image here
 
 const CreateJob = () => {
     const [title, setJobTitle] = useState('');
@@ -167,7 +168,8 @@ const CreateJob = () => {
                     )}
                 </div>            </header>
             <div className="main-content">
-                <h2>Job Postings</h2>
+                <img src={jobOpenning} alt="Job Postings" className="job-icon" />
+
                 <div className="create-job-container">
                     <section className="job-form">
                         <form onSubmit={handleSubmit}>

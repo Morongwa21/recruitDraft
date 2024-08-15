@@ -133,8 +133,7 @@ const AdminPage = ({}) => {
         <li><Link to="/AdminJobsView"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
         {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}
-        <li><a href="#analytics"><FontAwesomeIcon icon={faChartBar} /> Analytics</a></li>
-        {/* <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li> */}
+         <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li> 
                     </ul>
                 </aside>
 
