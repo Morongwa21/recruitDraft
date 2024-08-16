@@ -41,7 +41,7 @@ const Prof = () => {
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const experience = Array.isArray(profile.experience) ? profile.experience : [];
-        console.log('experience------->', response)
+        console.log('Fetched experience:', experience);
         setExperienceItems(experience);
       } else {
         console.error('Failed to fetch profile:', response.status, response.statusText);
@@ -53,70 +53,48 @@ const Prof = () => {
 
   useEffect(() => {
     fetchExperience();
+    console.log(experienceItems)
   }, []);
 
 
   const handleSaveWorkExperience = async () => {
     setLoading(true);
-  
+
     const formattedStartDate = startDate.toISOString().split('T')[0];
     const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
-  
+
+    // Prepare the experience item, excluding _id if it's null or undefined
     const experienceItem = {
-      _id: editingExperienceId,
-      title,
-      company,
-      startDate: formattedStartDate,
-      endDate: inProgress ? null : formattedEndDate,
-      employmentType,
-      responsibilities: responsibilities.join(', ')
+        _id: editingExperienceId || undefined, // Only include _id if updating an existing experience
+        title,
+        company,
+        startDate: formattedStartDate,
+        endDate: inProgress ? null : formattedEndDate,
+        employmentType,
+        responsibilities: responsibilities.join(', ')
     };
-  
+
     try {
-      if (editingExperienceId) {
-        // Update existing experience
-        const updateResponse = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, { experience: [experienceItem] });
-        if (updateResponse.status === 200) {
-          console.log('Work experience updated successfully:', updateResponse.data.message);
-          fetchExperience();
-          setIsModalOpenExp(false);
-        } else {
-          console.error('Failed to update work experience:', updateResponse.status, updateResponse.statusText);
-        }
-      } else {
-        // Add new experience
-        const checkExperienceResponse = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
-        if (checkExperienceResponse.status === 200 && checkExperienceResponse.data) {
-          const existingExperiences = checkExperienceResponse.data.experience || [];
-          const updatedProfile = { experience: [...existingExperiences, experienceItem] };
-  
-          // Update profile with new experience
-          const updateResponse = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', updatedProfile);
-          if (updateResponse.status === 200) {
-            console.log('Work experience updated successfully:', updateResponse.data.message);
+        // Send the PATCH request
+        const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', { experience: [experienceItem] });
+
+        if (response.status === 200 || response.status === 201) {
+            console.log('Work experience saved successfully:', response.data.message);
             setIsModalOpenExp(false);
-            fetchExperience();
-          } else {
-            console.error('Failed to update work experience:', updateResponse.status, updateResponse.statusText);
-          }
+            fetchExperience(); // Refresh the experience list
+
+            // Update the experience items list with the new or updated experience
+            const updatedExperienceItems = response.data.profile.experience; // Adjust this based on your API response structure
+            setExperienceItems(updatedExperienceItems);
         } else {
-          // Create profile if it doesn't exist
-          const createResponse = await axios.post('https://recruitment-portal-rl5g.onrender.com/profile', { experience: [experienceItem] });
-          if (createResponse.status === 201) {
-            console.log('Work experience created successfully:', createResponse.data.message);
-            setIsModalOpenExp(false);
-            fetchExperience();
-          } else {
-            console.error('Failed to save experience:', createResponse.status, createResponse.statusText);
-          }
+            console.error('Failed to save experience:', response.status, response.statusText);
         }
-      }
     } catch (error) {
-      console.error('Error saving work experience:', error.message);
+        console.error('Error saving work experience:', error.message);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   const handleEditClickExp = (index) => {
     if (index < 0 || index >= experienceItems.length) {
@@ -146,6 +124,12 @@ const Prof = () => {
   };
 
   const handleDelete = async (experienceId, index) => {
+    if (!experienceId) {
+      console.error('Cannot delete experience: Experience ID is missing.');
+      return;
+    }
+  
+    console.log('Deleting experience ID:', experienceId);
     try {
       const response = await axios.delete(`https://recruitment-portal-rl5g.onrender.com/profile/experience/${experienceId}`);
       if (response.status === 200) {
@@ -333,9 +317,15 @@ const Prof = () => {
                   className="edit-icon"
                 />
                 <FaTrash
-                  onClick={() => handleDelete(exp._id, index)}
-                  className="delete-icon"
-                />
+  onClick={() => {
+    if (exp._id) {
+      handleDelete(exp._id, index);
+    } else {
+      console.error('Cannot delete experience: Experience ID is missing.');
+    }
+  }}
+  className="delete-icon"
+/>
               </div>
             </div>
           ))
