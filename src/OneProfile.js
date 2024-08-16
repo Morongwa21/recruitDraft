@@ -225,43 +225,47 @@ profilePicture,
       setError('Please select a file');
       return;
     }
-  
+
     if (!selectedFile.type.startsWith('image/')) {
       setError('Selected file is not an image');
       return;
     }
-  
-    console.log('Selected file details:');
-    console.log('Name:', selectedFile.name);
-    console.log('Type:', selectedFile.type);
-    console.log('Size:', selectedFile.size);
-  
+
+    console.log('Selected file details:', {
+      Name: selectedFile.name,
+      Type: selectedFile.type,
+      Size: selectedFile.size,
+    });
+
     try {
       setLoading(true);
-      const base64Image = await fileToBase64(selectedFile);
-      setPreview(base64Image); // Set preview URL immediately
-  
-      // Simulate immediate preview by setting the profile image
-      setProfileImage(base64Image);
-  
-      const response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', {
-        profilePicture: base64Image, // Send Base64-encoded image
-      }, {
-        headers: {
-          'Content-Type': 'application/json', // Ensure this matches the server expectations
-        },
-      });
-  
-      console.log('Profile picture response:', response);
-  
-      if (response.data.success) {
-        const imageURL = response.data.imageURL;
-        setProfileImage(imageURL); // Update with the final image URL from the server
-        localStorage.setItem('profileImage', imageURL); // Save URL from server
-        setSuccess('Profile picture updated successfully!');
-      } else {
-        setError('Failed to update profile picture.');
-      }
+
+      // Convert file to Base64 and display it immediately as a preview
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64Image = reader.result;
+        setProfileImage(base64Image); // Show preview immediately
+
+        // Upload the image to the server
+        const response = await axios.patch(
+          'https://recruitment-portal-rl5g.onrender.com/profile',
+          { profilePicture: base64Image },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        console.log('Profile picture response:', response);
+
+        if (response.data.success) {
+          const imageURL = response.data.imageURL;
+          setProfileImage(imageURL); // Update with final image URL from the server
+          localStorage.setItem('profileImage', imageURL); // Save URL from server
+          setSuccess('Profile picture updated successfully!');
+        } else {
+          setError('Failed to update profile picture.');
+        }
+      };
+
+      reader.readAsDataURL(selectedFile); // Convert to Base64 string
     } catch (error) {
       setError('Error uploading profile picture');
       console.error('Error uploading profile picture:', error);
@@ -577,8 +581,8 @@ return (
   >
     {loading ? (
       <div className="loading-spinner">
-        {/* You can replace this with your preferred loading spinner */}
-        <span>Loading...</span>
+                            <FaSpinner className="spinner-icon" />
+                            <span>Loading...</span>
       </div>
     ) : profileImage ? (
       <img src={profileImage} alt="Profile Icon" className="profile-icon" />
@@ -586,6 +590,9 @@ return (
       <FaUserCircle className="profile-icon" />
     )}
   </label>
+  {/* {error && <p className="error-message">{error}</p>}
+                    {success && <p className="success-message">{success}</p>} */}
+                 
 
 
                     <div className="personal-info">
