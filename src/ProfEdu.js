@@ -38,11 +38,12 @@ const ProfEdu = () => {
 
     const handleEducation = async () => {
         setLoading(true);
+        
         const formattedStartDate = startDate.toISOString().split('T')[0];
         const formattedEndDate = endDate ? endDate.toISOString().split('T')[0] : null;
-
+    
         const educationItem = {
-            _id: editId,
+            _id: editId || undefined,  // Only include _id if updating an existing education item
             institution,
             institutionType,
             degree,
@@ -50,45 +51,24 @@ const ProfEdu = () => {
             startDate: formattedStartDate,
             endDate: inProgress ? null : formattedEndDate,
         };
-
+    
         try {
+            let response;
+            
             if (editId) {
-                // Patch the existing education item
-                const updateResponse = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, { education: [educationItem] });
-                console.log('updateResponse to send', updateResponse)
-                if (updateResponse.status === 200) {
-                    console.log('Education updated successfully:', updateResponse.data.message);
-                    fetchEducation();
-                    handleCloseModalEdu(); // Close modal after saving
-                } else {
-                    console.error('Failed to update education:', updateResponse.status, updateResponse.statusText);
-                }
+                // Update the existing education item
+                response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', { education: [educationItem] });
             } else {
                 // Add a new education item
-                const checkEducationResponse = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
-                if (checkEducationResponse.status === 200 && checkEducationResponse.data) {
-                    const existingProfile = checkEducationResponse.data;
-                    const updatedProfile = { ...existingProfile, education: [...(existingProfile.education || []), educationItem] };
-
-                    const updateResponse = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', updatedProfile);
-
-                    if (updateResponse.status === 200) {
-                        console.log('Education has been updated successfully:', updateResponse.data.message);
-                        fetchEducation();
-                        handleCloseModalEdu(); // Close modal after saving
-                    } else {
-                        console.error('Failed to update education:', updateResponse.status, updateResponse.statusText);
-                    }
-                } else {
-                    const createResponse = await axios.post('https://recruitment-portal-rl5g.onrender.com/profile', { education: [educationItem] });
-                    if (createResponse.status === 201) {
-                        console.log('Education saved successfully:', createResponse.data.message);
-                        fetchEducation();
-                        handleCloseModalEdu(); // Close modal after saving
-                    } else {
-                        console.error('Failed to save education:', createResponse.status, createResponse.statusText);
-                    }
-                }
+                response = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', { education: [educationItem] });
+            }
+    
+            if (response.status === 200 || response.status === 201) {
+                console.log('Education saved successfully:', response.data.message);
+                fetchEducation();  // Refresh the education list
+                handleCloseModalEdu();  // Close the modal after saving
+            } else {
+                console.error('Failed to save education:', response.status, response.statusText);
             }
         } catch (error) {
             console.error('Error saving education:', error.message);
