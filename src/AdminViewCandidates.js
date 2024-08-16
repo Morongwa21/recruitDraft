@@ -22,6 +22,8 @@ const AdminViewCandidates = () => {
     const [loading, setLoading] = useState(false); 
     const [profileData, setProfileData] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [resumeUrl, setResumeUrl] = useState(null);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -184,6 +186,18 @@ const AdminViewCandidates = () => {
             }
             // Handle other actions (Schedule Interview, Offer, Success) if needed
         };
+        const handleDownloadResume = async (userId) => {
+            try {
+                // Construct the URL to download the resume based on the updated route
+                const url = `https://recruitment-portal-rl5g.onrender.com/profile/resume/${userId}`;
+                // Set the resume URL for downloading
+                setResumeUrl(url);
+                // Trigger the download
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('Error downloading resume:', error.message);
+            }
+        };
     return (
         <div className="admin-page">
             <header className="admin-header">
@@ -239,6 +253,17 @@ const AdminViewCandidates = () => {
                                                     <p><FontAwesomeIcon icon={faBuilding} /> Company: {job.company}</p>
                                                     <p><FontAwesomeIcon icon={faMapMarkerAlt} /> Location: {job.location}</p>
                                                     <p><FontAwesomeIcon icon={faClock} /> Status: {candidate.status}</p>
+                                                    <p>
+                                                        <FontAwesomeIcon icon={faClock} /> Resume: 
+                                                        {candidate.resume ? (
+                                                            <button onClick={() => handleDownloadResume(candidate.userId)}>
+                                                                Download Resume
+                                                            </button>
+                                                        ) : (
+                                                            'No resume available'
+                                                        )}
+                                                    </p> 
+
                                                 </div>
                                             )}
                                             <button 

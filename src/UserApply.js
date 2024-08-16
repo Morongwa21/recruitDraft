@@ -4,7 +4,7 @@ import axios from 'axios';
 import './components/ViewJobDetails.css';
 import logo from './company logo.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding, faMapMarkerAlt, faBriefcase, faCalendarAlt, faUsers, faClipboardList, faCheckCircle, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding, faMapMarkerAlt, faBriefcase, faCalendarAlt, faUsers, faClipboardList, faCheckCircle, faArrowLeft, faDollarSign } from '@fortawesome/free-solid-svg-icons';
 import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt, FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 const UserApply = () => {
@@ -78,6 +78,12 @@ const UserApply = () => {
         title,
         location,
         employmentType,
+        closingDate,
+        salary,
+        skills = [],
+        workExperience,
+        updatedAt,
+
         createdAt,
         numApplications,
         jobSummary,
@@ -119,6 +125,18 @@ const UserApply = () => {
                         <p>{new Date(createdAt).toLocaleDateString()}</p>
                     </div>
                     <div>
+                        <h4><FontAwesomeIcon icon={faCalendarAlt} /> Closing Date:</h4>
+                        <p>{new Date(closingDate).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                        <h4><FontAwesomeIcon icon={faCalendarAlt} /> Last Updated:</h4>
+                        <p>{new Date(updatedAt).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                        <h4><FontAwesomeIcon icon={faDollarSign} /> Salary:</h4>
+                        <p>{salary || 'N/A'}</p>
+                    </div>
+                    <div>
                         <h4><FontAwesomeIcon icon={faUsers} /> Number of Applications:</h4>
                         <p>{numApplications || 'N/A'}</p>
                     </div>
@@ -148,12 +166,16 @@ const UserApply = () => {
                     )}
                 </div>
                 <div className="user-view-post-buttons">
-                    <button 
-                        onClick={handleApply} 
-                        disabled={hasApplied} 
-                        className={hasApplied ? 'apply-button-disabled' : 'apply-button'}
+                    <button
+                        onClick={handleApply}
+                        disabled={hasApplied}
+                        style={{
+                            backgroundColor: hasApplied ? '#ccc' : '#007bff',
+                            color: hasApplied ? '#666' : '#fff',
+                            cursor: hasApplied ? 'not-allowed' : 'pointer'
+                        }}
                     >
-                        {hasApplied ? 'Already Applied' : 'Apply'}
+                        {hasApplied ? 'Applied' : 'Apply'}
                     </button>
                     <button className="back-button" onClick={handleBack}>
                         <FontAwesomeIcon icon={faArrowLeft} /> Back
