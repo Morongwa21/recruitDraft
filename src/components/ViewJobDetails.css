@@ -11,6 +11,22 @@
     color: #333;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+@media (max-width: 768px) {
+    .user-view-post-container {
+        width: 95%; /* Increase width for better fit on smaller screens */
+        padding: 15px; /* Reduce padding for smaller screens */
+        margin: 20px auto; /* Reduce margin for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .user-view-post-container {
+        width: 90%; /* Full width on very small screens */
+        padding: 5px; /* Further reduce padding for very small screens */
+        margin: 10px auto; /* Further reduce margin for very small screens */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Lessen the shadow for smaller screens */
+    }
+}
 .spinner-container {
     display: flex;
     justify-content: center;
@@ -37,9 +53,8 @@
 }
 .job-details-heading {
     text-align: center;
-    margin-top: 20px;
-    margin-top: 50px;
-
+    margin-bottom: 80px;
+margin-top: 80px;
     font-size: 24px;
     color: #333;
 }
@@ -74,6 +89,18 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .user-view-post-info {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+        align-items: flex-start; /* Align items to the start on smaller screens */
+    }
+
+    .user-view-post-info > * {
+        margin-bottom: 10px; /* Add space between stacked items */
+        width: 100%; /* Ensure each item takes full width */
+    }
 }
 
 .user-view-post-info div {
@@ -145,4 +172,21 @@
 
 .user-view-post-buttons button:last-child:hover {
     background-color: #5a6268;
+}
+.spinner-cont {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.spinner-icons {
+    font-size: 3rem;
+    color: linear-gradient(to bottom, #8B0000 0%, #00008B 100%); /* Dark red to blue gradient */
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

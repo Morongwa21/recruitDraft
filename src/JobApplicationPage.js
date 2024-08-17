@@ -14,6 +14,7 @@ const JobApplicationPage = () => {
   const [profileData, setProfileData] = useState(null); 
   const { id } = useParams();
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -52,7 +53,10 @@ const JobApplicationPage = () => {
         console.log('Job Id:', jobResponse.data._id);
       } catch (error) {
         console.error('Error fetching job details:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
+
     };
 
     fetchJobDetails();
@@ -91,8 +95,13 @@ const JobApplicationPage = () => {
     }
   };
 
-  if (!job) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="spinner-cont">
+        <FaSpinner className="spinner-icons" />
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   const {
@@ -143,7 +152,7 @@ const JobApplicationPage = () => {
         <div className="user-view-post-buttons">
           <button onClick={handleApply}>Apply</button>
           <button className="back-button" onClick={handleBack}>
-                <FontAwesomeIcon icon={faArrowLeft} /> 
+                <FontAwesomeIcon icon={faArrowLeft} /> Back
             </button>
         </div>
       </div>

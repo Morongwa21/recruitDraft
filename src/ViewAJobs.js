@@ -12,6 +12,7 @@ const ViewAJobs = () => {
     const [applications, setApplications] = useState([]);
     const [jobs, setJobs] = useState([]);
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [loading, setLoading] = useState(true); 
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -64,8 +65,10 @@ const ViewAJobs = () => {
             const jobDetails = jobDetailsResponses.map(response => response.data);
             console.log('job details', jobDetails); // Check if job details are correctly extracted
             setJobs(jobDetails);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching job details:', error.message);
+            setLoading(false);
         }
     };
 
@@ -96,33 +99,36 @@ const ViewAJobs = () => {
     return (
         <div className="admin-page">
             <header className="admin-header">
-            <div className="logo">
-          <img src={logo} alt="Company Logo" />
-        </div>
-        <div className="user-info" onClick={handleUserInfoClick}>
-        <FaUser className="user-icon" />
-      </div>
-      {dropdownVisible && (
-        <div className="dropdown-menu">
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      )}
-      </header>
+                <div className="logo">
+                    <img src={logo} alt="Company Logo" />
+                </div>
+                <div className="user-info" onClick={handleUserInfoClick}>
+                    <FaUser className="user-icon" />
+                </div>
+                {dropdownVisible && (
+                    <div className="dropdown-menu">
+                        <button onClick={handleLogout}>Logout</button>
+                    </div>
+                )}
+            </header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
-                          {/* <li><a href="#home">Home</a></li> */}
-            <li><a href="/OneProfile">Profile</a></li>
-            {/* <li><a href="/ViewPosts">Documents</a></li> */}
-            <li><a href="/IkusasaProgram">Job Listings</a></li> 
-            <li><a href="/ViewAJobs">Job Applications</a></li>
-            <li><a href="/CVTemplate">Templates</a></li>
+                        <li><a href="/OneProfile">Profile</a></li>
+                        <li><a href="/IkusasaProgram">Job Listings</a></li> 
+                        <li><a href="/ViewAJobs">Job Applications</a></li>
+                        <li><a href="/CVTemplate">Templates</a></li>
                     </ul>
                 </aside>
                 <div className="main-content">
                     <div className="applications">
                         <h2>Your Job Applications</h2>
-                        {applications.length > 0 ? (
+                        {loading ? (  // Show the spinner while loading
+                            <div className="spinner-cont">
+                                <FaSpinner className="spinner-icons" />
+                                <p>Loading your applications...</p>
+                            </div>
+                        ) : applications.length > 0 ? (
                             jobs.length > 0 ? (
                                 <table>
                                     <thead>
@@ -153,7 +159,7 @@ const ViewAJobs = () => {
                                                         <Link to={`/UserApply/${job._id}`}>View Job</Link>
                                                     </td>
                                                     <td>
-                                                    <button className="delete-button" onClick={() => handleDeleteApplication(application._id)}>
+                                                        <button className="delete-button" onClick={() => handleDeleteApplication(application._id)}>
                                                             <FaTimesCircle />
                                                         </button>
                                                     </td>

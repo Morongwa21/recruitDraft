@@ -134,6 +134,23 @@ table th, table td {
     border: 1px solid #ccc;
     text-align: left;
 }
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile devices */
+}
+/* Responsive Design for Small Screens */
+@media (max-width: 600px) {
+    table, table th, table td {
+        width: 100%;
+    }
+
+  
+
+    
+
+   
+}
 .create-job-container {
     max-width: 600px; /* Adjust the maximum width as needed */
     margin: 0 auto; /* Center the container horizontally */

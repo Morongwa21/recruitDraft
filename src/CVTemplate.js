@@ -5,6 +5,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import { FaUser, FaArrowLeft } from 'react-icons/fa';
 import logo from './company logo.jpg';
 import BasicTemp from './BasicTemp';
+import { ClipLoader } from 'react-spinners'; 
 import ElegantTemp from './ElegantTemp';
 import TemplateSelector from './TemplateSelector';
 
@@ -13,7 +14,7 @@ const CVTemplate = () => {
   const [profile, setProfile] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('Basic');
-
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,15 +24,15 @@ const CVTemplate = () => {
         setProfile(response.data.profile);
       } catch (error) {
         console.error('Error fetching profile data:', error);
+      } finally {
+        setLoading(false); // Stop the spinner after data is fetched
       }
     };
 
     fetchProfile();
   }, [userId]);
 
-  if (!profile) {
-    return <div>Loading...</div>;
-  }
+ 
 
   const handleChangeTemplate = (template) => {
     setSelectedTemplate(template);
@@ -79,19 +80,26 @@ const CVTemplate = () => {
         </button>
         <TemplateSelector currentTemplate={selectedTemplate} onChangeTemplate={handleChangeTemplate} />
 
-        <h1>{profile.firstName} {profile.lastName}'s CV</h1>
-        <PDFDownloadLink
-          document={<TemplateComponent profile={profile} />}
-          fileName={`${profile.firstName}-${profile.lastName}-CV.pdf`}
-        >
-          
-          {({ loading }) => (
-            <button className="download-button">
-              {loading ? 'Generating PDF...' : 'Download CV'}
-            </button>
-            
-          )}
-        </PDFDownloadLink>
+        {loading ? (
+          <div className="spinner-container">
+            <ClipLoader size={50} color={"#123abc"} loading={loading} />
+            <p>Loading profile data...</p>
+          </div>
+        ) : (
+          <>
+            <h1>{profile.firstName} {profile.lastName}'s CV</h1>
+            <PDFDownloadLink
+              document={<TemplateComponent profile={profile} />}
+              fileName={`${profile.firstName}-${profile.lastName}-CV.pdf`}
+            >
+              {({ loading }) => (
+                <button className="download-button">
+                  {loading ? 'Generating PDF...' : 'Download CV'}
+                </button>
+              )}
+            </PDFDownloadLink>
+          </>
+        )}
       </div>
     </div>
   );
