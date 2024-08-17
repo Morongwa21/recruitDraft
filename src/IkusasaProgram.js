@@ -15,6 +15,8 @@ const IkusasaProgram = () => {
     const [keyword, setKeyword] = useState('');
     const [location, setLocation] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(true); // Loading state
+
     const navigate = useNavigate();
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -24,6 +26,7 @@ const IkusasaProgram = () => {
 
     const fetchJobs = async () => {
         try {
+            setLoading(true); 
             const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs?page=${currentPage}`);
             console.log('response:', response)
             const totalCount = parseInt(response.headers['x-total-count'], 10);
@@ -31,6 +34,9 @@ const IkusasaProgram = () => {
             setFilteredJobs(response.data);
         } catch (error) {
             console.error('Error fetching jobs:', error);
+
+         } finally {
+            setLoading(false); // Set loading to false after jobs are fetched
         }
     };
 
@@ -55,9 +61,33 @@ const IkusasaProgram = () => {
     const handleChangePassword = () => {
         navigate('/changepassword');
     };
-
+    const Spinner = () => (
+        <div className="spinner"></div>
+    );
     return (
         <div className="admin-page">
+             <style>
+                {`
+                .spinner {
+                    border: 4px solid rgba(0, 0, 0, 0.1);
+                    border-left-color: #007bff; /* Primary color */
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto; /* Center the spinner */
+                }
+
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+                `}
+            </style>
             <header className="admin-header">
             <div className="logo">
           <img src={logo} alt="Company Logo" />

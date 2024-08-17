@@ -38,39 +38,37 @@
 
 
 .side {
-   
-    position: fixed;
-    top: 0;
-    
-    left: 0;
-    width: 200px;
-    height: 100%;
-    background-color: #007bff;
-    color: white;
-    padding: 1rem;
-    box-sizing: border-box;
-    overflow-y: auto;  margin-top: 73px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin-top: 73px;
+  transition: all 0.3s ease; /* Smooth transition for responsiveness */
 }
 
 .side ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .side ul li {
-    margin: 1rem 0;
-
+  margin: 1rem 0;
 }
 
 .side ul li a {
-    color: white;
-    text-decoration: none;
+  color: white;
+  text-decoration: none;
 }
 
 .side ul li a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .main-content {
@@ -679,8 +677,8 @@ input[type="file"] {
   }
   .side {
     width: 100%; /* Full width sidebar on smaller screens */
-    position: static; /* Static position for sidebar */
-    margin-top: 0; /* Remove fixed positioning margin */
+    position: relative; /* Static position for sidebar */
+    margin-top: 10; /* Remove fixed positioning margin */
   }
   .main-content {
     margin-left: 0; /* Remove left margin on main content */

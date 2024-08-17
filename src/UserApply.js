@@ -62,7 +62,11 @@ const UserApply = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div className="spinner-cont">
+                <FaSpinner className="spinner-icons" spin />
+            </div>
+        );
     }
 
     if (error) {
@@ -110,6 +114,7 @@ const UserApply = () => {
             <h1 className="job-details-heading">Job Details</h1>
 
             <div className="user-view-post-container">
+                
                 <div className="user-view-post-header">
                     <h2><FontAwesomeIcon icon={faBuilding} /> {company}</h2>
                     <h3><FontAwesomeIcon icon={faBriefcase} /> {title}</h3>

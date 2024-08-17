@@ -220,6 +220,26 @@ body {
 .job-card p {
     margin: 5px 0;
 }
+@media (max-width: 768px) {
+  /* For tablets and smaller screens */
+  .job-card p {
+      margin: 4px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* For mobile phones */
+  .job-card p {
+      margin: 3px 0;
+  }
+}
+
+@media (max-width: 320px) {
+  /* For very small screens */
+  .job-card p {
+      margin: 2px 0;
+  }
+}
 
 .job-card button {
     width: 200px; /* Set a fixed width for the button */
@@ -281,6 +301,21 @@ body {
     color:black;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
+  @media (max-width: 768px) {
+    .apply-container {
+        margin: 100px auto;
+        padding: 15px;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .apply-container {
+        margin: 80px auto;
+        padding: 10px;
+        max-width: 95%;
+    }
+}
   
   /* Header Styles */
   .apply-header {
@@ -298,7 +333,25 @@ body {
     margin: 5px 0;
     color: #666;
   }
-  
+  @media (max-width: 768px) {
+    .apply-header h1 {
+        font-size: 1.25em; /* Slightly smaller font size for tablets */
+    }
+    
+    .apply-header p {
+        font-size: 0.9em; /* Slightly smaller font size for tablets */
+    }
+}
+
+@media (max-width: 480px) {
+    .apply-header h1 {
+        font-size: 1.1em; /* Smaller font size for mobile phones */
+    }
+    
+    .apply-header p {
+        font-size: 0.8em; /* Smaller font size for mobile phones */
+    }
+}
   /* Section Styles */
   .apply-section {
     margin-bottom: 20px;
@@ -312,7 +365,25 @@ body {
   .apply-section p {
     margin: 10px 0;
   }
-  
+  @media (max-width: 768px) {
+    .apply-section h2 {
+        font-size: 1.25em; /* Slightly smaller font size for tablets */
+    }
+    
+    .apply-section p {
+        font-size: 0.9em; /* Slightly smaller font size for tablets */
+    }
+}
+
+@media (max-width: 480px) {
+    .apply-section h2 {
+        font-size: 1.1em; /* Smaller font size for mobile phones */
+    }
+    
+    .apply-section p {
+        font-size: 0.8em; /* Smaller font size for mobile phones */
+    }
+}
   /* Button Styles */
   .apply-button {
     background: #007BFF;
@@ -341,9 +412,28 @@ body {
   }
   
   .apply-textarea {
-    height: 100px;
-  }
-  
+    height: 100px; /* Keep the height constant */
+    width: 100%; /* Full width by default */
+    padding: 10px; /* Padding inside the textarea */
+    box-sizing: border-box; /* Include padding in width calculation */
+    resize: vertical; /* Allow vertical resizing only */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .apply-textarea {
+        font-size: 0.9em; /* Slightly smaller font size for tablets */
+        padding: 8px; /* Adjust padding for tablets */
+    }
+}
+
+@media (max-width: 480px) {
+    .apply-textarea {
+        font-size: 0.8em; /* Smaller font size for mobile phones */
+        padding: 6px; /* Adjust padding for mobile phones */
+    }
+}
+
   /* Label and List Styles */
   .apply-label {
     display: block;
