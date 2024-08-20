@@ -730,3 +730,31 @@ input[type="file"] {
   margin-right: 8px;
   color: #007bff;
 }
+.schedule-button {
+  background-color: #007bff; 
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  margin-right: 400px;
+
+  transition: background-color 0.3s ease;
+}
+
+.schedule-button:hover {
+  background-color: #0056b3; 
+}
+.schedule-heading {
+  color: black; /* Light blue color */
+  margin-bottom: 25px;
+  margin-right: 400px;
+
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  padding-bottom: 15px;
+  font-family: 'Poppins', sans-serif; /* Modern font */
+}

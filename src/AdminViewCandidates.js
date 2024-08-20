@@ -23,7 +23,7 @@ const AdminViewCandidates = () => {
     const [profileData, setProfileData] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [resumeUrl, setResumeUrl] = useState(null);
-
+    
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -169,7 +169,7 @@ const AdminViewCandidates = () => {
                     const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/applications/${candidateId}`, {
                         status: 'rejected'
                     });
-    
+        
                     if (response.status === 200) {
                         console.log('Application rejected successfully');
                         setCandidates(prevCandidates => prevCandidates.map(candidate =>
@@ -183,8 +183,11 @@ const AdminViewCandidates = () => {
                 } finally {
                     setLoading(false); // Set loading state to false after request is complete
                 }
+            } else if (action === 'Schedule Interview') {
+                // Redirect to the schedule page with candidate ID as a URL parameter
+                navigate(`/schedule-interview/${candidateId}`);
             }
-            // Handle other actions (Schedule Interview, Offer, Success) if needed
+            // Handle other actions (Offer, Success) if needed
         };
         const handleDownloadResume = async (userId) => {
             try {
@@ -198,6 +201,7 @@ const AdminViewCandidates = () => {
                 console.error('Error downloading resume:', error.message);
             }
         };
+      
     return (
         <div className="admin-page">
             <header className="admin-header">
