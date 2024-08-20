@@ -32,6 +32,7 @@ import ProfileModal from './ProfileModal';
 import Theme from './TemplateSelector';
 import ProfilePic from './ProfilePic';
 import Notifications from './Notifications';
+import ScheduleInterview from './ScheduleInterview';
 
 //Notifications
 //ResumeUploadForm
@@ -46,8 +47,9 @@ const App = () => {
       <Route path="/UserProfile" element={<UserProfile />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/Prof" element={<Prof />} />
-
         <Route path="/ProfEdu" element={<ProfEdu />} />
+
+        <Route path="/schedule-interview/:candidateId" element={<ScheduleInterview />} />
         <Route path="/CVTemplate" element={<CVTemplate />} />
         <Route path="/ProfileModal" element={<ProfileModal />} />
         <Route path="/Theme" element={<Theme />} />
