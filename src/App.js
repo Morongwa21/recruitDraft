@@ -31,8 +31,9 @@ import CVTemplate from './CVTemplate';
 import ProfileModal from './ProfileModal';
 import Theme from './TemplateSelector';
 import ProfilePic from './ProfilePic';
-// import downloadResume from './controllers/downloadResume.js';
+import Notifications from './Notifications';
 
+//Notifications
 //ResumeUploadForm
 const App = () => {
 
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="/ProfileModal" element={<ProfileModal />} />
         <Route path="/Theme" element={<Theme />} />
         <Route path="/ProfilePic" element={<ProfilePic />} />
+        <Route path="/Notifications" element={<Notifications />} />
 
         <Route path="/OneProfile" element={<OneProfile />} />
         <Route path="/CreateJob" element={<CreateJob />} />

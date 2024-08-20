@@ -142,6 +142,7 @@ table th, table td {
 /* Responsive Design for Small Screens */
 @media (max-width: 600px) {
     table, table th, table td {
+        display: block; /* Make table elements block level */
         width: 100%;
     }
 

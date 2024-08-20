@@ -129,7 +129,7 @@ const AdminPage = ({}) => {
             <div className="admin-content">
                 <aside className="side">
                     <ul>
-                    <li><a href="#dashboard"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
+                    <li><a href="/AdminDash"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
         <li><Link to="/AdminJobsView"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
         {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}

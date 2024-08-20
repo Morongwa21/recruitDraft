@@ -168,8 +168,7 @@ const CreateJob = () => {
                     )}
                 </div>            </header>
             <div className="main-content">
-                <img src={jobOpenning} alt="Job Postings" className="job-icon" />
-
+<h3>Job Posting</h3>
                 <div className="create-job-container">
                     <section className="job-form">
                         <form onSubmit={handleSubmit}>

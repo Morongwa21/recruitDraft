@@ -5,7 +5,7 @@ import './components/UserViewPosts.css';
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faUser, faUsers, faBell, faHome, faSearch, faBriefcase, faEnvelope, faPhone, faBirthdayCake, faGenderless, faFlag, faBuilding, faMapMarkerAlt, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faUser, faUsers, faBell, faHome, faSearch, faBriefcase, faEnvelope, faPhone, faBirthdayCake, faGenderless, faFlag, faBuilding, faMapMarkerAlt, faClock, faFileAlt} from '@fortawesome/free-solid-svg-icons';
 import logo from './company logo.jpg';
 
 const AdminViewCandidates = () => {
@@ -254,8 +254,7 @@ const AdminViewCandidates = () => {
                                                     <p><FontAwesomeIcon icon={faMapMarkerAlt} /> Location: {job.location}</p>
                                                     <p><FontAwesomeIcon icon={faClock} /> Status: {candidate.status}</p>
                                                     <p>
-                                                        <FontAwesomeIcon icon={faClock} /> Resume: 
-                                                        {candidate.resume ? (
+                                                    <FontAwesomeIcon icon={faFileAlt} /> Resume:                                                        {candidate.resume ? (
                                                             <button onClick={() => handleDownloadResume(candidate.userId)}>
                                                                 Download Resume
                                                             </button>
