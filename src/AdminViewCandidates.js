@@ -5,8 +5,9 @@ import './components/UserViewPosts.css';
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faUser, faUsers, faBell, faHome, faSearch, faBriefcase, faEnvelope, faPhone, faBirthdayCake, faGenderless, faFlag, faBuilding, faMapMarkerAlt, faClock, faFileAlt} from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faUser, faUsers, faBell, faHome, faSearch, faBriefcase, faEnvelope, faEye, faBirthdayCake, faGenderless, faFlag, faBuilding, faMapMarkerAlt, faClock, faFileAlt} from '@fortawesome/free-solid-svg-icons';
 import logo from './company logo.jpg';
+import { FaUser } from 'react-icons/fa';
 
 const AdminViewCandidates = () => {
     const [candidates, setCandidates] = useState([]);
@@ -204,25 +205,24 @@ const AdminViewCandidates = () => {
       
     return (
         <div className="admin-page">
-            <header className="admin-header">
-                <div className="logo">
-                    <img src={logo} alt="Company Logo" />
-                </div>
-                <div className="user-info" onClick={handleUserInfoClick}>
-                    Welcome, {username}
-                    {dropdownVisible && (
-                        <div className="dropdown-menu">
-                            <button onClick={handleLogout}>Logout</button>
-                            <button onClick={handleChangePassword}>Change Password</button>
-                        </div>
-                    )}
-                </div>
-            </header>
+        <header className="admin-header">
+          <div className="logo">
+            <img src={logo} alt="Company Logo" />
+          </div>
+          <div className="user-info" onClick={handleUserInfoClick}>
+          <FaUser className="user-icon" />
+        </div>
+        {dropdownVisible && (
+          <div className="dropdown-menu">
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+        </header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
                         <li><a href="#dashboard"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
-                        <li><Link to="/AdminJobPosting"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
+                        <li><Link to="/AdminJobsView"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
                         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
                         {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}
                         {/* <li><a href="#analytics"><FontAwesomeIcon icon={faChartBar} /> Analytics</a></li> */}
@@ -269,11 +269,11 @@ const AdminViewCandidates = () => {
 
                                                 </div>
                                             )}
-                                            <button 
-                                                className="button"
-                                                onClick={() => handleViewProfile(candidate.userId, candidate._id, candidate.jobId)}>
-                                                <FontAwesomeIcon icon={faSearch} /> View Application
-                                            </button>
+                                           <button 
+    className="button"
+    onClick={() => handleViewProfile(candidate.userId, candidate._id, candidate.jobId)}>
+    <FontAwesomeIcon icon={faEye} /> View Application
+</button>
                                             <div className="action-buttons">
                                                 <button 
                                                     className="reject"
