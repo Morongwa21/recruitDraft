@@ -4,6 +4,7 @@ import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate } from 'react-router-dom';
 import logo from './company logo.jpg';
 import jobOpenning from './job vector.jpg'; // Import your image here
+import { FaUser } from 'react-icons/fa';
 
 const CreateJob = () => {
     const [title, setJobTitle] = useState('');
@@ -154,19 +155,19 @@ const CreateJob = () => {
     };
     return (
         <div className="admin-page">
-            <header className="admin-header">
-                <div className="logo">
-                    <img src={logo} alt="Company Logo" />
-                </div>
-                <div className="user-info" onClick={handleUserInfoClick}>
-                    Welcome, {username}
-                    {dropdownVisible && (
-                        <div className="dropdown-menu">
-                            <button onClick={handleLogout}>Logout</button>
-                            <button onClick={handleChangePassword}>Change Password</button>
-                        </div>
-                    )}
-                </div>            </header>
+        <header className="admin-header">
+          <div className="logo">
+            <img src={logo} alt="Company Logo" />
+          </div>
+          <div className="user-info" onClick={handleUserInfoClick}>
+          <FaUser className="user-icon" />
+        </div>
+        {dropdownVisible && (
+          <div className="dropdown-menu">
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+        </header>
             <div className="main-content">
 <h3>Job Posting</h3>
                 <div className="create-job-container">

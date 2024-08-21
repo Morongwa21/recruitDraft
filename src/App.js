@@ -49,7 +49,7 @@ const App = () => {
         <Route path="/Prof" element={<Prof />} />
         <Route path="/ProfEdu" element={<ProfEdu />} />
 
-        <Route path="/schedule-interview/:candidateId" element={<ScheduleInterview />} />
+        <Route path="/schedule-interview/:appId" element={<ScheduleInterview />} />
         <Route path="/CVTemplate" element={<CVTemplate />} />
         <Route path="/ProfileModal" element={<ProfileModal />} />
         <Route path="/Theme" element={<Theme />} />

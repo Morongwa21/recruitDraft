@@ -8,6 +8,8 @@ import { faChartBar, faUser, faUsers, faBell,faHome } from '@fortawesome/free-so
 import { Bar } from 'react-chartjs-2'; 
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { useNavigate } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
+
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -112,20 +114,19 @@ const AdminPage = ({}) => {
     };
     return (
         <div className="admin-page">
-            <header className="admin-header">
-            <div className="logo">
-        <img src={logo} alt="Company Logo" />
-    </div>
-    <div className="user-info" onClick={handleUserInfoClick}>
-                    Welcome, {username}
-                    {dropdownVisible && (
-                        <div className="dropdown-menu">
-                            <button onClick={handleLogout}>Logout</button>
-                            <button onClick={handleChangePassword}>Change Password</button>
-                        </div>
-                    )}
-                </div>           
-                 </header>
+        <header className="admin-header">
+          <div className="logo">
+            <img src={logo} alt="Company Logo" />
+          </div>
+          <div className="user-info" onClick={handleUserInfoClick}>
+          <FaUser className="user-icon" />
+        </div>
+        {dropdownVisible && (
+          <div className="dropdown-menu">
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+        </header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>

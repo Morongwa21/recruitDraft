@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faChartBar, faTrashAlt, faUser, faUsers, faBell, faHome } from '@fortawesome/free-solid-svg-icons';
 import logo from './company logo.jpg';
 import { Link } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 
 const AdminJobsView = () => {
     const [jobPostings, setJobPostings] = useState([]);
@@ -113,25 +114,24 @@ const AdminJobsView = () => {
 
     return (
         <div className="admin-page">
-            <header className="admin-header">
-                <div className="logo">
-                    <img src={logo} alt="Company Logo" />
-                </div>
-                <div className="user-info" onClick={handleUserInfoClick}>
-                    Welcome, {username}
-                    {dropdownVisible && (
-                        <div className="dropdown-menu">
-                            <button onClick={handleLogout}>Logout</button>
-                            <button onClick={handleChangePassword}>Change Password</button>
-                        </div>
-                    )}
-                </div>
-            </header>
+        <header className="admin-header">
+          <div className="logo">
+            <img src={logo} alt="Company Logo" />
+          </div>
+          <div className="user-info" onClick={handleUserInfoClick}>
+          <FaUser className="user-icon" />
+        </div>
+        {dropdownVisible && (
+          <div className="dropdown-menu">
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+        </header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
                         <li><a href="/AdminDash"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
-                        <li><Link to="/AdminJobPosting"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
+                        <li><Link to="/AdminJobsView"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
                         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
                         {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}
                         {/* <li><a href="#analytics"><FontAwesomeIcon icon={faChartBar} /> Analytics</a></li> */}
