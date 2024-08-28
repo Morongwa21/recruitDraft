@@ -44,7 +44,7 @@ const LoginPageA = () => {
         }
         setLoading(true);
         try {
-            const response = await axios.post('https://recruitment-portal-rl5g.onrender.com/login', {
+            const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/login', {
                 email: email,
                 password: password
             });
@@ -55,7 +55,7 @@ const LoginPageA = () => {
                 const { token } = response.data; 
                 localStorage.setItem('token', token);
                 console.log('token: ', token)
-                const userResponse = await axios.get('https://recruitment-portal-rl5g.onrender.com/user/me', {
+                const userResponse = await axios.get('https://recruitment-portal-t6a3.onrender.com/user/me', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

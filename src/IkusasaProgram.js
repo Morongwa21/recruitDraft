@@ -5,7 +5,7 @@ import logo from './company logo.jpg';  // Adjust the import as necessary
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faMapMarkerAlt, faBuilding, faCalendarAlt, faTasks, faClock, faBriefcase, faDollarSign, faBook, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaBell } from 'react-icons/fa';
 
 
 const IkusasaProgram = () => {
@@ -16,7 +16,9 @@ const IkusasaProgram = () => {
     const [location, setLocation] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true); // Loading state
-
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [unviewedCount, setUnviewedCount] = useState(0);
     const navigate = useNavigate();
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -27,7 +29,7 @@ const IkusasaProgram = () => {
     const fetchJobs = async () => {
         try {
             setLoading(true); 
-            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs?page=${currentPage}`);
+            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/jobs?page=${currentPage}`);
             console.log('response:', response)
             const totalCount = parseInt(response.headers['x-total-count'], 10);
             setJobs(response.data);
@@ -57,7 +59,33 @@ const IkusasaProgram = () => {
         localStorage.removeItem('userId');
         navigate('/LoginPageA');
     };
-
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
+                setNotifications(response.data);
+      
+                // Count unviewed notifications
+                const unviewed = response.data.filter(notification => !notification.viewed);
+                setUnviewedCount(unviewed.length);
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            }
+        };
+      
+        fetchNotifications();
+      }, []);
+      const handleBellClick = (event) => {
+        event.stopPropagation();  // Prevent click from triggering other click handlers
+        setIsNotificationsOpen(!isNotificationsOpen);
+      };
+      
+      
+      // Handle page click to close both dropdowns
+      const handlePageClick = () => {
+          setIsNotificationsOpen(false);
+          setDropdownVisible(false);
+      };
     const handleChangePassword = () => {
         navigate('/changepassword');
     };
@@ -88,19 +116,43 @@ const IkusasaProgram = () => {
                 }
                 `}
             </style>
-            <header className="admin-header">
-            <div className="logo">
+            <div className="admin-page" onClick={handlePageClick}>
+      <header className="admin-header">
+        <div className="logo">
           <img src={logo} alt="Company Logo" />
         </div>
-        <div className="user-info" onClick={handleUserInfoClick}>
-        <FaUser className="user-icon" />
-      </div>
-      {dropdownVisible && (
-        <div className="dropdown-menu">
-          <button onClick={handleLogout}>Logout</button>
+        <div className="user-info">
+                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
+                    {unviewedCount > 0 && (
+                        <span className="notification-count">{unviewedCount}</span>
+                    )}
+
+{isNotificationsOpen && (
+        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+            <h3>Notifications</h3>
+            <ul>
+                {notifications.map(notification => (
+                    <li key={notification.id}>
+                        <div className="notification-message">
+                            {notification.message}
+                            {!notification.viewed && <strong> (New)</strong>}
+                        </div>
+                        <div className="notification-date">
+                            {new Date(notification.receivedAt).toLocaleDateString()}
+                        </div>
+                    </li>
+                ))}
+            </ul>
         </div>
-      )}
-      </header>
+                    )}
+                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
+                    {dropdownVisible && (
+                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                            <button onClick={handleLogout}>Logout</button>
+                        </div>
+                    )}
+                </div>
+            </header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
@@ -195,6 +247,8 @@ const IkusasaProgram = () => {
                 </div>
             </div>
         </div>
+        </div>
+
     );
 };
 

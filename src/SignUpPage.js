@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './components/LoginA.css'; 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaUser, FaLock, FaRegEyeSlash, FaRegEye, FaUsers, FaSearch  } from 'react-icons/fa'; // Import icons from react-icons library
+
 import logo from './company logo.jpg';
 
 const SignUpPage = () => {
@@ -43,7 +45,7 @@ const SignUpPage = () => {
         };
         setIsLoading(true);
         try {
-            const response = await axios.post('https://recruitment-portal-rl5g.onrender.com/register', formData, {
+            const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/register', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -80,10 +82,10 @@ const SignUpPage = () => {
             <img src={logo} alt="Company logo" />
           </div>
           <nav>
-            <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="/UserViewPost">Job Listings</a></li>
-            </ul>
+          <ul>
+                    <li><a href="#"><FaUsers /> Home</a></li> {/* Added Home icon */}
+                        <li><a href="/UserViewPost"><FaSearch /> Job Listings</a></li>
+                    </ul>
           </nav>
         </header>
             <div className="signup-heading">
