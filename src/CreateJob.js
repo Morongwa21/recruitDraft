@@ -4,7 +4,7 @@ import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate } from 'react-router-dom';
 import logo from './company logo.jpg';
 import jobOpenning from './job vector.jpg'; // Import your image here
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaBell } from 'react-icons/fa';
 
 const CreateJob = () => {
     const [title, setJobTitle] = useState('');
@@ -19,6 +19,9 @@ const CreateJob = () => {
     const [skills, setSkills] = useState('');
     const [username, setUsername] = useState('');
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [unviewedCount, setUnviewedCount] = useState(0);
     const navigate = useNavigate();
     useEffect(() => {
         fetchUserDetails();
@@ -149,25 +152,74 @@ const CreateJob = () => {
         localStorage.removeItem('userId');
         navigate('/LoginPage');
     };
-
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
+                setNotifications(response.data);
+      
+                // Count unviewed notifications
+                const unviewed = response.data.filter(notification => !notification.viewed);
+                setUnviewedCount(unviewed.length);
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            }
+        };
+      
+        fetchNotifications();
+      }, []);
+      const handleBellClick = (event) => {
+        event.stopPropagation();  // Prevent click from triggering other click handlers
+        setIsNotificationsOpen(!isNotificationsOpen);
+      };
+      
+      
+      // Handle page click to close both dropdowns
+      const handlePageClick = () => {
+          setIsNotificationsOpen(false);
+          setDropdownVisible(false);
+      };
     const handleChangePassword = () => {
         navigate('/changepassword');
     };
     return (
         <div className="admin-page">
-        <header className="admin-header">
-          <div className="logo">
-            <img src={logo} alt="Company Logo" />
-          </div>
-          <div className="user-info" onClick={handleUserInfoClick}>
-          <FaUser className="user-icon" />
+         <header className="admin-header">
+        <div className="logo">
+          <img src={logo} alt="Company Logo" />
         </div>
-        {dropdownVisible && (
-          <div className="dropdown-menu">
-            <button onClick={handleLogout}>Logout</button>
-          </div>
-        )}
-        </header>
+        <div className="user-info">
+                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
+                    {unviewedCount > 0 && (
+                        <span className="notification-count">{unviewedCount}</span>
+                    )}
+
+{isNotificationsOpen && (
+        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+            <h3>Notifications</h3>
+            <ul>
+                {notifications.map(notification => (
+                    <li key={notification.id}>
+                        <div className="notification-message">
+                            {notification.message}
+                            {!notification.viewed && <strong> (New)</strong>}
+                        </div>
+                        <div className="notification-date">
+                            {new Date(notification.receivedAt).toLocaleDateString()}
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+                    )}
+                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
+                    {dropdownVisible && (
+                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                            <button onClick={handleLogout}>Logout</button>
+                        </div>
+                    )}
+                </div>
+            </header>
             <div className="main-content">
 <h3>Job Posting</h3>
                 <div className="create-job-container">

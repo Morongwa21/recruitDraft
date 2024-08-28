@@ -7,7 +7,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar, faUser, faUsers, faBell, faHome, faSearch, faBriefcase, faEnvelope, faEye, faBirthdayCake, faGenderless, faFlag, faBuilding, faMapMarkerAlt, faClock, faFileAlt} from '@fortawesome/free-solid-svg-icons';
 import logo from './company logo.jpg';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaBell } from 'react-icons/fa';
 
 const AdminViewCandidates = () => {
     const [candidates, setCandidates] = useState([]);
@@ -24,6 +24,9 @@ const AdminViewCandidates = () => {
     const [profileData, setProfileData] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [resumeUrl, setResumeUrl] = useState(null);
+    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [unviewedCount, setUnviewedCount] = useState(0);
     
     const navigate = useNavigate();
 
@@ -190,6 +193,33 @@ const AdminViewCandidates = () => {
             }
             // Handle other actions (Offer, Success) if needed
         };
+        useEffect(() => {
+            const fetchNotifications = async () => {
+                try {
+                    const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
+                    setNotifications(response.data);
+          
+                    // Count unviewed notifications
+                    const unviewed = response.data.filter(notification => !notification.viewed);
+                    setUnviewedCount(unviewed.length);
+                } catch (error) {
+                    console.error('Error fetching notifications:', error);
+                }
+            };
+          
+            fetchNotifications();
+          }, []);
+          const handleBellClick = (event) => {
+            event.stopPropagation();  // Prevent click from triggering other click handlers
+            setIsNotificationsOpen(!isNotificationsOpen);
+          };
+          
+          
+          // Handle page click to close both dropdowns
+          const handlePageClick = () => {
+              setIsNotificationsOpen(false);
+              setDropdownVisible(false);
+          };
         const handleDownloadResume = async (userId) => {
             try {
                 // Construct the URL to download the resume based on the updated route
@@ -205,19 +235,42 @@ const AdminViewCandidates = () => {
       
     return (
         <div className="admin-page">
-        <header className="admin-header">
-          <div className="logo">
-            <img src={logo} alt="Company Logo" />
-          </div>
-          <div className="user-info" onClick={handleUserInfoClick}>
-          <FaUser className="user-icon" />
+         <header className="admin-header">
+        <div className="logo">
+          <img src={logo} alt="Company Logo" />
         </div>
-        {dropdownVisible && (
-          <div className="dropdown-menu">
-            <button onClick={handleLogout}>Logout</button>
-          </div>
-        )}
-        </header>
+        <div className="user-info">
+                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
+                    {unviewedCount > 0 && (
+                        <span className="notification-count">{unviewedCount}</span>
+                    )}
+
+{isNotificationsOpen && (
+        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+            <h3>Notifications</h3>
+            <ul>
+                {notifications.map(notification => (
+                    <li key={notification.id}>
+                        <div className="notification-message">
+                            {notification.message}
+                            {!notification.viewed && <strong> (New)</strong>}
+                        </div>
+                        <div className="notification-date">
+                            {new Date(notification.receivedAt).toLocaleDateString()}
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+                    )}
+                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
+                    {dropdownVisible && (
+                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                            <button onClick={handleLogout}>Logout</button>
+                        </div>
+                    )}
+                </div>
+            </header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
@@ -226,7 +279,7 @@ const AdminViewCandidates = () => {
                         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
                         {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}
                         {/* <li><a href="#analytics"><FontAwesomeIcon icon={faChartBar} /> Analytics</a></li> */}
-                         <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li> 
+                         {/* <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li>  */}
                     </ul>
                 </aside>
                 <div className="main-content">
