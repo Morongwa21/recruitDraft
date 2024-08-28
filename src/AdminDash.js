@@ -44,7 +44,7 @@ const AdminPage = ({}) => {
             // Fetch user details using stored user ID
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
-            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`);
             console.log('User details response:', response); // Log the full response
 
             if (response.status === 200) {
@@ -61,7 +61,7 @@ const AdminPage = ({}) => {
     const fetchJobPostings = async () => {
         try {
             
-            const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/jobs');
+            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/jobs');
             setJobPostings(response.data);
             prepareChartData(response.data);
 

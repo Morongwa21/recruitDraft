@@ -17,7 +17,7 @@ const ViewJobDetails = () => {
     useEffect(() => {
         const fetchJobDetails = async () => {
             try {
-                const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/jobs/${id}`);
+                const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/jobs/${id}`);
                 setJob(response.data);
                 console.log('Job Details:', response.data); // Log the job details
             } catch (error) {

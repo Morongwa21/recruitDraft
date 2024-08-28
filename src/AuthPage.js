@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import './components/LoginA.css';
 import logo from './company logo.jpg';
+import { FaUser, FaLock, FaRegEyeSlash, FaRegEye, FaUsers, FaSearch  } from 'react-icons/fa'; // Import icons from react-icons library
 
 axios.defaults.withCredentials = true;
 
@@ -38,7 +39,7 @@ function AuthPage() {
     setError('');
     try {
       const response = await axios.post(
-        'https://recruitment-portal-rl5g.onrender.com/verify-otp',
+        'https://recruitment-portal-t6a3.onrender.com/verify-otp',
         { otp }
       );
       setLoading(false);
@@ -65,7 +66,7 @@ function AuthPage() {
     setResendLoading(true);
     setError('');
     try {
-      const response = await axios.post('https://recruitment-portal-rl5g.onrender.com/resend-otp', {});
+      const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/resend-otp', {});
       setResendLoading(false);
       if (response.status === 200) {
         console.log(response.data);
@@ -113,10 +114,10 @@ function AuthPage() {
             <img src={logo} alt="Company logo" />
           </div>
           <nav>
-            <ul>
-              <li><a href="#">Home</a></li>
-              <li><a href="/UserViewPost">Job Listings</a></li>
-            </ul>
+          <ul>
+                    <li><a href="#"><FaUsers /> Home</a></li> {/* Added Home icon */}
+                        <li><a href="/UserViewPost"><FaSearch /> Job Listings</a></li>
+                    </ul>
           </nav>
         </header>
       <div className="login-heading">

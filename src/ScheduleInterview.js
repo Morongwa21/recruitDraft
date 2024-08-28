@@ -39,7 +39,7 @@ const ScheduleInterview = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`https://recruitment-portal-rl5g.onrender.com/applications/${appId}`, formData, {
+            const response = await axios.post(`https://recruitment-portal-t6a3.onrender.com/applications/${appId}`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you use JWT
@@ -55,10 +55,9 @@ const ScheduleInterview = () => {
     };
 
     const africanTimeZones = [
-        'Africa/Abidjan',
+        'Africa/Johannesburg',
         'Africa/Accra',
         'Africa/Addis_Ababa',
-        // ... other time zones
         'Africa/Windhoek'
     ];
 

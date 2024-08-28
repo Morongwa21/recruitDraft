@@ -13,7 +13,7 @@ const Notifications = () => {
 
     const fetchNotifications = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/notifications');//To get the endpoint from Tiyani
+            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');//To get the endpoint from Tiyani
             setNotifications(response.data);
         } catch (error) {
             console.error('Error fetching notifications:', error.message);

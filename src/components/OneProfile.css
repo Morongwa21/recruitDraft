@@ -153,7 +153,16 @@
     padding: 8px; /* Space around the icon */
     transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
 }
-
+.bell-icon {
+  margin-right: 8px;
+  font-size: 24px; /* Increased icon size */
+  color: #007bff;
+  background-color: #e0e0e0;
+border-radius: 50%; /* Circular shape */
+  padding: 8px; 
+  
+  transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
 .user-icon:hover {
     color: #0056b3;
     background-color: #c0c0c0; /* Darker grey on hover */
@@ -368,7 +377,221 @@
   background-color: #f1f1f1; /* Light grey background on hover */
 }
    
+   .job-stats-container {
+        display: flex;
+      }
+      @media (max-width: 480px) {
+        .job-stats-container {
+            height: 175px; /* Allow the height to adjust based on content */
+            padding: 5px; /* Reduce padding for smaller screens */
+        }}
+      
+      .job-stat-box {
+        flex: 1;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: 1px solid #007bff;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        margin-right: 20px; /* Adjust margin as needed */
+      }
+      @media (max-width: 1024px) {
+        .job-stat-box {
+            max-width: calc(50% - 20px); /* 2 items per row for medium screens */
+        }
+    }
     
+    @media (max-width: 768px) {
+        .job-stat-box {
+            max-width: calc(100% - 20px); /* 1 item per row for smaller screens */
+        }
+    }
+    
+    @media (max-width: 480px) {
+      .job-stat-box {
+          max-width: calc(100% - 1px); /* Maximize the width within the screen */
+          padding: 5px; /* Reduce padding */
+          margin: 1px; /* Reduce margin */
+          min-width: 90px; /* Set minimum width */
+          min-height: 30px; /* Set minimum height */
+      }
+  }.profile-completeness-title {
+    font-size: 16px; /* Adjust the font size */
+    font-weight: bold; /* Make the text bold */
+    text-align: center; /* Center the text */
+    margin-bottom: 15px; /* Add some space below the heading */
+    text-transform: uppercase; /* Capitalize the text */
+    letter-spacing: 1px; /* Add some spacing between letters */
+}
+@media (max-width: 480px) {
+  .profile-completeness-title {
+      font-size: 10px; /* Further reduce font size for very small screens */
+      margin-bottom: 10px; /* Further reduce bottom margin */
+  }
+}
+
+      .job-exp {
+        flex: 1;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: 1px solid #007bff;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        margin-right: auto;
+      }
+      
+      .job-stat-box:last-child {
+        margin-right: 0; /* Remove right margin for the last box */
+      }
+      
+      .jobsekerContainer {
+        flex: 1;
+        display: flex;
+        height: 400px; /* Set a fixed height for the chart container */
+        background-color: #f0f0f0;
+        padding: 20px;
+        border: 1px solid #007bff;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        margin-right: 20px;
+      }
+      @media (max-width: 480px) {
+        .jobsekerContainer {
+            height: 200px; /* Further reduce height for very small screens */
+            padding: 10px; /* Further reduce padding */
+            margin-right: 5px; /* Further reduce margin */
+            overflow-y: auto; /* Add scroll if content overflows */
+        }
+    }
+      .parent-container {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      @media (max-width: 480px) {
+        .parent-container {
+          display: flex;
+            padding: 5px;
+        }
+    }
+      
+      .jobsekerWrapper {
+        display: flex;
+        flex: 1;
+      }
+      @media (max-width: 480px) {
+        .jobsekerWrapper {
+            /* Further adjustments for very small screens */
+            flex-direction: column; /* Stack items vertically on small screens */
+            padding: 10px; /* Add some padding for small screens */
+        }
+    }
+      .jobsekerLeft {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap:5px
+
+      }
+ 
+      .jobsekerRight {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap:5px
+      }
+    
+      .jobsekerBox {
+        flex: 1;
+        background-color: #f0f0f0;
+        padding: 20px;
+        border: 1px solid #007bff;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+.profile-completeness {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .progress-bar-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Adjust based on your design */
+    height: 30px; /* Height of the progress bar */
+    background-color: #f2f2f2; /* Background color of the bar */
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, #8b0000, #2575fc); /* Gradient color */
+    transition: width 1s linear;
+    border-radius: 5px 0 0 5px; /* Rounded corners for filled part */
+  }
+  
+  .progress-label {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #3498db;
+  }
+  
+
+
+  .experience-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+    padding: 20px;
+    background-color: #f9f9f9; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Experience {
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd; 
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+  }
+  
+  .Experience p {
+    margin: 5px 0; 
+  }
+
+.profile-icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-upload-input {
+    display: none; 
+}
+
+.profile-icon-label {
+    cursor: pointer;
+}
+
+.profile-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    object-fit: cover;
+    transition: border-color 0.3s;
+}
+
+.profile-icon-label:hover .profile-icon {
+    border-color: #0056b3;
+}
+
+   
 .loading-spinner {
   display: flex;
   justify-content: center;
@@ -376,5 +599,43 @@
   height: 100%;
   width: 100%;
 }
-    
-  
+
+
+.notification-count {
+  position: absolute;
+
+  right: 80px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+
+.notification-panel {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 300px;
+  padding: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-panel h3 {
+  margin-top: 0;
+}
+
+.notification-panel ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.notification-panel li {
+  padding: 8px 0;
+  border-bottom: 1px solid #ccc;
+}

@@ -6,7 +6,7 @@ import Prof from './Prof';
 import ProfEdu from './ProfEdu'; 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEdit, FaUserCircle, FaCity, FaEnvelope, FaPhone, FaUser, FaUniversity, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import { FaEdit, FaUserCircle, FaCity, FaEnvelope, FaPhone, FaUser, FaBell, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
 
 const OneProfile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +46,9 @@ const OneProfile = () => {
   const [success, setSuccess] = useState('');
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   const [preview, setPreview] = useState('');
-
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unviewedCount, setUnviewedCount] = useState(0);
   useEffect(() => {
     if (showStatusMessage) {
       const timer = setTimeout(() => setShowStatusMessage(false), 3000); // Hide after 3 seconds
@@ -85,7 +87,7 @@ const OneProfile = () => {
 
   const fetchEducationItem = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/profile');
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const education = Array.isArray(profile.education) ? profile.education : [];
@@ -100,7 +102,7 @@ const OneProfile = () => {
   };
   const fetchExperience = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/profile');
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const experience = Array.isArray(profile.experience) ? profile.experience : [];
@@ -124,7 +126,7 @@ const OneProfile = () => {
       }
   
       // Update the URL to include userId
-      const profileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile`);
+      const profileResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile`);
   
       if (profileResponse.status === 200) {
         const response = profileResponse.data.profile;
@@ -190,10 +192,14 @@ profilePicture,
       console.error('Error fetching user details or profile data:', error.message);
     }
   };
+  const handleUserInfoClick = (e) => {
+    e.stopPropagation();  // Prevent the global click handler from running
+    setDropdownVisible(!dropdownVisible);
+};
 
   const fetchJobs = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/jobs');
+      const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/jobs');
       console.log('Jobs response:', response);
 
       if (response.status === 200) {
@@ -214,9 +220,7 @@ profilePicture,
     navigate('/LoginPageA');
   };
 
-  const handleUserInfoClick = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
+ 
 
   const handleImageChange = async (event) => {
     event.preventDefault();
@@ -248,7 +252,7 @@ profilePicture,
 
         // Upload the image to the server
         const response = await axios.patch(
-          'https://recruitment-portal-rl5g.onrender.com/profile',
+          'https://recruitment-portal-t6a3.onrender.com/profile',
           { profilePicture: base64Image },
           { headers: { 'Content-Type': 'application/json' } }
         );
@@ -350,7 +354,7 @@ profilePicture,
       };
   
       console.log('resume:', formData);
-      const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, formData, {
+      const response = await axios.patch(`https://recruitment-portal-t6a3.onrender.com/profile`, formData, {
         headers: {
           'Content-Type': 'application/json', // Adjust the content type accordingly
         },
@@ -385,7 +389,7 @@ profilePicture,
       };
   
       console.log('payload:::::::: ', payload);
-      const response = await axios.patch(`https://recruitment-portal-rl5g.onrender.com/profile`, payload, {
+      const response = await axios.patch(`https://recruitment-portal-t6a3.onrender.com/profile`, payload, {
         headers: {
           'Content-Type': 'application/json', // Adjust the content type accordingly
         },
@@ -451,7 +455,7 @@ profilePicture,
     try {
         let checkProfileResponse;
         try {
-          checkProfileResponse = await axios.get(`https://recruitment-portal-rl5g.onrender.com/profile`);
+          checkProfileResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile`);
         } catch (error) {
           if (error.response && error.response.status === 404) {
             checkProfileResponse = { status: 404, data: null }; 
@@ -462,7 +466,7 @@ profilePicture,
         console.log('Existing Profile: ', checkProfileResponse);
         if (checkProfileResponse.status === 200 && checkProfileResponse.data) {
           console.log('data: ', data);
-          const updateResponse = await axios.patch('https://recruitment-portal-rl5g.onrender.com/profile', data);
+          const updateResponse = await axios.patch('https://recruitment-portal-t6a3.onrender.com/profile', data);
           if (updateResponse.status === 200) {
             console.log('Profile updated successfully');
             setSaveMessage('Profile updated successfully!');
@@ -474,7 +478,7 @@ profilePicture,
             setSaveMessage(`Failed to update profile: ${updateResponse.statusText}`);
           }
         } else {
-          const createResponse = await axios.post('https://recruitment-portal-rl5g.onrender.com/profile', data);
+          const createResponse = await axios.post('https://recruitment-portal-t6a3.onrender.com/profile', data);
           if (createResponse.status === 200) {
             console.log('Profile created successfully');
             setIsSaved(true);
@@ -507,23 +511,71 @@ const handleCloseModal = () => {
   setIsModalOpen(false);
 
 };
+useEffect(() => {
+  const fetchNotifications = async () => {
+      try {
+          const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
+          setNotifications(response.data);
+
+          // Count unviewed notifications
+          const unviewed = response.data.filter(notification => !notification.viewed);
+          setUnviewedCount(unviewed.length);
+      } catch (error) {
+          console.error('Error fetching notifications:', error);
+      }
+  };
+
+  fetchNotifications();
+}, []);
+const handleBellClick = (event) => {
+  event.stopPropagation();  // Prevent click from triggering other click handlers
+  setIsNotificationsOpen(!isNotificationsOpen);
+};
 
 
+// Handle page click to close both dropdowns
+const handlePageClick = () => {
+    setIsNotificationsOpen(false);
+    setDropdownVisible(false);
+};
 return (
-    <div className="admin-page">
+  <div className="admin-page" onClick={handlePageClick}>
       <header className="admin-header">
         <div className="logo">
           <img src={logo} alt="Company Logo" />
         </div>
-        <div className="user-info" onClick={handleUserInfoClick}>
-        <FaUser className="user-icon" />
-      </div>
-      {dropdownVisible && (
-        <div className="dropdown-menu">
-          <button onClick={handleLogout}>Logout</button>
+        <div className="user-info">
+                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
+                    {unviewedCount > 0 && (
+                        <span className="notification-count">{unviewedCount}</span>
+                    )}
+
+{isNotificationsOpen && (
+        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+            <h3>Notifications</h3>
+            <ul>
+                {notifications.map(notification => (
+                    <li key={notification.id}>
+                        <div className="notification-message">
+                            {notification.message}
+                            {!notification.viewed && <strong> (New)</strong>}
+                        </div>
+                        <div className="notification-date">
+                            {new Date(notification.receivedAt).toLocaleDateString()}
+                        </div>
+                    </li>
+                ))}
+            </ul>
         </div>
-      )}
-      </header>
+                    )}
+                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
+                    {dropdownVisible && (
+                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                            <button onClick={handleLogout}>Logout</button>
+                        </div>
+                    )}
+                </div>
+            </header>
 
       <div className="admin-content">
         <aside className="side">
@@ -540,12 +592,12 @@ return (
           <div className="job-stats-container">
             <div className="job-stat-box">
               <p>Number of jobs available in the portal:</p>
-              <p style={{ fontSize: '40px', color: 'blue' }}>{jobsAvailable}</p>
+              <p style={{ fontSize: '40px', color:'#007bff' }}>{jobsAvailable}</p>
               </div>
               <div className="job-stat-box">
   <div className="profile-completeness">
-    <h3>Profile Completeness</h3>
-    <div className="progress-bar-container">
+  <h3 className="profile-completeness-title">Profile Completeness</h3>
+  <div className="progress-bar-container">
       <div 
         className="progress-bar-fill" 
         style={{ width: `${completenessPercentage}%` }}
@@ -773,6 +825,8 @@ return (
 </div>
 </div>
    )}
+       <Prof />
+
    </div>
 </div> 
               <div className="jobsekerRight">
@@ -794,7 +848,6 @@ return (
 </div>
       )}
     </div>
-    <Prof />
 <ProfEdu />
 </div>
                   </div>

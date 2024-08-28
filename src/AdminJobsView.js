@@ -29,7 +29,7 @@ const AdminJobsView = () => {
             // Fetch user details using stored user ID
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
-            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`);
             console.log('User details response:', response); // Log the full response
 
             if (response.status === 200) {
@@ -44,7 +44,7 @@ const AdminJobsView = () => {
 
     const fetchJobPostings = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-rl5g.onrender.com/jobs/org/recruiter');
+            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/jobs/org/recruiter');
             setJobPostings(response.data);
         } catch (error) {
             console.error('Error fetching job postings:', error.message);
@@ -62,7 +62,7 @@ const AdminJobsView = () => {
 
     const handleDeleteClick = async (jobId) => {
         try {
-            await axios.delete(`https://recruitment-portal-rl5g.onrender.com/job/${jobId}`);
+            await axios.delete(`https://recruitment-portal-t6a3.onrender.com/job/${jobId}`);
             fetchJobPostings(); // Refresh job postings after deletion
         } catch (error) {
             console.error('Error deleting job:', error.message);
@@ -76,7 +76,7 @@ const AdminJobsView = () => {
 
     const handleSaveClick = async () => {
         try {
-            await axios.patch(`https://recruitment-portal-rl5g.onrender.com/job/${editingJobId}`, editedJob);
+            await axios.patch(`https://recruitment-portal-t6a3.onrender.com/job/${editingJobId}`, editedJob);
             fetchJobPostings(); // Refresh job postings after saving
             setEditingJobId(null); // Exit editing mode
         } catch (error) {

@@ -28,7 +28,7 @@ const CreateJob = () => {
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
 
-            const response = await axios.get(`https://recruitment-portal-rl5g.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`);
             console.log('User details response:', response);
 
             if (response.status === 200) {
@@ -100,7 +100,7 @@ const CreateJob = () => {
 
 
         try {
-            const response = await axios.post('https://recruitment-portal-rl5g.onrender.com/jobs', {
+            const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/jobs', {
                 title,
                 company,
                 location,
