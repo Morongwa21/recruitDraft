@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://recruitment-portal-t6a3.onrender.com/',
+    baseURL: 'https://recruitment-portal-utcp.onrender.com/',
     headers: {
         'Content-Type': 'application/json',
     },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import './components/UserViewPosts.css';
 import logo from './company logo.jpg';  // Adjust the import as necessary
@@ -6,9 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faMapMarkerAlt, faBuilding, faCalendarAlt, faTasks, faClock, faBriefcase, faDollarSign, faBook, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { FaUser, FaBell } from 'react-icons/fa';
+import NotificationContext from './NotificationContext';
 
 
 const IkusasaProgram = () => {
+    const {
+        notifications,
+        unviewedCount,
+        isNotificationsOpen,
+        setIsNotificationsOpen,
+        fetchNotificationById,
+        selectedNotification,
+    } = useContext(NotificationContext);
     const [username, setUsername] = useState('');
     const [jobs, setJobs] = useState([]);
     const [filteredJobs, setFilteredJobs] = useState([]);
@@ -16,9 +25,7 @@ const IkusasaProgram = () => {
     const [location, setLocation] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true); // Loading state
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-    const [notifications, setNotifications] = useState([]);
-    const [unviewedCount, setUnviewedCount] = useState(0);
+
     const navigate = useNavigate();
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -29,7 +36,7 @@ const IkusasaProgram = () => {
     const fetchJobs = async () => {
         try {
             setLoading(true); 
-            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/jobs?page=${currentPage}`);
+            const response = await axios.get(`https://recruitment-portal-utcp.onrender.com/jobs?page=${currentPage}`);
             console.log('response:', response)
             const totalCount = parseInt(response.headers['x-total-count'], 10);
             setJobs(response.data);
@@ -59,36 +66,31 @@ const IkusasaProgram = () => {
         localStorage.removeItem('userId');
         navigate('/LoginPageA');
     };
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
-                setNotifications(response.data);
-      
-                // Count unviewed notifications
-                const unviewed = response.data.filter(notification => !notification.viewed);
-                setUnviewedCount(unviewed.length);
-            } catch (error) {
-                console.error('Error fetching notifications:', error);
-            }
-        };
-      
-        fetchNotifications();
-      }, []);
-      const handleBellClick = (event) => {
-        event.stopPropagation();  // Prevent click from triggering other click handlers
-        setIsNotificationsOpen(!isNotificationsOpen);
-      };
-      
-      
-      // Handle page click to close both dropdowns
-      const handlePageClick = () => {
-          setIsNotificationsOpen(false);
-          setDropdownVisible(false);
-      };
+   
+    const handlePageClick = () => {
+        setIsNotificationsOpen(false);
+        setDropdownVisible(false);
+    };
     const handleChangePassword = () => {
         navigate('/changepassword');
     };
+    const handleNotificationClick = async (notificationId) => {
+        console.log('Notification ID clicked:', notificationId);  // Log the ID of the notification clicked
+      
+        try {
+            const notification = await fetchNotificationById(notificationId); // Fetch the notification details
+            console.log('Fetched notification:', notification);  // Log the notification details
+      
+            setIsNotificationsOpen(true);
+            navigate(`/notification/${notificationId}`);
+        } catch (error) {
+            console.error('Error fetching notification:', error);
+        }
+      };
+      const handleBellClick = (event) => {
+        event.stopPropagation();
+        setIsNotificationsOpen(!isNotificationsOpen);
+      };
     const Spinner = () => (
         <div className="spinner"></div>
     );
@@ -117,42 +119,53 @@ const IkusasaProgram = () => {
                 `}
             </style>
             <div className="admin-page" onClick={handlePageClick}>
-      <header className="admin-header">
-        <div className="logo">
-          <img src={logo} alt="Company Logo" />
-        </div>
-        <div className="user-info">
-                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
-                    {unviewedCount > 0 && (
-                        <span className="notification-count">{unviewedCount}</span>
-                    )}
-
-{isNotificationsOpen && (
-        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
-            <h3>Notifications</h3>
-            <ul>
-                {notifications.map(notification => (
-                    <li key={notification.id}>
-                        <div className="notification-message">
-                            {notification.message}
-                            {!notification.viewed && <strong> (New)</strong>}
-                        </div>
-                        <div className="notification-date">
-                            {new Date(notification.receivedAt).toLocaleDateString()}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-                    )}
-                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
-                    {dropdownVisible && (
-                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-                            <button onClick={handleLogout}>Logout</button>
-                        </div>
-                    )}
-                </div>
-            </header>
+            <header className="admin-header">
+    <div className="logo">
+        <img src={logo} alt="Company Logo" />
+    </div>
+    <div className="user-info">
+                <FaBell className="bell-icon" onClick={handleBellClick} />
+                {unviewedCount > 0 && (
+                    <span className="notification-count">{unviewedCount}</span>
+                )}
+                {isNotificationsOpen && (
+                    <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+                        <h3>Notifications</h3>
+                        <ul>
+                            {notifications.map(notification => (
+                                <li 
+                                    key={notification._id}
+                                    onClick={() => handleNotificationClick(notification._id)}
+                                >
+                                    <div className="notification-message">
+                                        {notification.message}
+                                        {!notification.isRead && <strong> (New)</strong>}
+                                    </div>
+                                    <div className="notification-date">
+                                    {new Date(notification.createdAt).toLocaleDateString()}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                        {selectedNotification && (
+                            <div className="notification-detail">
+                                <h4>{selectedNotification.title}</h4>
+                                <p>{selectedNotification.message}</p>
+                                <span>                       
+                                   {new Date(selectedNotification.updatedAt).toLocaleString()}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
+        <FaUser className="user-icon" onClick={handleUserInfoClick} />
+        {dropdownVisible && (
+            <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                <button onClick={handleLogout}>Logout</button>
+            </div>
+        )}
+    </div>
+</header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
@@ -162,6 +175,8 @@ const IkusasaProgram = () => {
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
             <li><a href="/CVTemplate">Templates</a></li>
+            <li><a href="/SupportPage">Support</a></li>
+
                     </ul>
                 </aside>
                 <div className="main-content">

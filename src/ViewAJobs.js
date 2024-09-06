@@ -1,21 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import logo from './company logo.jpg'; // Make sure to provide the correct path for your logo image
 import './components/AdminDash.css';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons'; 
-import { FaEdit, FaUserCircle, FaTrash, FaPlus, FaCity, FaEnvelope, FaPhone, FaUser, FaBell, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import {FaUser, FaBell, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import NotificationContext from './NotificationContext';
+
 
 const ViewAJobs = () => {
+    const {
+        notifications,
+        unviewedCount,
+        isNotificationsOpen,
+        setIsNotificationsOpen,
+        fetchNotificationById,
+        selectedNotification,
+    } = useContext(NotificationContext);
     const [username, setUsername] = useState('');
     const [applications, setApplications] = useState([]);
     const [jobs, setJobs] = useState([]);
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const [loading, setLoading] = useState(true); 
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-    const [notifications, setNotifications] = useState([]);
-    const [unviewedCount, setUnviewedCount] = useState(0);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -27,7 +35,7 @@ const ViewAJobs = () => {
         try {
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
-            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-utcp.onrender.com/user/${userId}`);
   
             if (response.status === 200) {
                 const userData = response.data;
@@ -43,7 +51,7 @@ const ViewAJobs = () => {
 
     const fetchUserApplications = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/applications/me');
+            const response = await axios.get('https://recruitment-portal-utcp.onrender.com/applications/me');
   
             if (response.status === 200) {
                 const applicationData = response.data;
@@ -62,7 +70,7 @@ const ViewAJobs = () => {
         try {
             const jobIds = applications.map(application => application.jobId);
             const jobDetailsPromises = jobIds.map(jobId =>
-                axios.get(`https://recruitment-portal-t6a3.onrender.com/jobs/${jobId}`)
+                axios.get(`https://recruitment-portal-utcp.onrender.com/jobs/${jobId}`)
             );
             const jobDetailsResponses = await Promise.all(jobDetailsPromises);
             const jobDetails = jobDetailsResponses.map(response => response.data);
@@ -84,35 +92,30 @@ const ViewAJobs = () => {
         localStorage.removeItem('userId');
         navigate('/LoginPageA');
       };
-      useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
-                setNotifications(response.data);
+      const handleNotificationClick = async (notificationId) => {
+        console.log('Notification ID clicked:', notificationId);  // Log the ID of the notification clicked
       
-                // Count unviewed notifications
-                const unviewed = response.data.filter(notification => !notification.viewed);
-                setUnviewedCount(unviewed.length);
-            } catch (error) {
-                console.error('Error fetching notifications:', error);
-            }
-        };
+        try {
+            const notification = await fetchNotificationById(notificationId); // Fetch the notification details
+            console.log('Fetched notification:', notification);  // Log the notification details
       
-        fetchNotifications();
-      }, []);
+            setIsNotificationsOpen(true);
+            navigate(`/notification/${notificationId}`);
+        } catch (error) {
+            console.error('Error fetching notification:', error);
+        }
+      };
+    
       const handleBellClick = (event) => {
-        event.stopPropagation();  // Prevent click from triggering other click handlers
+        event.stopPropagation();
         setIsNotificationsOpen(!isNotificationsOpen);
       };
-      
-      
-      // Handle page click to close both dropdowns
-      const handlePageClick = () => {
-          setIsNotificationsOpen(false);
-          setDropdownVisible(false);
-      };
+    const handlePageClick = () => {
+        setIsNotificationsOpen(false);
+        setDropdownVisible(false);
+    };
     const handleDeleteApplication = async (appId) => {
-        const deleteUrl = `https://recruitment-portal-t6a3.onrender.com/applications/${appId}/withdraw`;
+        const deleteUrl = `https://recruitment-portal-utcp.onrender.com/applications/${appId}/withdraw`;
         console.log('Delete URL:', deleteUrl);  // Log the URL
         try {
             const response = await axios.delete(deleteUrl);
@@ -171,6 +174,8 @@ const ViewAJobs = () => {
                         <li><a href="/IkusasaProgram">Job Listings</a></li> 
                         <li><a href="/ViewAJobs">Job Applications</a></li>
                         <li><a href="/CVTemplate">Templates</a></li>
+                        <li><a href="/SupportPage">Support</a></li>
+
                     </ul>
                 </aside>
                 <div className="main-content">

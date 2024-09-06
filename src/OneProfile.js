@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import logo from './company logo.jpg';
 import './components/AdminDash.css'; 
 import './components/OneProfile.css';
@@ -7,8 +7,17 @@ import ProfEdu from './ProfEdu';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaEdit, FaUserCircle, FaCity, FaEnvelope, FaPhone, FaUser, FaBell, FaBook, FaGraduationCap, FaCalendarAlt,FaBuilding, FaBriefcase, FaClock, FaTasks, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import NotificationContext from './NotificationContext';
 
 const OneProfile = () => {
+  const {
+    notifications,
+    unviewedCount,
+    isNotificationsOpen,
+    setIsNotificationsOpen,
+    fetchNotificationById,
+    selectedNotification,
+} = useContext(NotificationContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
@@ -46,9 +55,7 @@ const OneProfile = () => {
   const [success, setSuccess] = useState('');
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   const [preview, setPreview] = useState('');
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [unviewedCount, setUnviewedCount] = useState(0);
+
   useEffect(() => {
     if (showStatusMessage) {
       const timer = setTimeout(() => setShowStatusMessage(false), 3000); // Hide after 3 seconds
@@ -87,7 +94,7 @@ const OneProfile = () => {
 
   const fetchEducationItem = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-utcp.onrender.com/profile');
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const education = Array.isArray(profile.education) ? profile.education : [];
@@ -102,7 +109,7 @@ const OneProfile = () => {
   };
   const fetchExperience = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-utcp.onrender.com/profile');
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const experience = Array.isArray(profile.experience) ? profile.experience : [];
@@ -125,8 +132,7 @@ const OneProfile = () => {
         return;
       }
   
-      // Update the URL to include userId
-      const profileResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile`);
+      const profileResponse = await axios.get(`https://recruitment-portal-utcp.onrender.com/profile`);
   
       if (profileResponse.status === 200) {
         const response = profileResponse.data.profile;
@@ -199,7 +205,7 @@ profilePicture,
 
   const fetchJobs = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/jobs');
+      const response = await axios.get('https://recruitment-portal-utcp.onrender.com/jobs');
       console.log('Jobs response:', response);
 
       if (response.status === 200) {
@@ -244,15 +250,13 @@ profilePicture,
     try {
       setLoading(true);
 
-      // Convert file to Base64 and display it immediately as a preview
       const reader = new FileReader();
       reader.onloadend = async () => {
         const base64Image = reader.result;
-        setProfileImage(base64Image); // Show preview immediately
+        setProfileImage(base64Image); 
 
-        // Upload the image to the server
         const response = await axios.patch(
-          'https://recruitment-portal-t6a3.onrender.com/profile',
+          'https://recruitment-portal-utcp.onrender.com/profile',
           { profilePicture: base64Image },
           { headers: { 'Content-Type': 'application/json' } }
         );
@@ -300,28 +304,20 @@ profilePicture,
       country,
     ];
   
-    // Check if optional fields are filled
     const isEducationFilled = educationItems.length > 0;
     const isExperienceFilled = experienceItems.length > 0;
   
-    // Count filled required fields
     const filledFieldsCount = requiredFields.filter(field => {
       if (field === undefined || field === null) return false;
       if (typeof field === 'string' && field.trim() === '') return false;
       return true;
     }).length;
   
-    // Total number of fields, including optional ones
     const totalFieldsCount = requiredFields.length + 2; // +2 for education and experience
+      const totalFilledFieldsCount = filledFieldsCount + (isEducationFilled ? 1 : 0) + (isExperienceFilled ? 1 : 0);
   
-    // Total filled fields
-    const totalFilledFieldsCount = filledFieldsCount + (isEducationFilled ? 1 : 0) + (isExperienceFilled ? 1 : 0);
-  
-    // Calculate completeness percentage
     completeness = (totalFilledFieldsCount / totalFieldsCount) * 100;
-  
-    // Clamp percentage between 0 and 100
-    return Math.min(Math.max(completeness, 0), 100).toFixed(2);
+      return Math.min(Math.max(completeness, 0), 100).toFixed(2);
   };
   
   const completenessPercentage = calculateProfileCompleteness();
@@ -350,13 +346,13 @@ profilePicture,
     try {
       const base64Resume = await fileToBase64(resume);
       const formData = {
-        resume: base64Resume, // Send the base64 string
+        resume: base64Resume,
       };
   
       console.log('resume:', formData);
-      const response = await axios.patch(`https://recruitment-portal-t6a3.onrender.com/profile`, formData, {
+      const response = await axios.patch(`https://recruitment-portal-utcp.onrender.com/profile`, formData, {
         headers: {
-          'Content-Type': 'application/json', // Adjust the content type accordingly
+          'Content-Type': 'application/json', 
         },
       });
   
@@ -385,13 +381,13 @@ profilePicture,
     try {
       const base64Resume = await fileToBase64(resume);
       const payload = {
-        resume: base64Resume, // Send the base64 string
+        resume: base64Resume, 
       };
   
       console.log('payload:::::::: ', payload);
-      const response = await axios.patch(`https://recruitment-portal-t6a3.onrender.com/profile`, payload, {
+      const response = await axios.patch(`https://recruitment-portal-utcp.onrender.com/profile`, payload, {
         headers: {
-          'Content-Type': 'application/json', // Adjust the content type accordingly
+          'Content-Type': 'application/json', 
         },
       });
   
@@ -415,7 +411,7 @@ profilePicture,
   useEffect(() => {
     const storedResume = localStorage.getItem('resume');
     if (storedResume) {
-      setResume(storedResume); // Assuming storedResume is a base64 string
+      setResume(storedResume); 
     }
   
     const storedResumeFileName = localStorage.getItem('resumeFileName');
@@ -455,7 +451,7 @@ profilePicture,
     try {
         let checkProfileResponse;
         try {
-          checkProfileResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile`);
+          checkProfileResponse = await axios.get(`https://recruitment-portal-utcp.onrender.com/profile`);
         } catch (error) {
           if (error.response && error.response.status === 404) {
             checkProfileResponse = { status: 404, data: null }; 
@@ -466,7 +462,7 @@ profilePicture,
         console.log('Existing Profile: ', checkProfileResponse);
         if (checkProfileResponse.status === 200 && checkProfileResponse.data) {
           console.log('data: ', data);
-          const updateResponse = await axios.patch('https://recruitment-portal-t6a3.onrender.com/profile', data);
+          const updateResponse = await axios.patch('https://recruitment-portal-utcp.onrender.com/profile', data);
           if (updateResponse.status === 200) {
             console.log('Profile updated successfully');
             setSaveMessage('Profile updated successfully!');
@@ -478,7 +474,7 @@ profilePicture,
             setSaveMessage(`Failed to update profile: ${updateResponse.statusText}`);
           }
         } else {
-          const createResponse = await axios.post('https://recruitment-portal-t6a3.onrender.com/profile', data);
+          const createResponse = await axios.post('https://recruitment-portal-utcp.onrender.com/profile', data);
           if (createResponse.status === 200) {
             console.log('Profile created successfully');
             setIsSaved(true);
@@ -511,71 +507,80 @@ const handleCloseModal = () => {
   setIsModalOpen(false);
 
 };
-useEffect(() => {
-  const fetchNotifications = async () => {
-      try {
-          const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
-          setNotifications(response.data);
-
-          // Count unviewed notifications
-          const unviewed = response.data.filter(notification => !notification.viewed);
-          setUnviewedCount(unviewed.length);
-      } catch (error) {
-          console.error('Error fetching notifications:', error);
-      }
-  };
-
-  fetchNotifications();
-}, []);
 const handleBellClick = (event) => {
-  event.stopPropagation();  // Prevent click from triggering other click handlers
+  event.stopPropagation();
   setIsNotificationsOpen(!isNotificationsOpen);
 };
 
 
-// Handle page click to close both dropdowns
 const handlePageClick = () => {
     setIsNotificationsOpen(false);
     setDropdownVisible(false);
 };
+// console.log('notifications:',notifications)
+
+const handleNotificationClick = async (notificationId) => {
+  console.log('Notification ID clicked:', notificationId);  // Log the ID of the notification clicked
+
+  try {
+      const notification = await fetchNotificationById(notificationId); // Fetch the notification details
+      console.log('Fetched notification:', notification);  // Log the notification details
+
+      setIsNotificationsOpen(true);
+      navigate(`/notification/${notificationId}`);
+  } catch (error) {
+      console.error('Error fetching notification:', error);
+  }
+};
 return (
   <div className="admin-page" onClick={handlePageClick}>
-      <header className="admin-header">
-        <div className="logo">
-          <img src={logo} alt="Company Logo" />
-        </div>
-        <div className="user-info">
-                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
-                    {unviewedCount > 0 && (
-                        <span className="notification-count">{unviewedCount}</span>
-                    )}
-
-{isNotificationsOpen && (
-        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
-            <h3>Notifications</h3>
-            <ul>
-                {notifications.map(notification => (
-                    <li key={notification.id}>
-                        <div className="notification-message">
-                            {notification.message}
-                            {!notification.viewed && <strong> (New)</strong>}
-                        </div>
-                        <div className="notification-date">
-                            {new Date(notification.receivedAt).toLocaleDateString()}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-                    )}
-                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
-                    {dropdownVisible && (
-                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-                            <button onClick={handleLogout}>Logout</button>
-                        </div>
-                    )}
-                </div>
-            </header>
+ <header className="admin-header">
+    <div className="logo">
+        <img src={logo} alt="Company Logo" />
+    </div>
+    <div className="user-info">
+                <FaBell className="bell-icon" onClick={handleBellClick} />
+                {unviewedCount > 0 && (
+                    <span className="notification-count">{unviewedCount}</span>
+                )}
+                {isNotificationsOpen && (
+                    <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+                        <h3>Notifications</h3>
+                        <ul>
+                            {notifications.map(notification => (
+                                <li 
+                                    key={notification._id}
+                                    onClick={() => handleNotificationClick(notification._id)}
+                                >
+                                    <div className="notification-message">
+                                        {notification.message}
+                                        {!notification.isRead && <strong> (New)</strong>}
+                                    </div>
+                                    <div className="notification-date">
+                                    {new Date(notification.createdAt).toLocaleDateString()}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                        {selectedNotification && (
+                            <div className="notification-detail">
+                                <h4>{selectedNotification.title}</h4>
+                                <p>{selectedNotification.message}</p>
+                                <span>                       
+                                   {new Date(selectedNotification.updatedAt).toLocaleString()}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
+        <FaUser className="user-icon" onClick={handleUserInfoClick} />
+        {dropdownVisible && (
+            <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                <button onClick={handleLogout}>Logout</button>
+            </div>
+        )}
+    </div>
+</header>
 
       <div className="admin-content">
         <aside className="side">
@@ -584,6 +589,7 @@ return (
             <li><a href="/IkusasaProgram">Job Listings</a></li> 
             <li><a href="/ViewAJobs">Job Applications</a></li>
             <li><a href="/CVTemplate">Templates</a></li>
+            <li><a href="/SupportPage">Support</a></li>
 
           </ul>
         </aside>

@@ -5,6 +5,7 @@ import logo from './company logo.jpg';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSignInAlt, faHome } from '@fortawesome/free-solid-svg-icons';
+import { FaUsers, FaRegLifeRing, FaSearch } from 'react-icons/fa'; // Import icons from react-icons library
 
 const UserViewPost = () => {
     const [jobs, setJobs] = useState([]);
@@ -21,7 +22,7 @@ const UserViewPost = () => {
 
     const fetchJobs = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/jobs');
+            const response = await axios.get('https://recruitment-portal-utcp.onrender.com/jobs');
             console.log('API Response:', response);
             console.log('Response Headers:', response.headers);
 
@@ -63,6 +64,7 @@ const UserViewPost = () => {
             <SearchBar onSearch={handleSearch} />
             {/* <Filters onFilter={handleFilter} /> */}
             <JobListings jobs={filteredJobs} onSelectJob={handleSelectJob} />
+            
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
     );
@@ -77,7 +79,9 @@ const Header = () => {
             <nav className="nav">
                 <a href="/" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
                     <FontAwesomeIcon icon={faHome} /> Home
+                    
                 </a>
+
                 <a href="/LoginPageA" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/LoginPageA'); }}>
                     <FontAwesomeIcon icon={faSignInAlt} /> Sign-In|Sign-Up
                 </a>

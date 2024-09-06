@@ -37,7 +37,7 @@ const Prof = () => {
 
   const fetchExperience = async () => {
     try {
-      const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/profile');
+      const response = await axios.get('https://recruitment-portal-utcp.onrender.com/profile');
       if (response.status === 200) {
         const profile = response.data.profile || {};
         const experience = Array.isArray(profile.experience) ? profile.experience : [];
@@ -76,7 +76,7 @@ const Prof = () => {
 
     try {
         // Send the PATCH request
-        const response = await axios.patch('https://recruitment-portal-t6a3.onrender.com/profile', { experience: [experienceItem] });
+        const response = await axios.patch('https://recruitment-portal-utcp.onrender.com/profile', { experience: [experienceItem] });
 
         if (response.status === 200 || response.status === 201) {
             console.log('Work experience saved successfully:', response.data.message);
@@ -131,7 +131,7 @@ const Prof = () => {
   
     console.log('Deleting experience ID:', experienceId);
     try {
-      const response = await axios.delete(`https://recruitment-portal-t6a3.onrender.com/profile/experience/${experienceId}`);
+      const response = await axios.delete(`https://recruitment-portal-utcp.onrender.com/profile/experience/${experienceId}`);
       if (response.status === 200) {
         console.log('Experience deleted successfully');
         const updatedExperienceItems = [...experienceItems];

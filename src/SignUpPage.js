@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './components/LoginA.css'; 
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaUser, FaLock, FaRegEyeSlash, FaRegEye, FaUsers, FaSearch  } from 'react-icons/fa'; // Import icons from react-icons library
+import { FaUser, FaLock, FaRegEyeSlash, FaRegLifeRing, FaUsers, FaSearch  } from 'react-icons/fa'; // Import icons from react-icons library
 
 import logo from './company logo.jpg';
 
@@ -45,7 +45,7 @@ const SignUpPage = () => {
         };
         setIsLoading(true);
         try {
-            const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/register', formData, {
+            const response = await axios.post('https://recruitment-portal-utcp.onrender.com/register', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -83,8 +83,10 @@ const SignUpPage = () => {
           </div>
           <nav>
           <ul>
-                    <li><a href="#"><FaUsers /> Home</a></li> {/* Added Home icon */}
+                    <li><a href="/"><FaUsers /> Home</a></li> {/* Added Home icon */}
                         <li><a href="/UserViewPost"><FaSearch /> Job Listings</a></li>
+                        <li><a href="/SupportPage"><FaRegLifeRing /> Support</a></li>                    
+
                     </ul>
           </nav>
         </header>

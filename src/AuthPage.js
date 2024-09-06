@@ -39,7 +39,7 @@ function AuthPage() {
     setError('');
     try {
       const response = await axios.post(
-        'https://recruitment-portal-t6a3.onrender.com/verify-otp',
+        'https://recruitment-portal-utcp.onrender.com/verify-otp',
         { otp }
       );
       setLoading(false);
@@ -66,7 +66,7 @@ function AuthPage() {
     setResendLoading(true);
     setError('');
     try {
-      const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/resend-otp', {});
+      const response = await axios.post('https://recruitment-portal-utcp.onrender.com/resend-otp', {});
       setResendLoading(false);
       if (response.status === 200) {
         console.log(response.data);

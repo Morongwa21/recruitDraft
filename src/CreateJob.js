@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './components/JobPosting.css'; // Import CSS for styling
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate } from 'react-router-dom';
 import logo from './company logo.jpg';
 import jobOpenning from './job vector.jpg'; // Import your image here
 import { FaUser, FaBell } from 'react-icons/fa';
+import NotificationContext from './NotificationContext';
 
 const CreateJob = () => {
     const [title, setJobTitle] = useState('');
@@ -19,9 +20,14 @@ const CreateJob = () => {
     const [skills, setSkills] = useState('');
     const [username, setUsername] = useState('');
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-    const [notifications, setNotifications] = useState([]);
-    const [unviewedCount, setUnviewedCount] = useState(0);
+    const {
+        notifications,
+        unviewedCount,
+        isNotificationsOpen,
+        setIsNotificationsOpen,
+        fetchNotificationById,
+        selectedNotification,
+    } = useContext(NotificationContext);
     const navigate = useNavigate();
     useEffect(() => {
         fetchUserDetails();
@@ -31,7 +37,7 @@ const CreateJob = () => {
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
 
-            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-utcp.onrender.com/user/${userId}`);
             console.log('User details response:', response);
 
             if (response.status === 200) {
@@ -103,7 +109,7 @@ const CreateJob = () => {
 
 
         try {
-            const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/jobs', {
+            const response = await axios.post('https://recruitment-portal-utcp.onrender.com/jobs', {
                 title,
                 company,
                 location,
@@ -152,24 +158,21 @@ const CreateJob = () => {
         localStorage.removeItem('userId');
         navigate('/LoginPage');
     };
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
-                setNotifications(response.data);
+    const handleNotificationClick = async (notificationId) => {
+        console.log('Notification ID clicked:', notificationId);  // Log the ID of the notification clicked
       
-                // Count unviewed notifications
-                const unviewed = response.data.filter(notification => !notification.viewed);
-                setUnviewedCount(unviewed.length);
-            } catch (error) {
-                console.error('Error fetching notifications:', error);
-            }
-        };
+        try {
+            const notification = await fetchNotificationById(notificationId); // Fetch the notification details
+            console.log('Fetched notification:', notification);  // Log the notification details
       
-        fetchNotifications();
-      }, []);
+            setIsNotificationsOpen(true);
+            navigate(`/notification/${notificationId}`);
+        } catch (error) {
+            console.error('Error fetching notification:', error);
+        }
+      };
       const handleBellClick = (event) => {
-        event.stopPropagation();  // Prevent click from triggering other click handlers
+        event.stopPropagation();
         setIsNotificationsOpen(!isNotificationsOpen);
       };
       
@@ -184,42 +187,53 @@ const CreateJob = () => {
     };
     return (
         <div className="admin-page">
-         <header className="admin-header">
-        <div className="logo">
-          <img src={logo} alt="Company Logo" />
-        </div>
-        <div className="user-info">
-                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
-                    {unviewedCount > 0 && (
-                        <span className="notification-count">{unviewedCount}</span>
-                    )}
-
-{isNotificationsOpen && (
-        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
-            <h3>Notifications</h3>
-            <ul>
-                {notifications.map(notification => (
-                    <li key={notification.id}>
-                        <div className="notification-message">
-                            {notification.message}
-                            {!notification.viewed && <strong> (New)</strong>}
-                        </div>
-                        <div className="notification-date">
-                            {new Date(notification.receivedAt).toLocaleDateString()}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-                    )}
-                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
-                    {dropdownVisible && (
-                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-                            <button onClick={handleLogout}>Logout</button>
-                        </div>
-                    )}
-                </div>
-            </header>
+       <header className="admin-header">
+    <div className="logo">
+        <img src={logo} alt="Company Logo" />
+    </div>
+    <div className="user-info">
+                <FaBell className="bell-icon" onClick={handleBellClick} />
+                {unviewedCount > 0 && (
+                    <span className="notification-count">{unviewedCount}</span>
+                )}
+                {isNotificationsOpen && (
+                    <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+                        <h3>Notifications</h3>
+                        <ul>
+                            {notifications.map(notification => (
+                                <li 
+                                    key={notification._id}
+                                    onClick={() => handleNotificationClick(notification._id)}
+                                >
+                                    <div className="notification-message">
+                                        {notification.message}
+                                        {!notification.isRead && <strong> (New)</strong>}
+                                    </div>
+                                    <div className="notification-date">
+                                    {new Date(notification.createdAt).toLocaleDateString()}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                        {selectedNotification && (
+                            <div className="notification-detail">
+                                <h4>{selectedNotification.title}</h4>
+                                <p>{selectedNotification.message}</p>
+                                <span>                       
+                                   {new Date(selectedNotification.updatedAt).toLocaleString()}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
+        <FaUser className="user-icon" onClick={handleUserInfoClick} />
+        {dropdownVisible && (
+            <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                <button onClick={handleLogout}>Logout</button>
+            </div>
+        )}
+    </div>
+</header>
             <div className="main-content">
 <h3>Job Posting</h3>
                 <div className="create-job-container">

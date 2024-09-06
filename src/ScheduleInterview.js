@@ -42,7 +42,7 @@ const ScheduleInterview = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`https://recruitment-portal-t6a3.onrender.com/applications/${appId}`, formData, {
+            const response = await axios.post(`https://recruitment-portal-utcp.onrender.com/applications/${appId}`, formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming you use JWT
@@ -59,7 +59,7 @@ const ScheduleInterview = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
+                const response = await axios.get('https://recruitment-portal-utcp.onrender.com/notifications');
                 setNotifications(response.data);
       
                 // Count unviewed notifications
