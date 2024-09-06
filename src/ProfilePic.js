@@ -45,7 +45,7 @@ const ProfilePicture = () => {
 
     try {
       // Send the base64 string as part of the request body
-      const response = await axios.patch(`https://recruitment-portal-t6a3.onrender.com/profile`, {
+      const response = await axios.patch(`https://recruitment-portal-utcp.onrender.com/profile`, {
         profilePicture: preview,
       }, {
         headers: {

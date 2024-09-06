@@ -3,7 +3,7 @@ import './components/LandingPage.css';
 import recruitingImage from './recruiting.png';
 import logo from './company logo.jpg';
 import { useNavigate } from 'react-router-dom';
-import { FaUsers, FaMapMarkerAlt, FaSearch } from 'react-icons/fa'; // Import icons from react-icons library
+import { FaUsers, FaRegLifeRing, FaSearch } from 'react-icons/fa'; // Import icons from react-icons library
 import { AiOutlineUserAdd } from 'react-icons/ai'; // Example vector icon for "Get Started"
 
 const LandingPage = () => {
@@ -27,10 +27,9 @@ const LandingPage = () => {
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#"><FaUsers /> Home</a></li> {/* Added Home icon */}
+                        <li><a href="/"><FaUsers /> Home</a></li> {/* Added Home icon */}
                         <li><a href="/UserViewPost"><FaSearch /> Job Listings</a></li> {/* Added Job Listings icon */}
-                        {/* Add more navigation items with icons if needed */}
-                    </ul>
+                        <li><a href="/SupportPage"><FaRegLifeRing /> Support</a></li>                    </ul>
                 </nav>
             </header>
             <main>

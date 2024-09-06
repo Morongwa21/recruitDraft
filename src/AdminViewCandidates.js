@@ -5,7 +5,7 @@ import './components/UserViewPosts.css';
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar, faUser, faUsers, faBell, faHome, faSearch, faBriefcase, faEnvelope, faEye, faBirthdayCake, faGenderless, faFlag, faBuilding, faMapMarkerAlt, faClock, faFileAlt} from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faUser, faUsers, faBell, faHome, faSearch, faBriefcase, faEnvelope, faEye, faQuestionCircle, faGenderless, faFlag, faBuilding, faMapMarkerAlt, faClock, faFileAlt} from '@fortawesome/free-solid-svg-icons';
 import logo from './company logo.jpg';
 import { FaUser, FaBell } from 'react-icons/fa';
 
@@ -38,7 +38,7 @@ const AdminViewCandidates = () => {
     const fetchUserDetails = async () => {
         try {
             const userId = localStorage.getItem('userId');
-            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-utcp.onrender.com/user/${userId}`);
             console.log('User Details Response:', response); // Log the response
 
             if (response.status === 200) {
@@ -53,7 +53,7 @@ const AdminViewCandidates = () => {
 
     const fetchCandidates = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/applications');
+            const response = await axios.get('https://recruitment-portal-utcp.onrender.com/applications');
             console.log('Candidates Response:', response); // Log the response
 
             setCandidates(response.data);
@@ -70,7 +70,7 @@ const AdminViewCandidates = () => {
             const uniqueJobIds = [...new Set(jobIds)]; // Remove duplicate job IDs
     
             const jobDetailsPromises = uniqueJobIds.map(jobId => {
-                return axios.get(`https://recruitment-portal-t6a3.onrender.com/jobs/${jobId}`);
+                return axios.get(`https://recruitment-portal-utcp.onrender.com/jobs/${jobId}`);
             });
     
             const jobDetailsResponses = await Promise.all(jobDetailsPromises);
@@ -86,7 +86,7 @@ const AdminViewCandidates = () => {
     
             // Fetch profile data for each candidate
             await Promise.all(applications.map(async (application) => {
-                const profileResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile/${application.userId}`);
+                const profileResponse = await axios.get(`https://recruitment-portal-utcp.onrender.com/profile/${application.userId}`);
                 
                 if (profileResponse.status === 200) {
                     setProfData(profileResponse.data);
@@ -128,9 +128,9 @@ const AdminViewCandidates = () => {
     const candidatesToDisplay = filteredCandidates.length > 0 ? filteredCandidates : candidates;
     const handleViewProfile = async (userId, appId, jobId) => {
         try {
-            const profileResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile/${userId}`);
-            const applicationResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/applications/${appId}`);
-            const jobResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/jobs/${jobId}`);
+            const profileResponse = await axios.get(`https://recruitment-portal-utcp.onrender.com/profile/${userId}`);
+            const applicationResponse = await axios.get(`https://recruitment-portal-utcp.onrender.com/applications/${appId}`);
+            const jobResponse = await axios.get(`https://recruitment-portal-utcp.onrender.com/jobs/${jobId}`);
             
             if (profileResponse.status === 200 && applicationResponse.status === 200 && jobResponse.status === 200) {
                 setProfileData(profileResponse.data);
@@ -139,7 +139,7 @@ const AdminViewCandidates = () => {
                 setModalVisible(true);
                 
                 // Update the application status to "View"
-                const updateStatusResponse = await axios.put(`https://recruitment-portal-t6a3.onrender.com/applications/${appId}/status`, {
+                const updateStatusResponse = await axios.put(`https://recruitment-portal-utcp.onrender.com/applications/${appId}/status`, {
                     status: 'View'
                 });
     
@@ -170,7 +170,7 @@ const AdminViewCandidates = () => {
             if (action === 'Reject') {
                 setLoading(true); // Set loading state to true
                 try {
-                    const response = await axios.patch(`https://recruitment-portal-t6a3.onrender.com/applications/${candidateId}`, {
+                    const response = await axios.patch(`https://recruitment-portal-utcp.onrender.com/applications/${candidateId}`, {
                         status: 'rejected'
                     });
         
@@ -196,7 +196,7 @@ const AdminViewCandidates = () => {
         useEffect(() => {
             const fetchNotifications = async () => {
                 try {
-                    const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
+                    const response = await axios.get('https://recruitment-portal-utcp.onrender.com/notifications');
                     setNotifications(response.data);
           
                     // Count unviewed notifications
@@ -223,7 +223,7 @@ const AdminViewCandidates = () => {
         const handleDownloadResume = async (userId) => {
             try {
                 // Construct the URL to download the resume based on the updated route
-                const url = `https://recruitment-portal-t6a3.onrender.com/profile/resume/${userId}`;
+                const url = `https://recruitment-portal-utcp.onrender.com/profile/resume/${userId}`;
                 // Set the resume URL for downloading
                 setResumeUrl(url);
                 // Trigger the download
@@ -274,9 +274,11 @@ const AdminViewCandidates = () => {
             <div className="admin-content">
                 <aside className="side">
                     <ul>
-                        <li><a href="#dashboard"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
+                        <li><a href="/AdminDash"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
                         <li><Link to="/AdminJobsView"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
                         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
+                        <li><a href="/SupportPage"><FontAwesomeIcon icon={faQuestionCircle} /> Support</a></li> {/* Add support icon here */}
+
                         {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}
                         {/* <li><a href="#analytics"><FontAwesomeIcon icon={faChartBar} /> Analytics</a></li> */}
                          {/* <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li>  */}

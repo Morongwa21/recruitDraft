@@ -21,7 +21,7 @@ const UserViewPost = () => {
 
     const fetchJobs = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/jobs'); 
+            const response = await axios.get('https://recruitment-portal-utcp.onrender.com/jobs'); 
             console.log('API Response:', response); 
             console.log('Response Headers:', response.headers); 
             const totalCount = response.headers['x-total-count'];

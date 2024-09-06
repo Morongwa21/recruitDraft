@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './components/JobPosting.css'; // Import CSS for styling
 import axios from 'axios'; // Import Axios for making HTTP requests
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faChartBar, faTrashAlt, faUser, faUsers, faBell, faHome } from '@fortawesome/free-solid-svg-icons';
-
+import { faPen, faChartBar, faTrashAlt, faUser, faUsers, faQuestionCircle, faHome } from '@fortawesome/free-solid-svg-icons';
+import NotificationContext from './NotificationContext';
 import logo from './company logo.jpg';
 import { Link } from 'react-router-dom';
 import { FaUser, FaBell } from 'react-icons/fa';
@@ -15,9 +15,14 @@ const AdminJobsView = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [username, setUsername] = useState('');
     const [dropdownVisible, setDropdownVisible] = useState(false);
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-    const [notifications, setNotifications] = useState([]);
-    const [unviewedCount, setUnviewedCount] = useState(0);
+    const {
+        notifications,
+        unviewedCount,
+        isNotificationsOpen,
+        setIsNotificationsOpen,
+        fetchNotificationById,
+        selectedNotification,
+    } = useContext(NotificationContext);
 
     const navigate = useNavigate();
     const employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Temporary', 'Internship'];
@@ -32,7 +37,7 @@ const AdminJobsView = () => {
             // Fetch user details using stored user ID
             const userId = localStorage.getItem('userId');
             console.log('Fetching details for user ID:', userId);
-            const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`);
+            const response = await axios.get(`https://recruitment-portal-utcp.onrender.com/user/${userId}`);
             console.log('User details response:', response); // Log the full response
 
             if (response.status === 200) {
@@ -47,7 +52,7 @@ const AdminJobsView = () => {
 
     const fetchJobPostings = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/jobs/org/recruiter');
+            const response = await axios.get('https://recruitment-portal-utcp.onrender.com/jobs/org/recruiter');
             setJobPostings(response.data);
         } catch (error) {
             console.error('Error fetching job postings:', error.message);
@@ -65,7 +70,7 @@ const AdminJobsView = () => {
 
     const handleDeleteClick = async (jobId) => {
         try {
-            await axios.delete(`https://recruitment-portal-t6a3.onrender.com/job/${jobId}`);
+            await axios.delete(`https://recruitment-portal-utcp.onrender.com/job/${jobId}`);
             fetchJobPostings(); // Refresh job postings after deletion
         } catch (error) {
             console.error('Error deleting job:', error.message);
@@ -79,7 +84,7 @@ const AdminJobsView = () => {
 
     const handleSaveClick = async () => {
         try {
-            await axios.patch(`https://recruitment-portal-t6a3.onrender.com/job/${editingJobId}`, editedJob);
+            await axios.patch(`https://recruitment-portal-utcp.onrender.com/job/${editingJobId}`, editedJob);
             fetchJobPostings(); // Refresh job postings after saving
             setEditingJobId(null); // Exit editing mode
         } catch (error) {
@@ -114,77 +119,84 @@ const AdminJobsView = () => {
     const handleChangePassword = () => {
         navigate('/changepassword');
     };
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
-                setNotifications(response.data);
+    const handleNotificationClick = async (notificationId) => {
+        console.log('Notification ID clicked:', notificationId);  // Log the ID of the notification clicked
       
-                // Count unviewed notifications
-                const unviewed = response.data.filter(notification => !notification.viewed);
-                setUnviewedCount(unviewed.length);
-            } catch (error) {
-                console.error('Error fetching notifications:', error);
-            }
-        };
+        try {
+            const notification = await fetchNotificationById(notificationId); // Fetch the notification details
+            console.log('Fetched notification:', notification);  // Log the notification details
       
-        fetchNotifications();
-      }, []);
+            setIsNotificationsOpen(true);
+            navigate(`/notification/${notificationId}`);
+        } catch (error) {
+            console.error('Error fetching notification:', error);
+        }
+      };
       const handleBellClick = (event) => {
-        event.stopPropagation();  // Prevent click from triggering other click handlers
+        event.stopPropagation();
         setIsNotificationsOpen(!isNotificationsOpen);
       };
-      
-      
-      // Handle page click to close both dropdowns
       const handlePageClick = () => {
           setIsNotificationsOpen(false);
           setDropdownVisible(false);
       };
     return (
         <div className="admin-page">
-           <header className="admin-header">
-        <div className="logo">
-          <img src={logo} alt="Company Logo" />
-        </div>
-        <div className="user-info">
-                    <FaBell className="bell-icon" onClick={handleBellClick} /> 
-                    {unviewedCount > 0 && (
-                        <span className="notification-count">{unviewedCount}</span>
-                    )}
-
-{isNotificationsOpen && (
-        <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
-            <h3>Notifications</h3>
-            <ul>
-                {notifications.map(notification => (
-                    <li key={notification.id}>
-                        <div className="notification-message">
-                            {notification.message}
-                            {!notification.viewed && <strong> (New)</strong>}
-                        </div>
-                        <div className="notification-date">
-                            {new Date(notification.receivedAt).toLocaleDateString()}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-                    )}
-                    <FaUser className="user-icon" onClick={handleUserInfoClick} />
-                    {dropdownVisible && (
-                        <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
-                            <button onClick={handleLogout}>Logout</button>
-                        </div>
-                    )}
-                </div>
-            </header>
+         <header className="admin-header">
+    <div className="logo">
+        <img src={logo} alt="Company Logo" />
+    </div>
+    <div className="user-info">
+                <FaBell className="bell-icon" onClick={handleBellClick} />
+                {unviewedCount > 0 && (
+                    <span className="notification-count">{unviewedCount}</span>
+                )}
+                {isNotificationsOpen && (
+                    <div className="notification-panel" onClick={(e) => e.stopPropagation()}>
+                        <h3>Notifications</h3>
+                        <ul>
+                            {notifications.map(notification => (
+                                <li 
+                                    key={notification._id}
+                                    onClick={() => handleNotificationClick(notification._id)}
+                                >
+                                    <div className="notification-message">
+                                        {notification.message}
+                                        {!notification.isRead && <strong> (New)</strong>}
+                                    </div>
+                                    <div className="notification-date">
+                                    {new Date(notification.createdAt).toLocaleDateString()}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                        {selectedNotification && (
+                            <div className="notification-detail">
+                                <h4>{selectedNotification.title}</h4>
+                                <p>{selectedNotification.message}</p>
+                                <span>                       
+                                   {new Date(selectedNotification.updatedAt).toLocaleString()}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                )}
+        <FaUser className="user-icon" onClick={handleUserInfoClick} />
+        {dropdownVisible && (
+            <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+                <button onClick={handleLogout}>Logout</button>
+            </div>
+        )}
+    </div>
+</header>
             <div className="admin-content">
                 <aside className="side">
                     <ul>
                         <li><a href="/AdminDash"><FontAwesomeIcon icon={faHome} /> Dashboard</a></li>
                         <li><Link to="/AdminJobsView"><FontAwesomeIcon icon={faChartBar} /> Job Postings</Link></li>
                         <li><a href="/AdminViewCandidates"><FontAwesomeIcon icon={faUsers} /> Candidates</a></li>
+                        <li><a href="/SupportPage"><FontAwesomeIcon icon={faQuestionCircle} /> Support</a></li> {/* Add support icon here */}
+
                         {/* <li><a href="#users"><FontAwesomeIcon icon={faUser} /> Users</a></li> */}
                         {/* <li><a href="#analytics"><FontAwesomeIcon icon={faChartBar} /> Analytics</a></li> */}
                         {/* { <li><a href="#notifications"><FontAwesomeIcon icon={faBell} /> Notifications</a></li> } */}

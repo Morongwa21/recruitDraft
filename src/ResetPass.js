@@ -37,7 +37,7 @@ const ResetPass = () => {
     // Create a form element to submit as POST
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'https://recruitment-portal-t6a3.onrender.com/forgot-password'; // Adjust to the correct URL
+    form.action = 'https://recruitment-portal-utcp.onrender.com/forgot-password'; // Adjust to the correct URL
 
     // Create hidden input elements for password, passwordConfirm, and token
     const passwordInput = document.createElement('input');

@@ -19,7 +19,7 @@ const ProfEdu = () => {
     const [editId, setEditId] = useState(null);    
     const fetchEducation = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/profile');
+            const response = await axios.get('https://recruitment-portal-utcp.onrender.com/profile');
             if (response.status === 200) {
                 const profile = response.data.profile || {};
                 const education = Array.isArray(profile.education) ? profile.education : [];
@@ -57,10 +57,10 @@ const ProfEdu = () => {
             
             if (editId) {
                 // Update the existing education item
-                response = await axios.patch('https://recruitment-portal-t6a3.onrender.com/profile', { education: [educationItem] });
+                response = await axios.patch('https://recruitment-portal-utcp.onrender.com/profile', { education: [educationItem] });
             } else {
                 // Add a new education item
-                response = await axios.patch('https://recruitment-portal-t6a3.onrender.com/profile', { education: [educationItem] });
+                response = await axios.patch('https://recruitment-portal-utcp.onrender.com/profile', { education: [educationItem] });
             }
     
             if (response.status === 200 || response.status === 201) {
@@ -79,7 +79,7 @@ const ProfEdu = () => {
 
     const handleDelete = async (educationId, index) => {
         try {
-            const response = await axios.delete(`https://recruitment-portal-t6a3.onrender.com/profile/education/${educationId}`);
+            const response = await axios.delete(`https://recruitment-portal-utcp.onrender.com/profile/education/${educationId}`);
             if (response.status === 200) {
                 console.log('Education deleted successfully');
                 const updatedEducationItems = [...educationItem];

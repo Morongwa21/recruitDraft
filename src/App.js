@@ -31,14 +31,18 @@ import CVTemplate from './CVTemplate';
 import ProfileModal from './ProfileModal';
 import Theme from './TemplateSelector';
 import ProfilePic from './ProfilePic';
-import Notifications from './Notifications';
+import { NotificationProvider } from './NotificationContext';
 import ScheduleInterview from './ScheduleInterview';
+import NotificationDetailPage from './NotificationDetailPage'; 
+import SupportPage from './SupportPage'; 
 
-//Notifications
+//SupportPage
 //ResumeUploadForm
 const App = () => {
 
   return (
+    <NotificationProvider>
+
     <Router>
       <Routes>
       {/* <Route path="/" element={<UserViewPost />} /> */}
@@ -48,13 +52,15 @@ const App = () => {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/Prof" element={<Prof />} />
         <Route path="/ProfEdu" element={<ProfEdu />} />
+        <Route path="/SupportPage" element={<SupportPage />} />
 
         <Route path="/schedule-interview/:appId" element={<ScheduleInterview />} />
         <Route path="/CVTemplate" element={<CVTemplate />} />
         <Route path="/ProfileModal" element={<ProfileModal />} />
         <Route path="/Theme" element={<Theme />} />
         <Route path="/ProfilePic" element={<ProfilePic />} />
-        <Route path="/Notifications" element={<Notifications />} />
+        {/* <Route path="/Notifications" element={<Notifications />} /> */}
+        <Route path="/notification/:notificationId" element={<NotificationDetailPage />} />
 
         <Route path="/OneProfile" element={<OneProfile />} />
         <Route path="/CreateJob" element={<CreateJob />} />
@@ -78,8 +84,11 @@ const App = () => {
         <Route path="/UserApply/:id" element={<UserApply />} />
         <Route path="/AuthPage" element={<AuthPage />} />
         <Route path="/ProPage" element={<ProPage />} />
+
       </Routes>
     </Router>
+    </NotificationProvider>
+
   );
 };
 

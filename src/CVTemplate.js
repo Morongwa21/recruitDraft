@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -8,22 +8,30 @@ import BasicTemp from './BasicTemp';
 import { ClipLoader } from 'react-spinners'; 
 import ElegantTemp from './ElegantTemp';
 import TemplateSelector from './TemplateSelector';
+import NotificationContext from './NotificationContext';
+
 
 const CVTemplate = () => {
+  const {
+    notifications,
+    unviewedCount,
+    isNotificationsOpen,
+    setIsNotificationsOpen,
+    fetchNotificationById,
+    selectedNotification,
+} = useContext(NotificationContext);
   const { userId } = useParams();
   const [profile, setProfile] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('Basic');
   const [loading, setLoading] = useState(true);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [unviewedCount, setUnviewedCount] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile`);
+        const response = await axios.get(`https://recruitment-portal-utcp.onrender.com/profile`);
         setProfile(response.data.profile);
       } catch (error) {
         console.error('Error fetching profile data:', error);
@@ -43,35 +51,31 @@ const CVTemplate = () => {
   const handleChangeTemplate = (template) => {
     setSelectedTemplate(template);
   };
-  useEffect(() => {
-    const fetchNotifications = async () => {
-        try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
-            setNotifications(response.data);
+  const handleNotificationClick = async (notificationId) => {
+    console.log('Notification ID clicked:', notificationId);  // Log the ID of the notification clicked
   
-            // Count unviewed notifications
-            const unviewed = response.data.filter(notification => !notification.viewed);
-            setUnviewedCount(unviewed.length);
-        } catch (error) {
-            console.error('Error fetching notifications:', error);
-        }
-    };
+    try {
+        const notification = await fetchNotificationById(notificationId); // Fetch the notification details
+        console.log('Fetched notification:', notification);  // Log the notification details
   
-    fetchNotifications();
-  }, []);
+        setIsNotificationsOpen(true);
+        navigate(`/notification/${notificationId}`);
+    } catch (error) {
+        console.error('Error fetching notification:', error);
+    }
+  };
   const handleBellClick = (event) => {
-    event.stopPropagation();  // Prevent click from triggering other click handlers
+    event.stopPropagation();
     setIsNotificationsOpen(!isNotificationsOpen);
   };
   
   
-  // Handle page click to close both dropdowns
   const handlePageClick = () => {
       setIsNotificationsOpen(false);
       setDropdownVisible(false);
   };
   const handleBack = () => {
-    navigate(-1); // Go back to the previous page
+    navigate(-1); 
   };
   const handleLogout = () => {
     localStorage.removeItem('token');

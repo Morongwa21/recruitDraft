@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './components/LoginA.css';
 import logo from './company logo.jpg';
 import axios from 'axios'; 
-import { FaUser, FaLock, FaRegEyeSlash, FaRegEye, FaUsers, FaSearch  } from 'react-icons/fa'; // Import icons from react-icons library
+import { FaUser, FaLock, FaRegEyeSlash, FaRegEye, FaUsers, FaSearch, FaRegLifeRing  } from 'react-icons/fa'; // Import icons from react-icons library
 
 axios.defaults.withCredentials = true;
 
@@ -44,7 +44,7 @@ const LoginPageA = () => {
         }
         setLoading(true);
         try {
-            const response = await axios.post('https://recruitment-portal-t6a3.onrender.com/login', {
+            const response = await axios.post('https://recruitment-portal-utcp.onrender.com/login', {
                 email: email,
                 password: password
             });
@@ -55,7 +55,7 @@ const LoginPageA = () => {
                 const { token } = response.data; 
                 localStorage.setItem('token', token);
                 console.log('token: ', token)
-                const userResponse = await axios.get('https://recruitment-portal-t6a3.onrender.com/user/me', {
+                const userResponse = await axios.get('https://recruitment-portal-utcp.onrender.com/user/me', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -93,9 +93,10 @@ const LoginPageA = () => {
                 </div>
                 <nav>
                     <ul>
-                    <li><a href="#"><FaUsers /> Home</a></li> {/* Added Home icon */}
+                    <li><a href="/"><FaUsers /> Home</a></li> {/* Added Home icon */}
                         <li><a href="/UserViewPost"><FaSearch /> Job Listings</a></li>
-                    </ul>
+                        <li><a href="/SupportPage"><FaRegLifeRing /> Support</a></li>                    </ul>
+
                 </nav>
             </header>
        

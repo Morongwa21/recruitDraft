@@ -27,15 +27,15 @@ const JobApplicationPage = () => {
         const jobId = localStorage.getItem('jobId') || id;
         
         const [jobResponse, userResponse] = await Promise.all([
-          axios.get(`https://recruitment-portal-t6a3.onrender.com/jobs/${jobId}`),
-          axios.get(`https://recruitment-portal-t6a3.onrender.com/user/${userId}`)
+          axios.get(`https://recruitment-portal-utcp.onrender.com/jobs/${jobId}`),
+          axios.get(`https://recruitment-portal-utcp.onrender.com/user/${userId}`)
         ]);
-//https://recruitment-portal-t6a3.onrender.com
+//https://recruitment-portal-utcp.onrender.com
         setJob(jobResponse.data);
         setUsername(userResponse.data);
 
         try {
-          const profileResponse = await axios.get(`https://recruitment-portal-t6a3.onrender.com/profile`);
+          const profileResponse = await axios.get(`https://recruitment-portal-utcp.onrender.com/profile`);
           setProfileData(profileResponse.data); // Set the profile data
 
           console.log('Profile response:', profileResponse);
@@ -72,7 +72,7 @@ const JobApplicationPage = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
         try {
-            const response = await axios.get('https://recruitment-portal-t6a3.onrender.com/notifications');
+            const response = await axios.get('https://recruitment-portal-utcp.onrender.com/notifications');
             setNotifications(response.data);
   
             // Count unviewed notifications
@@ -108,7 +108,7 @@ const JobApplicationPage = () => {
     formData.append('resume', profileData.resume); // Use the resume from the profile
 
     try {
-      const response = await axios.post(`https://recruitment-portal-t6a3.onrender.com/applications/${job._id}/submit`, formData, {
+      const response = await axios.post(`https://recruitment-portal-utcp.onrender.com/applications/${job._id}/submit`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

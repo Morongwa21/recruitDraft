@@ -31,7 +31,7 @@ const ResumeUploadForm = () => {
 
   const submitResume = async (data) => {
     try {
-      const response = await axios.patch(`https://recruitment-portal-t6a3.onrender.com/profile`, data, {
+      const response = await axios.patch(`https://recruitment-portal-utcp.onrender.com/profile`, data, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
