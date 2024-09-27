@@ -409,6 +409,8 @@ profilePicture,
   };
   
   useEffect(() => {
+
+    
     const storedResume = localStorage.getItem('resume');
     if (storedResume) {
       setResume(storedResume); 
@@ -847,11 +849,18 @@ return (
 </div>
 {resume && (
 <div>
-<p>{resumeFileName || 'No file selected'}</p>
-        <a href={resume} target="_blank" rel="noopener noreferrer">
+
+        {/* <a href={resume} target="_blank" rel="noopener noreferrer">
           View Resume
-  </a>
+  </a> */}
+  <div className="button-container">
+          <a href={resume} download className="blue-button">
+            Download Resume
+          </a>
+        </div>
+        <p>{resumeFileName || 'No file selected'}</p>
 </div>
+
       )}
     </div>
 <ProfEdu />

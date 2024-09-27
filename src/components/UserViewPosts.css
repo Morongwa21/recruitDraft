@@ -593,3 +593,32 @@ body {
 .action-buttons button.success:hover {
   background-color: #218838;
 }
+/* .vacancy {
+  text-align: center;  
+  margin-bottom: 20px; 
+  width: 100%; 
+  margin-top:-80px ;
+  background-color: #FFFFFF; 
+}
+
+.vacancy img {
+  width: 90%;      
+  height:6%;       
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #FFFFFF;
+} */
+.vacancy {
+  display: flex;
+  justify-content: center; /* Centers the image horizontally */
+  align-items: center;      /* Centers the image vertically */
+  margin: 20px 0;           /* Adds space above and below the image */
+}
+
+.vacancy img {
+  width: 100%;       
+  max-width: 1070px;
+  max-height: 200px;
+  height: auto;       
+  border-radius: 10px;      /* Adds rounded corners to the image */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Adds a subtle shadow effect */
+}

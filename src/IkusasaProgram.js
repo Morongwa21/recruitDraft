@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faMapMarkerAlt, faBuilding, faCalendarAlt, faTasks, faClock, faBriefcase, faDollarSign, faBook, faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { FaUser, FaBell } from 'react-icons/fa';
 import NotificationContext from './NotificationContext';
-
+// import jobsearch from './JOB.jpg';
 
 const IkusasaProgram = () => {
     const {
@@ -179,7 +179,12 @@ const IkusasaProgram = () => {
 
                     </ul>
                 </aside>
+  
                 <div className="main-content">
+                <h1>Job Vacancies</h1>
+                {/* <div className="vacancy">
+        <img src={jobsearch} alt="vacancy" />
+    </div> */}
                     <div className="search-bar">
                         <input
                             type="text"
