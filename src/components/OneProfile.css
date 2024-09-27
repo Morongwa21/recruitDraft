@@ -490,8 +490,8 @@ border-radius: 50%; /* Circular shape */
         display: flex;
         flex-direction: column;
         flex: 1;
-        gap:5px
-
+        gap:5px;
+        
       }
  
       .jobsekerRight {
@@ -509,7 +509,19 @@ border-radius: 50%; /* Circular shape */
         border-radius: 8px;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       }
-
+      @media (max-width: 768px) { /* Adjust this value based on your desired breakpoint */
+        .jobsekerLeft,
+        .jobsekerRight {
+          flex-direction: column;
+          width: 100%; /* Make sure they take up the full width */
+        }
+      
+        .jobsekerLeft,
+        .jobsekerRight,
+        .jobsekerBox {
+          margin-bottom: 10px; /* Add some spacing between boxes */
+        }
+      }
 .profile-completeness {
     display: flex;
     flex-direction: column;
